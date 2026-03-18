@@ -2,596 +2,654 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08081a">
-<title>👻 Hayalet Müzik</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Hayalet Müzik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-/* ══════════════════════════════════════
-   DESIGN TOKENS
-══════════════════════════════════════ */
-:root {
-  --bg:       #08081a;
-  --bg2:      #0e0e22;
-  --bg3:      #141430;
-  --card:     #161628;
-  --border:   rgba(255,255,255,0.07);
-  --border2:  rgba(255,255,255,0.12);
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100dvh;overflow-x:hidden;
+  transition:background .3s,color .3s;padding-bottom:calc(140px + env(safe-area-inset-bottom))}
 
-  --p1: #7c3aed;
-  --p2: #8b5cf6;
-  --p3: #a78bfa;
-  --acc: #06b6d4;
-  --acc2: #22d3ee;
-  --gold: #f59e0b;
-  --rose: #f43f5e;
-  --ok:  #10b981;
-
-  --txt:  #f1f1f8;
-  --txt2: #9090b0;
-  --txt3: #5050708;
-
-  --r:   14px;
-  --r2:  10px;
-  --ease: cubic-bezier(.4,0,.2,1);
-  --bounce: cubic-bezier(.34,1.56,.64,1);
+/* ── CSS VARIABLES ── */
+:root{
+  --p1:#7c3aed;--p2:#8b5cf6;--p3:#a78bfa;--acc:#06b6d4;
+  --bg:#08081a;--bg2:#0e0e22;--bg3:#141430;--card:#161628;
+  --txt:#f0f0ff;--txt2:#8888aa;--brd:#ffffff18;
+  --gold:#fbbf24;--red:#f87171;--green:#4ade80;
+  --r:14px;--rr:22px;--sh:0 4px 24px #0008;
 }
 
-/* ══════════════════════════════════════
-   THEMES
-══════════════════════════════════════ */
-/* ── ORIGINAL 7 ── */
-.th-fire     { --p1:#c2410c; --p2:#ea580c; --p3:#fb923c; --acc:#fbbf24; --bg:#110500; --bg2:#1a0800; --bg3:#220b00; --card:#1e0900; }
-.th-ocean    { --p1:#0369a1; --p2:#0ea5e9; --p3:#38bdf8; --acc:#06d6a0; --bg:#000c12; --bg2:#00121c; --bg3:#001825; --card:#001020; }
-.th-neon     { --p1:#4d7c0f; --p2:#65a30d; --p3:#a3e635; --acc:#e879f9; --bg:#030801; --bg2:#060f02; --bg3:#091503; --card:#071202; }
-.th-rose     { --p1:#9f1239; --p2:#e11d48; --p3:#fb7185; --acc:#fda4af; --bg:#0f0009; --bg2:#180011; --bg3:#200016; --card:#180011; }
-.th-gold     { --p1:#92400e; --p2:#d97706; --p3:#fbbf24; --acc:#fde68a; --bg:#0c0700; --bg2:#160c00; --bg3:#1c1000; --card:#160c00; }
-.th-cyber    { --p1:#00875a; --p2:#00b377; --p3:#00ff9f; --acc:#ff00ff; --bg:#000a05; --bg2:#001009; --bg3:#00160d; --card:#00110a; }
-.th-ghost    { --p1:#7c3aed; --p2:#8b5cf6; --p3:#a78bfa; --acc:#06b6d4; --bg:#08081a; --bg2:#0e0e22; --bg3:#141430; --card:#161628; }
-/* ── 30 YENİ TEMA ── */
-/* 8. Aurora Borealis – kuzey ışıkları, yeşil+mor */
-.th-aurora   { --p1:#059669; --p2:#10b981; --p3:#34d399; --acc:#818cf8; --bg:#010d08; --bg2:#021910; --bg3:#032016; --card:#041e13; }
-/* 9. Sakura – Japon kiraz çiçeği, pembe+mor */
-.th-sakura   { --p1:#be185d; --p2:#db2777; --p3:#f472b6; --acc:#e879f9; --bg:#0f0009; --bg2:#1c0213; --bg3:#25031b; --card:#1f031a; }
-/* 10. Midnight – gece mavisi, derin koyu */
-.th-midnight { --p1:#1e40af; --p2:#2563eb; --p3:#60a5fa; --acc:#818cf8; --bg:#020510; --bg2:#040a1e; --bg3:#060f28; --card:#050d22; }
-/* 11. Lava – yanardağ kırmızı+turuncu */
-.th-lava     { --p1:#991b1b; --p2:#dc2626; --p3:#ef4444; --acc:#f97316; --bg:#0f0000; --bg2:#1a0000; --bg3:#220000; --card:#1e0000; }
-/* 12. Ice – buz mavisi, soğuk beyaz */
-.th-ice      { --p1:#0e7490; --p2:#0891b2; --p3:#22d3ee; --acc:#a5f3fc; --bg:#000c10; --bg2:#00121c; --bg3:#001825; --card:#011020; }
-/* 13. Sunset – gün batımı, turuncu+mor */
-.th-sunset   { --p1:#9333ea; --p2:#a855f7; --p3:#c084fc; --acc:#f97316; --bg:#090008; --bg2:#120011; --bg3:#1a0016; --card:#160012; }
-/* 14. Toxic – zehirli sarı-yeşil */
-.th-toxic    { --p1:#65a30d; --p2:#84cc16; --p3:#bef264; --acc:#facc15; --bg:#020601; --bg2:#050d02; --bg3:#071203; --card:#061002; }
-/* 15. Dracula – klasik vampir teması */
-.th-dracula  { --p1:#6272a4; --p2:#bd93f9; --p3:#caa9fa; --acc:#ff79c6; --bg:#0d0d14; --bg2:#14141e; --bg3:#1a1a28; --card:#181826; }
-/* 16. Monokai – kod editörü teması */
-.th-monokai  { --p1:#f92672; --p2:#fd971f; --p3:#e6db74; --acc:#a6e22e; --bg:#060604; --bg2:#0e0d08; --bg3:#14120b; --card:#100f09; }
-/* 17. Nord – soğuk İskandinav paleti */
-.th-nord     { --p1:#4c566a; --p2:#5e81ac; --p3:#81a1c1; --acc:#88c0d0; --bg:#020406; --bg2:#060a0f; --bg3:#090e15; --card:#080c13; }
-/* 18. Vaporwave – 80s retro, pembe+mavi */
-.th-vapor    { --p1:#b5179e; --p2:#7209b7; --p3:#f72585; --acc:#4cc9f0; --bg:#06000a; --bg2:#0d0013; --bg3:#140018; --card:#0f0015; }
-/* 19. Matrix – yeşil kod yağmuru */
-.th-matrix   { --p1:#166534; --p2:#16a34a; --p3:#4ade80; --acc:#86efac; --bg:#000300; --bg2:#000800; --bg3:#000d00; --card:#000b00; }
-/* 20. Copper – bakır, eski antika */
-.th-copper   { --p1:#92400e; --p2:#b45309; --p3:#d97706; --acc:#78716c; --bg:#0a0600; --bg2:#160e00; --bg3:#1e1400; --card:#191000; }
-/* 21. Cobalt – saf kobalt mavisi */
-.th-cobalt   { --p1:#1d4ed8; --p2:#2563eb; --p3:#3b82f6; --acc:#67e8f9; --bg:#00020e; --bg2:#000418; --bg3:#000620; --card:#00051c; }
-/* 22. Orchid – orkide çiçeği, lavanta */
-.th-orchid   { --p1:#7c3aed; --p2:#9333ea; --p3:#c084fc; --acc:#f0abfc; --bg:#08000f; --bg2:#10001c; --bg3:#160023; --card:#13001f; }
-/* 23. Teal – petrol yeşili */
-.th-teal     { --p1:#0f766e; --p2:#0d9488; --p3:#2dd4bf; --acc:#818cf8; --bg:#000908; --bg2:#001412; --bg3:#001b18; --card:#001714; }
-/* 24. Blood Moon – kanlı ay, kırmızı+siyah */
-.th-blood    { --p1:#7f1d1d; --p2:#b91c1c; --p3:#ef4444; --acc:#fca5a5; --bg:#0a0000; --bg2:#140000; --bg3:#1c0000; --card:#170000; }
-/* 25. Galaxy – galaksi uzay, çok renkli */
-.th-galaxy   { --p1:#4f46e5; --p2:#7c3aed; --p3:#a78bfa; --acc:#f472b6; --bg:#01000a; --bg2:#030015; --bg3:#05001f; --card:#040018; }
-/* 26. Amber – kehribar, sıcak sarı */
-.th-amber    { --p1:#b45309; --p2:#d97706; --p3:#fbbf24; --acc:#f87171; --bg:#090500; --bg2:#140b00; --bg3:#1c1000; --card:#180d00; }
-/* 27. Mint – ferahlatıcı nane yeşili */
-.th-mint     { --p1:#065f46; --p2:#059669; --p3:#6ee7b7; --acc:#67e8f9; --bg:#000a06; --bg2:#001510; --bg3:#001d16; --card:#001912; }
-/* 28. Crimson – koyu kırmızı kadife */
-.th-crimson  { --p1:#881337; --p2:#be123c; --p3:#fb7185; --acc:#fda4af; --bg:#0a0004; --bg2:#160008; --bg3:#1e000b; --card:#180008; }
-/* 29. Slate – gri çelik, modern */
-.th-slate    { --p1:#334155; --p2:#475569; --p3:#94a3b8; --acc:#38bdf8; --bg:#020408; --bg2:#06090f; --bg3:#090e16; --card:#070c14; }
-/* 30. Magma – magma, kızıl turuncu */
-.th-magma    { --p1:#c2410c; --p2:#ea580c; --p3:#fb923c; --acc:#fde68a; --bg:#0c0200; --bg2:#180400; --bg3:#230600; --card:#1e0500; }
-/* 31. Indigo – koyu lacivert, gece */
-.th-indigo   { --p1:#312e81; --p2:#4338ca; --p3:#818cf8; --acc:#c7d2fe; --bg:#02020c; --bg2:#060618; --bg3:#090921; --card:#07071c; }
-/* 32. Emerald – zümrüt yeşili */
-.th-emerald  { --p1:#065f46; --p2:#047857; --p3:#34d399; --acc:#fbbf24; --bg:#000a05; --bg2:#00160b; --bg3:#001d10; --card:#001a0e; }
-/* 33. Lavender – açık lavanta */
-.th-lavender { --p1:#7e22ce; --p2:#9333ea; --p3:#d8b4fe; --acc:#fce7f3; --bg:#07000f; --bg2:#0f001d; --bg3:#150025; --card:#120020; }
-/* 34. Rust – pas kırmızısı, endüstriyel */
-.th-rust     { --p1:#7c2d12; --p2:#9a3412; --p3:#f97316; --acc:#fbbf24; --bg:#0a0300; --bg2:#160600; --bg3:#200a00; --card:#1a0700; }
-/* 35. Aqua – aqua deniz mavisi */
-.th-aqua     { --p1:#0e7490; --p2:#0891b2; --p3:#06b6d4; --acc:#a78bfa; --bg:#000910; --bg2:#00121b; --bg3:#001824; --card:#001020; }
-/* 36. Monochrome – siyah-beyaz klasik */
-.th-mono     { --p1:#374151; --p2:#6b7280; --p3:#d1d5db; --acc:#f3f4f6; --bg:#030303; --bg2:#0a0a0a; --bg3:#111111; --card:#0e0e0e; }
-/* 37. Deep Purple – derin mor */
-.th-deeppurp { --p1:#4a044e; --p2:#6b21a8; --p3:#a855f7; --acc:#e879f9; --bg:#060008; --bg2:#0e0012; --bg3:#140018; --card:#100015; }
+/* ── THEMES ── */
+.th-ghost    {--p1:#7c3aed;--p2:#8b5cf6;--p3:#a78bfa;--acc:#06b6d4;--bg:#08081a;--bg2:#0e0e22;--bg3:#141430;--card:#161628}
+.th-fire     {--p1:#c2410c;--p2:#ea580c;--p3:#fb923c;--acc:#fbbf24;--bg:#110500;--bg2:#1a0800;--bg3:#220b00;--card:#1e0900}
+.th-ocean    {--p1:#0369a1;--p2:#0ea5e9;--p3:#38bdf8;--acc:#06d6a0;--bg:#000c12;--bg2:#00121c;--bg3:#001825;--card:#001020}
+.th-neon     {--p1:#4d7c0f;--p2:#65a30d;--p3:#a3e635;--acc:#e879f9;--bg:#030801;--bg2:#060f02;--bg3:#091503;--card:#071202}
+.th-rose     {--p1:#9f1239;--p2:#e11d48;--p3:#fb7185;--acc:#fda4af;--bg:#0f0009;--bg2:#180011;--bg3:#200016;--card:#180011}
+.th-gold     {--p1:#92400e;--p2:#d97706;--p3:#fbbf24;--acc:#fde68a;--bg:#0c0700;--bg2:#160c00;--bg3:#1c1000;--card:#160c00}
+.th-cyber    {--p1:#00875a;--p2:#00b377;--p3:#00ff9f;--acc:#ff00ff;--bg:#000a05;--bg2:#001009;--bg3:#00160d;--card:#00110a}
+.th-aurora   {--p1:#059669;--p2:#10b981;--p3:#34d399;--acc:#818cf8;--bg:#010d08;--bg2:#021910;--bg3:#032016;--card:#041e13}
+.th-sakura   {--p1:#be185d;--p2:#db2777;--p3:#f472b6;--acc:#e879f9;--bg:#0f0009;--bg2:#1c0213;--bg3:#25031b;--card:#1f031a}
+.th-midnight {--p1:#1e40af;--p2:#2563eb;--p3:#60a5fa;--acc:#818cf8;--bg:#020510;--bg2:#040a1e;--bg3:#060f28;--card:#050d22}
+.th-lava     {--p1:#991b1b;--p2:#dc2626;--p3:#ef4444;--acc:#f97316;--bg:#0f0000;--bg2:#1a0000;--bg3:#220000;--card:#1e0000}
+.th-ice      {--p1:#0e7490;--p2:#0891b2;--p3:#22d3ee;--acc:#a5f3fc;--bg:#000c10;--bg2:#00121b;--bg3:#001825;--card:#011020}
+.th-sunset   {--p1:#9333ea;--p2:#a855f7;--p3:#c084fc;--acc:#f97316;--bg:#090008;--bg2:#120011;--bg3:#1a0016;--card:#160012}
+.th-toxic    {--p1:#65a30d;--p2:#84cc16;--p3:#bef264;--acc:#facc15;--bg:#020601;--bg2:#050d02;--bg3:#071203;--card:#061002}
+.th-dracula  {--p1:#6272a4;--p2:#bd93f9;--p3:#caa9fa;--acc:#ff79c6;--bg:#0d0d14;--bg2:#14141e;--bg3:#1a1a28;--card:#181826}
+.th-monokai  {--p1:#f92672;--p2:#fd971f;--p3:#e6db74;--acc:#a6e22e;--bg:#060604;--bg2:#0e0d08;--bg3:#14120b;--card:#100f09}
+.th-nord     {--p1:#4c566a;--p2:#5e81ac;--p3:#81a1c1;--acc:#88c0d0;--bg:#020406;--bg2:#060a0f;--bg3:#090e15;--card:#080c13}
+.th-vapor    {--p1:#b5179e;--p2:#7209b7;--p3:#f72585;--acc:#4cc9f0;--bg:#06000a;--bg2:#0d0013;--bg3:#140018;--card:#0f0015}
+.th-matrix   {--p1:#166534;--p2:#16a34a;--p3:#4ade80;--acc:#86efac;--bg:#000300;--bg2:#000800;--bg3:#000d00;--card:#000b00}
+.th-copper   {--p1:#92400e;--p2:#b45309;--p3:#d97706;--acc:#78716c;--bg:#0a0600;--bg2:#160e00;--bg3:#1e1400;--card:#191000}
+.th-cobalt   {--p1:#1d4ed8;--p2:#2563eb;--p3:#3b82f6;--acc:#67e8f9;--bg:#00020e;--bg2:#000418;--bg3:#000620;--card:#00051c}
+.th-orchid   {--p1:#7c3aed;--p2:#9333ea;--p3:#c084fc;--acc:#f0abfc;--bg:#08000f;--bg2:#10001c;--bg3:#160023;--card:#13001f}
+.th-teal     {--p1:#0f766e;--p2:#0d9488;--p3:#2dd4bf;--acc:#818cf8;--bg:#000908;--bg2:#001412;--bg3:#001b18;--card:#001714}
+.th-blood    {--p1:#7f1d1d;--p2:#b91c1c;--p3:#ef4444;--acc:#fca5a5;--bg:#0a0000;--bg2:#140000;--bg3:#1c0000;--card:#170000}
+.th-galaxy   {--p1:#4f46e5;--p2:#7c3aed;--p3:#a78bfa;--acc:#f472b6;--bg:#01000a;--bg2:#030015;--bg3:#05001f;--card:#040018}
+.th-amber    {--p1:#b45309;--p2:#d97706;--p3:#fbbf24;--acc:#f87171;--bg:#090500;--bg2:#140b00;--bg3:#1c1000;--card:#180d00}
+.th-mint     {--p1:#065f46;--p2:#059669;--p3:#6ee7b7;--acc:#67e8f9;--bg:#000a06;--bg2:#001510;--bg3:#001d16;--card:#001912}
+.th-crimson  {--p1:#881337;--p2:#be123c;--p3:#fb7185;--acc:#fda4af;--bg:#0a0004;--bg2:#160008;--bg3:#1e000b;--card:#180008}
+.th-slate    {--p1:#334155;--p2:#475569;--p3:#94a3b8;--acc:#38bdf8;--bg:#020408;--bg2:#06090f;--bg3:#090e16;--card:#070c14}
+.th-magma    {--p1:#c2410c;--p2:#ea580c;--p3:#fb923c;--acc:#fde68a;--bg:#0c0200;--bg2:#180400;--bg3:#230600;--card:#1e0500}
+.th-indigo   {--p1:#312e81;--p2:#4338ca;--p3:#818cf8;--acc:#c7d2fe;--bg:#02020c;--bg2:#060618;--bg3:#090921;--card:#07071c}
+.th-emerald  {--p1:#065f46;--p2:#047857;--p3:#34d399;--acc:#fbbf24;--bg:#000a05;--bg2:#00160b;--bg3:#001d10;--card:#001a0e}
+.th-lavender {--p1:#7e22ce;--p2:#9333ea;--p3:#d8b4fe;--acc:#fce7f3;--bg:#07000f;--bg2:#0f001d;--bg3:#150025;--card:#120020}
+.th-rust     {--p1:#7c2d12;--p2:#9a3412;--p3:#f97316;--acc:#fbbf24;--bg:#0a0300;--bg2:#160600;--bg3:#200a00;--card:#1a0700}
+.th-aqua     {--p1:#0e7490;--p2:#0891b2;--p3:#06b6d4;--acc:#a78bfa;--bg:#000910;--bg2:#00121b;--bg3:#001824;--card:#001020}
+.th-mono     {--p1:#374151;--p2:#6b7280;--p3:#d1d5db;--acc:#f3f4f6;--bg:#030303;--bg2:#0a0a0a;--bg3:#111111;--card:#0e0e0e}
+.th-deeppurp {--p1:#4a044e;--p2:#6b21a8;--p3:#a855f7;--acc:#e879f9;--bg:#060008;--bg2:#0e0012;--bg3:#140018;--card:#100015}
 
-/* ══════════════════════════════════════
-   BASE RESET
-══════════════════════════════════════ */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; overflow:hidden; background:var(--bg); }
-body {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--txt);
-  font-size: 14px;
-  line-height: 1.5;
-  overscroll-behavior: none;
-}
-input, button, select, textarea { font-family: inherit; }
+/* ── LAYOUT ── */
+.page{display:none;flex-direction:column;min-height:calc(100dvh - 56px);padding:0 0 16px}
+.page.active{display:flex;animation:fadeUp .3s ease}
 
-/* ══════════════════════════════════════
-   AMBIENT
-══════════════════════════════════════ */
-#ambientA, #ambientB, #ambientC {
-  position: fixed; border-radius: 50%;
-  filter: blur(120px); pointer-events: none;
-  animation: drift 20s ease-in-out infinite;
-}
-#ambientA { width:600px; height:600px; background:radial-gradient(circle,var(--p1),transparent 70%); opacity:.08; top:-200px; right:-200px; }
-#ambientB { width:400px; height:400px; background:radial-gradient(circle,var(--acc),transparent 70%); opacity:.06; bottom:-150px; left:-150px; animation-delay:-8s; }
-#ambientC { width:300px; height:300px; background:radial-gradient(circle,var(--p3),transparent 70%); opacity:.04; top:40%; left:35%; animation-delay:-14s; }
-@keyframes drift { 0%,100%{transform:translate(0,0)} 33%{transform:translate(25px,-35px)} 66%{transform:translate(-20px,25px)} }
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:100;background:var(--bg2);
+  border-bottom:1px solid var(--brd);backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:10px;padding:10px 14px}
+.hdr-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p3));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;animation:glow 3s ease-in-out infinite}
+.hdr-name{font-weight:700;font-size:15px;flex:1}
+.hdr-sub{font-size:11px;color:var(--txt2)}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:none;
+  color:var(--txt);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:15px;flex-shrink:0;transition:background .2s}
+.hdr-btn:hover{background:var(--p1)}
 
-/* ══════════════════════════════════════
-   LAYOUT
-══════════════════════════════════════ */
-#app { height:100vh; display:flex; flex-direction:column; overflow:hidden; position:relative; z-index:1; }
-#scroller { flex:1; overflow:hidden; position:relative; }
-.page {
-  position:absolute; inset:0; overflow-y:auto; overflow-x:hidden;
-  padding:0 0 160px; opacity:0; pointer-events:none;
-  transition: opacity .25s var(--ease), transform .25s var(--ease);
-  transform: translateY(8px);
-}
-.page.active { opacity:1; pointer-events:all; transform:translateY(0); }
-.page::-webkit-scrollbar { width:0; }
-.pad { padding:0 16px; }
+/* ── NAV ── */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--bg2);border-top:1px solid var(--brd);
+  display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:9px 4px;cursor:pointer;gap:3px;transition:color .2s;color:var(--txt2);border:none;background:none}
+.nav-item.on{color:var(--p3)}
+.nav-item.on i{animation:bounce .5s ease}
+.nav-item i{font-size:18px}
+.nav-item span{font-size:9px;font-weight:600;letter-spacing:.3px}
 
-/* ══════════════════════════════════════
-   LANG BAR
-══════════════════════════════════════ */
-#langBar {
-  display:flex; justify-content:flex-end; gap:4px;
-  padding:10px 16px 0; position:relative; z-index:50;
-}
-.lb {
-  padding:4px 9px; border-radius:8px;
-  border:1px solid var(--border2);
-  background:rgba(255,255,255,.04);
-  color:var(--txt2); font-size:10px; font-weight:600;
-  cursor:pointer; transition:all .2s; letter-spacing:.3px;
-}
-.lb.on { background:var(--p1); border-color:var(--p1); color:#fff; }
+/* ── MINI PLAYER ── */
+.mini{position:fixed;bottom:56px;left:0;right:0;z-index:190;
+  background:var(--bg2);border-top:1px solid var(--brd);
+  padding:8px 14px;display:none;align-items:center;gap:10px;
+  cursor:pointer;backdrop-filter:blur(12px)}
+.mini.show{display:flex}
+.mini-art{width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,var(--p1),var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;transition:all .3s}
+.mini-art.playing{animation:glow 2s ease-in-out infinite}
+.mini-info{flex:1;min-width:0}
+.mini-title{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-artist{font-size:11px;color:var(--txt2)}
+.mini-prog{position:absolute;bottom:0;left:0;height:2px;background:var(--p2);transition:width .5s linear}
+.mini-btn{background:none;border:none;color:var(--txt);font-size:20px;cursor:pointer;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;transition:background .2s}
+.mini-btn:hover{background:var(--bg3)}
 
-/* ══════════════════════════════════════
-   BOTTOM NAV
-══════════════════════════════════════ */
-#bnav {
-  position:fixed; bottom:0; left:0; right:0; z-index:200;
-  padding:0 0 max(10px, env(safe-area-inset-bottom));
-  background:linear-gradient(to top, var(--bg) 55%, transparent);
-}
-.bnav-inner {
-  display:flex; margin:0 12px;
-  background:rgba(20,20,48,.9); backdrop-filter:blur(24px);
-  border:1px solid var(--border2); border-radius:18px; padding:6px 0;
-}
-.nb {
-  flex:1; display:flex; flex-direction:column; align-items:center;
-  gap:3px; padding:8px 4px; border:none; background:none;
-  color:var(--txt2); cursor:pointer; font-size:9px; font-weight:600;
-  letter-spacing:.4px; text-transform:uppercase; transition:color .2s;
-}
-.nb i { font-size:19px; transition:transform .25s var(--bounce); }
-.nb.on { color:var(--p3); }
-.nb.on i { transform:scale(1.2); }
+/* ── FULL PLAYER ── */
+.fp{position:fixed;inset:0;z-index:300;background:var(--bg);
+  display:flex;flex-direction:column;transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.fp.open{transform:translateY(0)}
+.fp-hdr{padding:16px 16px 8px;display:flex;align-items:center;gap:8px}
+.fp-close{background:none;border:none;color:var(--txt2);font-size:22px;cursor:pointer;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.fp-title{flex:1;text-align:center;font-weight:700;font-size:14px}
+.fp-opts{background:none;border:none;color:var(--txt2);font-size:22px;cursor:pointer;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.fp-art-wrap{display:flex;justify-content:center;padding:12px 24px}
+.fp-art{width:220px;height:220px;border-radius:20px;overflow:hidden;
+  box-shadow:0 12px 40px #0006;transition:transform .3s;position:relative}
+.fp-art.playing{transform:scale(1.03)}
+.fp-art img{width:100%;height:100%;object-fit:cover}
+.fp-art-fallback{width:100%;height:100%;
+  background:linear-gradient(135deg,var(--p1),var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:70px}
+.fp-info{padding:0 24px;text-align:center}
+.fp-song{font-size:20px;font-weight:800;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-singer{color:var(--txt2);font-size:14px}
+.fp-like{background:none;border:none;color:var(--red);font-size:22px;cursor:pointer;margin-top:4px}
+.fp-prog-wrap{padding:16px 24px 8px}
+.fp-range{width:100%;-webkit-appearance:none;appearance:none;height:4px;
+  border-radius:2px;background:var(--bg3);cursor:pointer;outline:none}
+.fp-range::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--p3);margin-top:-5px}
+.fp-range::-webkit-slider-runnable-track{height:4px;border-radius:2px;
+  background:linear-gradient(to right,var(--p2) var(--pct,0%),var(--bg3) var(--pct,0%))}
+.fp-times{display:flex;justify-content:space-between;
+  font-size:11px;color:var(--txt2);padding:0 24px 8px}
+.fp-ctrl{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px}
+.fp-ctrl button{background:none;border:none;color:var(--txt);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s}
+.fp-ctrl .sm{font-size:20px;width:44px;height:44px}
+.fp-ctrl .sm:hover{background:var(--bg3)}
+.fp-ctrl .md{font-size:24px;width:52px;height:52px}
+.fp-ctrl .md:hover{background:var(--bg3)}
+.fp-ctrl .lg{font-size:30px;width:64px;height:64px;
+  background:var(--p2);box-shadow:0 4px 20px var(--p1)88}
+.fp-ctrl .lg:hover{background:var(--p1);transform:scale(1.05)}
+.fp-ctrl .on{color:var(--p3)}
+.fp-vol{display:flex;align-items:center;gap:10px;padding:0 24px 12px}
+.fp-vol i{color:var(--txt2);font-size:16px}
+.fp-vol-range{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;
+  background:var(--bg3);cursor:pointer;outline:none}
+.fp-vol-range::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--p3)}
+.fp-extras{display:flex;justify-content:center;gap:24px;padding:8px}
+.fp-extra-btn{background:none;border:none;color:var(--txt2);font-size:12px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;transition:color .2s}
+.fp-extra-btn i{font-size:20px}
+.fp-extra-btn:hover{color:var(--p3)}
+.fp-extra-btn.on{color:var(--p3)}
 
-/* ══════════════════════════════════════
-   MINI PLAYER
-══════════════════════════════════════ */
-#miniPlayer {
-  position:fixed; z-index:190;
-  bottom:calc(58px + max(10px,env(safe-area-inset-bottom)));
-  left:12px; right:12px;
-  background:rgba(20,20,48,.95); backdrop-filter:blur(28px);
-  border:1px solid var(--border2); border-radius:16px;
-  padding:11px 14px; display:flex; align-items:center; gap:11px;
-  transform:translateY(120%); transition:transform .38s var(--ease);
-  cursor:pointer;
-}
-#miniPlayer.show { transform:translateY(0); }
-.mp-art {
-  width:42px; height:42px; border-radius:12px; flex-shrink:0;
-  background:linear-gradient(135deg,var(--p1),var(--acc));
-  display:flex; align-items:center; justify-content:center; font-size:20px;
-  animation:spin 20s linear infinite paused;
-}
-.mp-art.pl { animation-play-state:running; }
-@keyframes spin { to { filter:hue-rotate(360deg); } }
-.mp-info { flex:1; min-width:0; }
-.mp-title { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.mp-artist { font-size:11px; color:var(--txt2); margin-top:1px; }
-.mp-btns { display:flex; gap:6px; align-items:center; }
-.mp-btns button {
-  width:34px; height:34px; border:none; background:none;
-  color:var(--txt); cursor:pointer; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; transition:background .15s;
-}
-.mp-btns .mpPlay { background:var(--p1); }
-.mp-prog { position:absolute; bottom:0; left:14px; right:14px; height:2px; background:rgba(255,255,255,.08); border-radius:1px; overflow:hidden; }
-.mp-prog-fill { height:100%; background:linear-gradient(90deg,var(--p1),var(--acc)); width:0%; transition:width .5s linear; }
+/* ── YOUTUBE HIDDEN PLAYER ── */
+#ytPlayer{position:fixed;bottom:-1000px;left:-1000px;width:1px;height:1px;opacity:0;pointer-events:none}
 
-/* ══════════════════════════════════════
-   FULL PLAYER
-══════════════════════════════════════ */
-#fullPlayer {
-  display:none; position:fixed; inset:0; z-index:500;
-  background:var(--bg); flex-direction:column; align-items:center;
-  padding:max(env(safe-area-inset-top),20px) 24px 36px;
-  overflow-y:auto;
-}
-#fullPlayer.show { display:flex; }
-#fullPlayer::-webkit-scrollbar { width:0; }
-.fp-bar {
-  width:100%; display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:22px;
-}
-.fp-bar button {
-  width:40px; height:40px; border:none;
-  background:rgba(255,255,255,.06); border-radius:50%;
-  color:var(--txt2); font-size:16px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; transition:all .2s;
-}
-.fp-bar button:hover { background:rgba(255,255,255,.12); color:var(--txt); }
-.fp-title-lbl { font-family:'Syne',sans-serif; font-size:11px; font-weight:600; letter-spacing:1.8px; color:var(--txt2); text-transform:uppercase; }
-.fp-art {
-  width:min(290px,76vw); height:min(290px,76vw);
-  border-radius:28px; margin-bottom:26px;
-  background:linear-gradient(135deg,var(--p1),var(--p2),var(--acc));
-  display:flex; align-items:center; justify-content:center; font-size:100px;
-  box-shadow:0 32px 80px -10px color-mix(in srgb, var(--p1) 50%, transparent),
-             0 0 0 1px rgba(255,255,255,.07);
-  transition:transform .3s var(--ease);
-  animation:coverPulse 6s ease-in-out infinite;
-}
-.fp-art.pl { transform:scale(1.03); }
-@keyframes coverPulse {
-  0%,100% { box-shadow:0 32px 80px -10px color-mix(in srgb,var(--p1) 50%,transparent); }
-  50% { box-shadow:0 32px 90px -5px color-mix(in srgb,var(--acc) 45%,transparent); }
-}
-.fp-meta { width:100%; text-align:center; margin-bottom:18px; }
-.fp-song { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; letter-spacing:-.4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.fp-singer { font-size:14px; color:var(--txt2); margin-top:4px; }
-.fp-actions { display:flex; gap:22px; margin-bottom:16px; }
-.fp-actions button { border:none; background:none; font-size:22px; color:var(--txt2); cursor:pointer; padding:6px; transition:all .2s; border-radius:50%; }
-.fp-actions button:hover { color:var(--txt); transform:scale(1.15); }
-.fp-actions button.liked { color:var(--rose); }
-.fp-seek { width:100%; margin-bottom:8px; }
-.fp-seek input[type=range] {
-  width:100%; -webkit-appearance:none; appearance:none;
-  height:4px; border-radius:2px; background:rgba(255,255,255,.1);
-  border:none; padding:0; outline:none;
-}
-.fp-seek input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance:none; width:16px; height:16px;
-  border-radius:50%; background:var(--p2); cursor:pointer;
-  box-shadow:0 0 12px color-mix(in srgb,var(--p2) 70%,transparent);
-}
-.fp-times { display:flex; justify-content:space-between; font-size:11px; color:var(--txt2); font-family:'JetBrains Mono',monospace; margin-top:4px; }
-.fp-ctrl { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
-.fp-ctrl button { border:none; background:none; color:var(--txt2); cursor:pointer; font-size:22px; padding:8px; border-radius:50%; transition:all .2s; }
-.fp-ctrl button:hover { color:var(--txt); }
-.fp-ctrl button.on { color:var(--p3); }
-.fp-playBtn {
-  width:70px!important; height:70px;
-  background:linear-gradient(135deg,var(--p1),var(--acc))!important;
-  border-radius:50%; color:#fff!important; font-size:26px!important;
-  box-shadow:0 8px 28px color-mix(in srgb,var(--p1) 50%,transparent);
-  transition:all .2s!important;
-}
-.fp-playBtn:hover { transform:scale(1.07)!important; }
-.fp-vol { width:100%; display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-.fp-vol i { color:var(--txt2); font-size:14px; width:16px; text-align:center; }
-.fp-vol input[type=range] {
-  flex:1; -webkit-appearance:none; appearance:none;
-  height:4px; border-radius:2px; background:rgba(255,255,255,.1); border:none; padding:0;
-}
-.fp-vol input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance:none; width:13px; height:13px;
-  border-radius:50%; background:var(--p3); cursor:pointer;
-}
-/* Speed row */
-.fp-speed { display:flex; gap:6px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
-.spd { padding:5px 12px; border-radius:20px; border:1px solid var(--border2); background:rgba(255,255,255,.04); color:var(--txt2); font-size:11px; font-weight:700; cursor:pointer; transition:all .2s; }
-.spd.on { background:var(--p1); border-color:var(--p1); color:#fff; }
-/* Bot buttons in FP */
-.fp-bot-grid { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:6px; }
-.fp-bot-btn {
-  padding:10px 8px; border-radius:11px; border:1px solid var(--border);
-  background:rgba(255,255,255,.03); color:var(--txt); font-size:12px; font-weight:600;
-  cursor:pointer; display:flex; align-items:center; justify-content:space-between;
-  transition:all .2s;
-}
-.fp-bot-btn:hover { background:rgba(124,58,237,.12); border-color:var(--p1); }
-.fp-bot-btn i { color:var(--p3); font-size:11px; }
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--brd)}
+.pad{padding:14px}
+.sh{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;
+  letter-spacing:.8px;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 14px 8px}
+.see{color:var(--p3);cursor:pointer;font-size:11px;text-transform:none;letter-spacing:0}
 
-/* ══════════════════════════════════════
-   QUEUE MODAL
-══════════════════════════════════════ */
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(8px); z-index:300; opacity:0; pointer-events:none; transition:opacity .22s; }
-.overlay.on { opacity:1; pointer-events:all; }
-.sheet {
-  position:fixed; bottom:0; left:0; right:0; z-index:310;
-  background:var(--bg2); border-radius:22px 22px 0 0;
-  padding:20px; transform:translateY(100%);
-  transition:transform .32s var(--ease); max-height:82vh; overflow-y:auto;
-}
-.sheet.on { transform:translateY(0); }
-.sheet::-webkit-scrollbar { width:0; }
-.handle { width:36px; height:3px; background:rgba(255,255,255,.14); border-radius:2px; margin:0 auto 18px; }
+/* ── TRACK ROW ── */
+.tr-row{display:flex;align-items:center;gap:12px;padding:10px 14px;
+  cursor:pointer;border-radius:12px;transition:background .15s;position:relative}
+.tr-row:hover,.tr-row:active{background:var(--bg3)}
+.tr-art{width:44px;height:44px;border-radius:12px;overflow:hidden;
+  background:linear-gradient(135deg,var(--p1)44,var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tr-art img{width:100%;height:100%;object-fit:cover}
+.tr-info{flex:1;min-width:0}
+.tr-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-sub{font-size:11px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-dur{font-size:11px;color:var(--txt2)}
+.tr-row.playing .tr-name{color:var(--p3)}
+.tr-menu{background:none;border:none;color:var(--txt2);font-size:16px;cursor:pointer;
+  padding:4px 8px;border-radius:8px}
 
-/* ══════════════════════════════════════
-   CARDS / UI
-══════════════════════════════════════ */
-.card { background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:16px; transition:border-color .2s; }
-.card:active { transform:scale(.99); }
+/* ── SEARCH ── */
+.srch-bar{display:flex;gap:8px;padding:14px 14px 8px;position:sticky;top:57px;
+  background:var(--bg);z-index:50}
+.srch-inp{flex:1;background:var(--card);border:1px solid var(--brd);border-radius:14px;
+  color:var(--txt);padding:10px 14px;font-size:14px;outline:none;transition:border .2s}
+.srch-inp:focus{border-color:var(--p2)}
+.srch-btn{background:var(--p2);border:none;color:#fff;border-radius:14px;
+  padding:10px 16px;font-size:14px;cursor:pointer;font-weight:600;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;transition:background .2s}
+.srch-btn:hover{background:var(--p1)}
+.srch-results{padding:0 14px}
+.srch-loading{display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:24px;color:var(--txt2);font-size:13px}
+.srch-loading i{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:7px; padding:11px 22px; border:none; border-radius:var(--r2);
-  font-size:13.5px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:.2px;
-}
-.btn-p { background:linear-gradient(135deg,var(--p1),var(--p2)); color:#fff; box-shadow:0 4px 16px color-mix(in srgb,var(--p1) 35%,transparent); }
-.btn-p:hover { transform:translateY(-1px); }
-.btn-s { background:rgba(255,255,255,.05); color:var(--txt); border:1px solid var(--border2); }
-.btn-s:hover { background:rgba(255,255,255,.09); }
-.btn-sm { padding:8px 15px; font-size:12px; border-radius:8px; }
-.btn-ico { width:40px; height:40px; padding:0; border-radius:50%; }
+/* ── CHIPS / TABS ── */
+.chips{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{background:var(--bg3);border:1px solid var(--brd);border-radius:20px;
+  padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:all .2s;color:var(--txt2)}
+.chip.on{background:var(--p2);border-color:var(--p2);color:#fff}
 
-.inp-w { position:relative; }
-.inp-w i { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--txt2); font-size:15px; pointer-events:none; }
-input[type=text], select, textarea {
-  width:100%; padding:13px 14px; background:rgba(255,255,255,.05);
-  border:1px solid var(--border2); border-radius:var(--r2);
-  color:var(--txt); font-size:14px; outline:none;
-  transition:border-color .2s, box-shadow .2s;
-}
-.inp-w input { padding-left:42px; }
-input[type=text]:focus, select:focus { border-color:var(--p2); box-shadow:0 0 0 3px color-mix(in srgb,var(--p1) 14%,transparent); }
-input::placeholder { color:var(--txt2); }
-select option { background:var(--bg3); }
+/* ── HOME BANNER ── */
+.banner{border-radius:var(--rr);overflow:hidden;margin:14px;position:relative;
+  background:linear-gradient(135deg,var(--p1),var(--p3));min-height:160px;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
+  cursor:pointer;box-shadow:var(--sh)}
+.banner-bg{position:absolute;inset:0;opacity:.15;font-size:120px;
+  display:flex;align-items:center;justify-content:center}
+.banner-label{font-size:11px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.7);
+  text-transform:uppercase;margin-bottom:4px}
+.banner-title{font-size:22px;font-weight:800;color:#fff;line-height:1.2}
+.banner-sub{font-size:13px;color:rgba(255,255,255,.8);margin-top:4px}
+.banner-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  background:rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;
+  font-size:13px;font-weight:700;color:#fff;backdrop-filter:blur(8px)}
 
-.sh { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; letter-spacing:-.3px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
-.sh .see { font-size:12px; font-weight:500; color:var(--p3); cursor:pointer; font-family:'Space Grotesk',sans-serif; }
-.pgtop { padding:18px 16px 8px; display:flex; align-items:center; justify-content:space-between; }
-h1 { font-family:'Syne',sans-serif; font-size:27px; font-weight:800; letter-spacing:-.5px; line-height:1.2; }
+/* ── HORIZONTAL SCROLL CARDS ── */
+.hscroll{display:flex;gap:10px;padding:0 14px;overflow-x:auto;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hcard{background:var(--card);border-radius:var(--r);border:1px solid var(--brd);
+  padding:12px;cursor:pointer;flex-shrink:0;width:140px;transition:all .2s}
+.hcard:hover{border-color:var(--p2);transform:translateY(-2px)}
+.hcard-art{width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;
+  background:linear-gradient(135deg,var(--p1)44,var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:8px}
+.hcard-art img{width:100%;height:100%;object-fit:cover}
+.hcard-title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hcard-sub{font-size:11px;color:var(--txt2)}
 
-.tr-row {
-  display:flex; align-items:center; gap:12px;
-  padding:9px 8px; border-radius:12px; cursor:pointer; transition:background .15s;
-}
-.tr-row:hover { background:rgba(255,255,255,.04); }
-.tr-art {
-  width:44px; height:44px; border-radius:12px; flex-shrink:0;
-  background:linear-gradient(135deg,var(--p1),var(--p2));
-  display:flex; align-items:center; justify-content:center; font-size:20px;
-}
-.tr-info { flex:1; min-width:0; }
-.tr-name { font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.tr-sub { font-size:11px; color:var(--txt2); margin-top:1px; }
-.tr-dur { font-size:11px; color:var(--txt2); font-family:'JetBrains Mono',monospace; flex-shrink:0; }
-.tr-more { width:30px; height:30px; border:none; background:none; color:var(--txt2); cursor:pointer; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; transition:color .15s; }
+/* ── GRID ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px}
 
-.chips { display:flex; gap:7px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
-.chips::-webkit-scrollbar { display:none; }
-.chip { padding:7px 16px; border-radius:20px; background:rgba(255,255,255,.06); border:1px solid var(--border2); font-size:12.5px; font-weight:600; white-space:nowrap; cursor:pointer; transition:all .2s; flex-shrink:0; }
-.chip:hover, .chip.on { background:var(--p1); border-color:var(--p1); color:#fff; }
+/* ── MOOD CARD ── */
+.mood-card{border-radius:var(--r);padding:14px;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;transition:transform .2s}
+.mood-card:hover{transform:scale(1.03)}
+.mood-ico{font-size:28px}
+.mood-name{font-size:12px;font-weight:700;color:#fff}
 
-.tog { width:42px; height:23px; background:rgba(255,255,255,.1); border-radius:12px; position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; }
-.tog.on { background:var(--p1); }
-.tog::after { content:''; position:absolute; top:3px; left:3px; width:17px; height:17px; background:#fff; border-radius:50%; transition:transform .2s; box-shadow:0 1px 4px rgba(0,0,0,.3); }
-.tog.on::after { transform:translateX(19px); }
+/* ── PROFILE ── */
+.prof-hero{display:flex;flex-direction:column;align-items:center;padding:24px 16px 16px;
+  background:linear-gradient(to bottom,var(--bg2),var(--bg));text-align:center}
+.prof-av{width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p1),var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+  font-weight:800;margin-bottom:12px;border:3px solid var(--p2)}
+.prof-name{font-size:20px;font-weight:800;margin-bottom:2px}
+.prof-tag{font-size:13px;color:var(--txt2)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px}
+.stat-item{background:var(--card);border-radius:var(--r);padding:12px 8px;
+  text-align:center;border:1px solid var(--brd)}
+.stat-num{font-size:18px;font-weight:800;color:var(--p3)}
+.stat-lbl{font-size:10px;color:var(--txt2);margin-top:2px}
 
-.badge { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.3px; }
-.badge-p { background:rgba(124,58,237,.15); color:var(--p3); border:1px solid rgba(124,58,237,.25); }
-.badge-a { background:rgba(6,182,212,.1); color:var(--acc2); border:1px solid rgba(6,182,212,.2); }
+/* ── SHEET ── */
+.overlay{position:fixed;inset:0;background:#0008;z-index:400;
+  opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.overlay.on{opacity:1;pointer-events:all}
+.sheet{position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:var(--bg2);border-radius:24px 24px 0 0;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  max-height:85dvh;overflow-y:auto;padding:0 0 calc(16px + env(safe-area-inset-bottom))}
+.sheet.on{transform:translateY(0)}
+.handle{width:36px;height:4px;border-radius:2px;background:var(--brd);
+  margin:10px auto 0;flex-shrink:0}
+.sh-head{padding:14px 16px 10px;font-weight:700;font-size:16px}
 
-#toast {
-  position:fixed; top:16px; left:50%; z-index:9999;
-  transform:translateX(-50%) translateY(-70px);
-  background:var(--card); border:1px solid var(--border2);
-  padding:10px 20px; border-radius:30px; font-size:13px; font-weight:600;
-  white-space:nowrap; box-shadow:0 8px 28px rgba(0,0,0,.5);
-  transition:transform .3s var(--bounce);
-}
-#toast.show { transform:translateX(-50%) translateY(0); }
-#toast.ok  { border-color:rgba(16,185,129,.3); color:var(--ok); }
-#toast.err { border-color:rgba(244,63,94,.3); color:var(--rose); }
-#toast.info{ border-color:rgba(124,58,237,.3); color:var(--p3); }
+/* ── THEME GRID ── */
+.tgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;padding:10px 14px 14px}
+.tdot-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tdot{border-radius:12px;cursor:pointer;position:relative;border:2px solid transparent;
+  transition:all .2s;overflow:hidden;aspect-ratio:1}
+.tdot.on{border-color:#fff8;box-shadow:0 0 0 3px var(--p1)44}
+.tdot-ck{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:18px;opacity:0;background:#0004}
+.tdot.on .tdot-ck{opacity:1}
+.tlbl{font-size:9px;text-align:center;margin-top:4px;color:var(--txt2);
+  font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.notice { background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); border-radius:10px; padding:11px 14px; font-size:12.5px; color:var(--gold); display:flex; gap:9px; align-items:flex-start; line-height:1.6; }
+/* ── QUEUE ── */
+.q-item{display:flex;align-items:center;gap:10px;padding:10px 16px;
+  cursor:pointer;border-radius:12px;transition:background .15s}
+.q-item:hover{background:var(--bg3)}
+.q-item.playing{background:var(--p1)22}
+.q-num{width:20px;text-align:center;font-size:12px;color:var(--txt2)}
+.q-art{width:40px;height:40px;border-radius:10px;overflow:hidden;
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px}
+.q-art img{width:100%;height:100%;object-fit:cover}
+.q-info{flex:1;min-width:0}
+.q-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-artist{font-size:11px;color:var(--txt2)}
+.q-rm{background:none;border:none;color:var(--txt2);cursor:pointer;font-size:16px;padding:4px 8px}
 
-/* PROFILE */
-.prof-av { width:76px; height:76px; border-radius:50%; background:linear-gradient(135deg,var(--p1),var(--acc)); margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:800; color:#fff; box-shadow:0 8px 28px color-mix(in srgb,var(--p1) 35%,transparent); }
+/* ── BUTTONS ── */
+.btn{padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+  font-size:14px;font-weight:600;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--p2);color:#fff}
+.btn-p:hover{background:var(--p1)}
+.btn-s{background:var(--bg3);color:var(--txt);border:1px solid var(--brd)}
+.btn-s:hover{border-color:var(--p2)}
+.btn-full{width:100%}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:10px}
 
-/* THEME GRID */
-.tgrid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:10px; }
-.tdot { height:48px; border-radius:12px; cursor:pointer; position:relative; border:2px solid transparent; transition:all .2s; overflow:hidden; }
-.tdot.on { border-color:rgba(255,255,255,.7); box-shadow:0 0 0 3px color-mix(in srgb,var(--p1) 30%,transparent); }
-.tdot-ck { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:16px; opacity:0; }
-.tdot.on .tdot-ck { opacity:1; }
-.tlbl { font-size:9.5px; text-align:center; margin-top:4px; color:var(--txt2); font-weight:600; }
+/* ── TOAST ── */
+.toast-wrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  z-index:9999;display:flex;flex-direction:column;align-items:center;gap:8px;width:90%;max-width:380px}
+.toast{background:var(--card);border:1px solid var(--brd);border-radius:14px;
+  padding:10px 16px;font-size:13px;font-weight:600;box-shadow:var(--sh);
+  display:flex;align-items:center;gap:8px;animation:toastIn .3s ease;width:100%}
+.toast.ok{border-color:var(--green)}
+.toast.err{border-color:var(--red)}
+.toast.info{border-color:var(--p3)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px var(--p1)44}50%{box-shadow:0 0 28px var(--p2)88,0 0 48px var(--p1)44}}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.8)}}
+@keyframes vinylSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 
-/* STATS */
-.stats4 { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
-.stat-box { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 8px; text-align:center; }
-.stat-v { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--p3); }
-.stat-l { font-size:10px; color:var(--txt2); margin-top:2px; text-transform:uppercase; letter-spacing:.3px; }
 
-/* BANNER */
-.banner {
-  position:relative; overflow:hidden; border-radius:20px;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--p1) 25%,transparent),color-mix(in srgb,var(--acc) 15%,transparent));
-  border:1px solid rgba(255,255,255,.08); padding:20px; margin-bottom:16px; cursor:pointer;
-}
-.banner::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--p1),var(--acc)); opacity:.06; pointer-events:none; }
-.bn-emoji { font-size:54px; position:absolute; right:16px; top:50%; transform:translateY(-50%); filter:drop-shadow(0 0 18px color-mix(in srgb,var(--p1) 80%,transparent)); }
-.bn-tag { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--p3); margin-bottom:6px; }
-.bn-title { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; max-width:72%; }
-.bn-sub { font-size:12px; color:var(--txt2); margin-top:3px; max-width:68%; }
+/* ── INPUT ── */
+.inp{background:var(--bg3);border:1px solid var(--brd);border-radius:12px;
+  color:var(--txt);padding:10px 14px;font-size:14px;outline:none;width:100%;transition:border .2s}
+.inp:focus{border-color:var(--p2)}
+.inp::placeholder{color:var(--txt2)}
 
-/* RADIO */
-.ri-row { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:12px; cursor:pointer; transition:background .15s; border:1px solid transparent; }
-.ri-row:hover { background:rgba(255,255,255,.04); }
-.ri-ico { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-.wave { display:flex; gap:2px; align-items:flex-end; height:14px; }
-.wave span { width:3px; background:var(--p2); border-radius:2px; animation:wav .7s ease-in-out infinite; height:5px; }
-.wave span:nth-child(2) { animation-delay:.15s; height:9px; }
-.wave span:nth-child(3) { animation-delay:.3s; height:4px; }
-@keyframes wav { 0%,100%{height:3px} 50%{height:12px} }
+/* ── RADIO ── */
+.radio-card{display:flex;align-items:center;gap:12px;padding:12px 14px;
+  cursor:pointer;border-radius:14px;transition:background .15s;margin:0 4px}
+.radio-card:hover{background:var(--bg3)}
+.radio-ico{width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.radio-info{flex:1}
+.radio-name{font-weight:700;font-size:14px}
+.radio-sub{font-size:11px;color:var(--txt2)}
+.radio-live{font-size:10px;font-weight:700;color:var(--red);letter-spacing:.5px}
 
-/* COMMANDS */
-.cmd-row { display:flex; align-items:flex-start; gap:11px; padding:12px; background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:12px; margin-bottom:7px; }
-.cmd-ico { width:34px; height:34px; border-radius:9px; background:rgba(124,58,237,.14); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-.cmd-txt { font-family:'JetBrains Mono',monospace; font-size:12.5px; background:rgba(255,255,255,.07); padding:2px 7px; border-radius:5px; color:var(--p3); }
-.cmd-desc { font-size:11.5px; color:var(--txt2); margin-top:3px; }
-
-/* SCORE */
-.sc-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.025); border:1px solid var(--border); margin-bottom:6px; }
-.sc-rank { width:26px; font-size:13px; font-weight:800; color:var(--p3); text-align:center; }
-
-/* CONTEST */
-.ct-bar { display:flex; border-radius:10px; overflow:hidden; height:8px; margin:10px 0; }
-.ct-a { background:var(--p1); transition:width .5s; }
-.ct-b { background:var(--acc); transition:width .5s; }
-
-/* EQ */
-.eq-presets { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
-.eq-p { padding:9px 4px; border-radius:10px; border:1px solid var(--border2); background:rgba(255,255,255,.03); color:var(--txt2); font-size:11px; font-weight:600; cursor:pointer; text-align:center; transition:all .2s; }
-.eq-p.on { background:rgba(124,58,237,.15); border-color:var(--p1); color:var(--p3); }
-.eq-slider { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.eq-slider label { width:58px; font-size:11px; color:var(--txt2); font-weight:600; }
-.eq-slider input[type=range] { flex:1; -webkit-appearance:none; height:4px; border-radius:2px; background:rgba(255,255,255,.1); border:none; outline:none; padding:0; }
-.eq-slider input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--p2); cursor:pointer; }
-.eq-slider span { width:36px; font-size:11px; color:var(--acc2); text-align:right; font-family:'JetBrains Mono',monospace; }
-
-/* SLEEP */
-.sl-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
-.sl-btn { padding:14px 8px; border-radius:12px; border:1px solid var(--border2); background:rgba(255,255,255,.03); color:var(--txt); font-size:13px; font-weight:700; cursor:pointer; text-align:center; transition:all .2s; }
-.sl-btn:hover { background:rgba(124,58,237,.14); border-color:var(--p1); color:var(--p3); }
-
-/* SUGGEST */
-.sug-item { padding:12px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,.025); margin-bottom:8px; }
-.vote-bar { height:5px; border-radius:3px; background:rgba(255,255,255,.08); margin-top:8px; overflow:hidden; }
-.vote-fill { height:100%; background:linear-gradient(90deg,var(--p1),var(--acc)); border-radius:3px; transition:width .4s; }
-
-/* PLAYLIST */
-.pl-item { display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:12px; background:rgba(255,255,255,.025); border:1px solid var(--border); margin-bottom:7px; cursor:pointer; transition:background .15s; }
-.pl-item:hover { background:rgba(124,58,237,.08); }
-
-/* QUICK ACTIONS */
-.qa-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
-.qa { padding:12px 6px 10px; border-radius:13px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--txt); font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; transition:all .2s; text-align:center; }
-.qa:hover { background:rgba(124,58,237,.1); border-color:var(--p2); }
-.qa i { font-size:20px; }
-
-/* LINKS (Support/Channel) */
-.link-card { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--border2); margin-bottom:8px; cursor:pointer; transition:all .2s; text-decoration:none; color:var(--txt); }
-.link-card:hover { background:rgba(124,58,237,.1); border-color:var(--p2); }
-.link-ico { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-
-/* WEATHER */
-.weather-box { background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(14,165,233,.08)); border:1px solid rgba(6,182,212,.2); border-radius:16px; padding:16px; margin-bottom:12px; }
+/* ── MISC ── */
+.divider{height:1px;background:var(--brd);margin:8px 14px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 20px;color:var(--txt2);gap:8px;text-align:center}
+.empty i{font-size:36px;opacity:.4}
+.empty-title{font-weight:700;font-size:15px;opacity:.7}
+.empty-sub{font-size:12px;opacity:.5}
+.badge{background:var(--p2);color:#fff;border-radius:20px;
+  font-size:10px;font-weight:700;padding:2px 7px;vertical-align:middle}
+.tag{background:var(--bg3);color:var(--txt2);border-radius:8px;
+  font-size:11px;font-weight:600;padding:3px 9px;border:1px solid var(--brd)}
+.row{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.row-icon{width:40px;height:40px;border-radius:12px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.row-info{flex:1}
+.row-title{font-size:14px;font-weight:600}
+.row-sub{font-size:12px;color:var(--txt2)}
+.toggle{width:48px;height:26px;border-radius:13px;background:var(--bg3);
+  border:none;cursor:pointer;position:relative;transition:background .3s}
+.toggle.on{background:var(--p2)}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:transform .3s}
+.toggle.on::after{transform:translateX(22px)}
 </style>
 </head>
-
 <body class="th-ghost">
-<div id="ambientA"></div><div id="ambientB"></div><div id="ambientC"></div>
-<div id="toast"></div>
 
-<!-- ════════════════════════════════
-  FULL PLAYER
-════════════════════════════════ -->
-<div id="fullPlayer">
-  <div class="fp-bar">
-    <button onclick="closeFP()"><i class="fas fa-chevron-down"></i></button>
-    <span class="fp-title-lbl" id="fpLbl">Şimdi Çalıyor</span>
-    <button onclick="openSheet('queueSheet','queueBg')"><i class="fas fa-list-ul"></i></button>
+<!-- ══ HIDDEN YOUTUBE PLAYER ══ -->
+<div id="ytPlayer"></div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══ HEADER ══ -->
+<div class="hdr">
+  <div class="hdr-av" id="hAv">👻</div>
+  <div style="flex:1;min-width:0">
+    <div class="hdr-name" id="hName">Hayalet Müzik</div>
+    <div class="hdr-sub" id="hSub">Müzik çalmaya hazır</div>
   </div>
-  <div class="fp-art" id="fpArt">🎵</div>
-  <div class="fp-meta">
-    <div class="fp-song" id="fpSong">Şarkı Seçin</div>
-    <div class="fp-singer" id="fpSinger">Hayalet Müzik</div>
-  </div>
-  <div class="fp-actions">
-    <button id="btnLike" onclick="toggleLike()"><i class="far fa-heart"></i></button>
-    <button onclick="addFav()"><i class="fas fa-bookmark"></i></button>
-    <button onclick="shareTrack()"><i class="fas fa-share-alt"></i></button>
-    <button onclick="botCmd('/np')"><i class="fas fa-robot"></i></button>
-    <button onclick="botCmd('/sozler')"><i class="fas fa-align-left"></i></button>
-  </div>
-  <div class="fp-seek">
-    <input type="range" id="fpRange" min="0" max="100" value="0" oninput="seekTo(this.value)">
-    <div class="fp-times"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div>
-  </div>
-  <div class="fp-ctrl">
-    <button id="btnShuf" onclick="toggleShuffle()"><i class="fas fa-random"></i></button>
-    <button onclick="prevTrack()" style="font-size:24px!important"><i class="fas fa-step-backward"></i></button>
-    <button class="fp-playBtn" id="fpPlay" onclick="togglePlay()"><i class="fas fa-play"></i></button>
-    <button onclick="nextTrack()" style="font-size:24px!important"><i class="fas fa-step-forward"></i></button>
-    <button id="btnLoop" onclick="toggleLoop()"><i class="fas fa-redo"></i></button>
-  </div>
-  <div class="fp-vol">
-    <i class="fas fa-volume-down"></i>
-    <input type="range" id="fpVol" min="0" max="100" value="75" oninput="setVol(this.value)">
-    <i class="fas fa-volume-up"></i>
-  </div>
-  <div style="width:100%;margin-bottom:10px">
-    <div style="font-size:11px;color:var(--txt2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px" id="fpSpdLbl">⚡ Hız</div>
-    <div class="fp-speed">
-      <button class="spd" onclick="setSpd(0.5,this)">0.5×</button>
-      <button class="spd" onclick="setSpd(0.75,this)">0.75×</button>
-      <button class="spd on" onclick="setSpd(1,this)">1×</button>
-      <button class="spd" onclick="setSpd(1.25,this)">1.25×</button>
-      <button class="spd" onclick="setSpd(1.5,this)">1.5×</button>
-      <button class="spd" onclick="setSpd(2,this)">2×</button>
-    </div>
-  </div>
-  <div class="fp-bot-grid" id="fpBotGrid"></div>
+  <button class="hdr-btn" onclick="openSheet('searchSheet','searchBg')" title="Ara">
+    <i class="fas fa-search"></i>
+  </button>
+  <button class="hdr-btn" onclick="openQueue()" title="Kuyruk">
+    <i class="fas fa-list-ul"></i>
+  </button>
+  <button class="hdr-btn" onclick="openSheet('settSheet','settBg')" title="Ayarlar">
+    <i class="fas fa-sliders"></i>
+  </button>
 </div>
 
-<!-- ════════════════════════════════
-  QUEUE SHEET
-════════════════════════════════ -->
+<!-- ══ PAGES ══ -->
+
+<!-- HOME -->
+<div class="page active" id="pg-home">
+  <div class="banner" onclick="openFP()">
+    <div class="banner-bg" id="bannerBg">🎵</div>
+    <div class="banner-label">ŞİMDİ ÇALIYOR</div>
+    <div class="banner-title" id="bannerTitle">Bir şarkı seç</div>
+    <div class="banner-sub" id="bannerArtist">Hayalet Müzik'e hoş geldin 👻</div>
+    <div class="banner-btn"><i class="fas fa-play"></i> Çal</div>
+  </div>
+
+  <div class="sh">🔥 Popüler Şarkılar</div>
+  <div id="popularList"></div>
+
+  <div class="sh">📻 Canlı Radyo <span class="see" onclick="showPg('library');switchTab('radio',null)">Tümü</span></div>
+  <div class="hscroll" id="radioScroll"></div>
+
+  <div class="sh">🎭 Ruh Haline Göre</div>
+  <div class="grid2" id="moodGrid" style="padding:0 14px"></div>
+
+  <div class="sh">🎲 Tür Keşfet</div>
+  <div class="chips" id="genreChips"></div>
+  <div id="genreResults"></div>
+</div>
+
+<!-- SEARCH -->
+<div class="page" id="pg-search">
+  <div class="srch-bar">
+    <input class="srch-inp" id="srchInp" placeholder="Şarkı, sanatçı, YouTube linki..." autocomplete="off"
+      oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="srch-btn" onclick="doSearch()"><i class="fas fa-search"></i> Ara</button>
+  </div>
+  <div class="chips" id="srchTags"></div>
+  <div id="srchResults">
+    <div class="empty">
+      <i class="fas fa-search"></i>
+      <div class="empty-title">Müzik Ara</div>
+      <div class="empty-sub">YouTube'da ara veya şarkı adı yaz</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY -->
+<div class="page" id="pg-library">
+  <div class="chips" id="libTabs" style="padding:10px 14px">
+    <div class="chip on" data-tab="fav" onclick="switchTab('fav',this)">❤️ Favoriler</div>
+    <div class="chip" data-tab="hist" onclick="switchTab('hist',this)">🕐 Geçmiş</div>
+    <div class="chip" data-tab="pl" onclick="switchTab('pl',this)">🎶 Listeler</div>
+    <div class="chip" data-tab="radio" onclick="switchTab('radio',null)">📻 Radyo</div>
+    <div class="chip" data-tab="queue" onclick="switchTab('queue',this)">📋 Kuyruk</div>
+  </div>
+  <div id="libBody"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="pg-profile">
+  <div class="prof-hero">
+    <div class="prof-av" id="profAv">👻</div>
+    <div class="prof-name" id="profName">Hayalet</div>
+    <div class="prof-tag">@hayaletkomutan</div>
+  </div>
+  <div class="stat-grid" id="statGrid"></div>
+  <div class="sh">🔗 Bağlantılar</div>
+  <div id="linksList"></div>
+  <div class="sh">🎨 Tema</div>
+  <div class="tgrid" id="tGrid"></div>
+  <div class="sh">⚙️ Ayarlar</div>
+  <div id="settRows"></div>
+</div>
+
+<!-- ══ MINI PLAYER ══ -->
+<div class="mini" id="miniPlayer" onclick="openFP()">
+  <div class="mini-art" id="mpArt">🎵</div>
+  <div class="mini-info">
+    <div class="mini-title" id="mpTitle">Şarkı seç</div>
+    <div class="mini-artist" id="mpArtist">Hayalet Müzik</div>
+  </div>
+  <div id="eqBars" style="display:none;gap:2px;align-items:flex-end;height:16px">
+    <div style="width:3px;height:8px;background:var(--p3);border-radius:2px 2px 0 0;animation:wave .8s ease-in-out infinite"></div>
+    <div style="width:3px;height:12px;background:var(--p3);border-radius:2px 2px 0 0;animation:wave .8s ease-in-out infinite .15s"></div>
+    <div style="width:3px;height:6px;background:var(--p3);border-radius:2px 2px 0 0;animation:wave .8s ease-in-out infinite .3s"></div>
+    <div style="width:3px;height:10px;background:var(--p3);border-radius:2px 2px 0 0;animation:wave .8s ease-in-out infinite .1s"></div>
+  </div>
+  <button class="mini-btn" onclick="event.stopPropagation();prevTrack()" title="Önceki">
+    <i class="fas fa-backward-step"></i>
+  </button>
+  <button class="mini-btn" onclick="event.stopPropagation();togglePlay()" id="mpPlayBtn" title="Oynat/Duraklat">
+    <i class="fas fa-play"></i>
+  </button>
+  <button class="mini-btn" onclick="event.stopPropagation();nextTrack()" title="Sonraki">
+    <i class="fas fa-forward-step"></i>
+  </button>
+  <div class="mini-prog" id="mpFill" style="width:0%"></div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <button class="nav-item on" id="nav-home" onclick="showPg('home')">
+    <i class="fas fa-house"></i><span>Ana Sayfa</span>
+  </button>
+  <button class="nav-item" id="nav-search" onclick="showPg('search')">
+    <i class="fas fa-search"></i><span>Ara</span>
+  </button>
+  <button class="nav-item" id="nav-library" onclick="showPg('library')">
+    <i class="fas fa-music"></i><span>Kütüphane</span>
+  </button>
+  <button class="nav-item" id="nav-profile" onclick="showPg('profile')">
+    <i class="fas fa-user"></i><span>Profil</span>
+  </button>
+</nav>
+
+<!-- ══ FULL PLAYER ══ -->
+<div class="fp" id="fullPlayer">
+  <div id="fpBg" style="position:absolute;inset:0;opacity:0;background-size:cover;background-position:center;filter:blur(40px) saturate(2);transform:scale(1.1);transition:opacity .5s;pointer-events:none"></div>
+  <div class="fp-hdr">
+    <button class="fp-close" onclick="closeFP()"><i class="fas fa-chevron-down"></i></button>
+    <div class="fp-title">Şimdi Çalıyor</div>
+    <button class="fp-opts" onclick="openSheet('trackMenu','trackMenuBg')"><i class="fas fa-ellipsis"></i></button>
+  </div>
+  <div style="display:flex;justify-content:center;padding:14px 24px;position:relative;z-index:1">
+    <div style="width:220px;height:220px;border-radius:50%;position:relative;box-shadow:0 16px 48px #0009">
+      <div id="vinylDisc" style="width:100%;height:100%;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--p1),var(--p3));display:flex;align-items:center;justify-content:center;position:relative">
+        <img id="fpArtImg" src="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">
+        <div id="fpArtFallback" style="font-size:72px">🎵</div>
+        <div style="position:absolute;inset:20px;border-radius:50%;border:2px solid rgba(255,255,255,.08)"></div>
+        <div style="position:absolute;inset:40px;border-radius:50%;border:1px solid rgba(255,255,255,.05)"></div>
+        <div style="position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 4px rgba(0,0,0,.3)"></div>
+      </div>
+      <div style="position:absolute;width:32px;height:32px;background:var(--bg);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 6px var(--bg3);z-index:1"></div>
+    </div>
+  </div>
+  <div class="fp-info">
+    <div class="fp-song" id="fpSong">Şarkı seç</div>
+    <div class="fp-singer" id="fpSinger">Hayalet Müzik</div>
+    <button class="fp-like" id="fpLikeBtn" onclick="toggleLike()"><i class="far fa-heart"></i></button>
+  </div>
+  <div class="fp-prog-wrap">
+    <input class="fp-range" type="range" min="0" max="100" value="0" id="fpRange"
+      oninput="seekTo(this.value)" style="--pct:0%">
+  </div>
+  <div class="fp-times">
+    <span id="fpCur">0:00</span>
+    <span id="fpTot">0:00</span>
+  </div>
+  <div class="fp-ctrl">
+    <button class="sm" id="btnShuffle" onclick="toggleShuffle()" title="Karıştır">
+      <i class="fas fa-shuffle"></i>
+    </button>
+    <button class="md" onclick="prevTrack()" title="Önceki">
+      <i class="fas fa-backward-step"></i>
+    </button>
+    <button class="lg" id="fpPlayBtn" onclick="togglePlay()" title="Oynat/Duraklat">
+      <i class="fas fa-play"></i>
+    </button>
+    <button class="md" onclick="nextTrack()" title="Sonraki">
+      <i class="fas fa-forward-step"></i>
+    </button>
+    <button class="sm" id="btnLoop" onclick="toggleLoop()" title="Döngü">
+      <i class="fas fa-repeat"></i>
+    </button>
+  </div>
+  <div class="fp-vol">
+    <i class="fas fa-volume-low"></i>
+    <input class="fp-vol-range" type="range" min="0" max="100" value="80" id="volRange"
+      oninput="setVol(this.value)">
+    <i class="fas fa-volume-high"></i>
+  </div>
+  <div class="fp-extras">
+    <button class="fp-extra-btn" onclick="openSheet('queueSheet','queueBg')">
+      <i class="fas fa-list-ul"></i><span>Kuyruk</span>
+    </button>
+    <button class="fp-extra-btn" onclick="addFav()">
+      <i class="fas fa-heart"></i><span>Favori</span>
+    </button>
+    <button class="fp-extra-btn" onclick="openSheet('eqSheet','eqBg')">
+      <i class="fas fa-sliders"></i><span>EQ</span>
+    </button>
+    <button class="fp-extra-btn" onclick="shareTrack()">
+      <i class="fas fa-share-nodes"></i><span>Paylaş</span>
+    </button>
+    <button class="fp-extra-btn" onclick="openSheet('sleepSheet','sleepBg')">
+      <i class="fas fa-moon"></i><span>Uyku</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ SHEETS ══ -->
+
+<!-- SEARCH SHEET -->
+<div class="overlay" id="searchBg" onclick="closeSheet('searchSheet','searchBg')"></div>
+<div class="sheet" id="searchSheet">
+  <div class="handle"></div>
+  <div class="sh-head">🔍 Hızlı Ara</div>
+  <div style="padding:0 14px 10px;display:flex;gap:8px">
+    <input class="inp" id="qsInp" placeholder="Şarkı, sanatçı..." autocomplete="off"
+      onkeydown="if(event.key==='Enter')quickSearch()">
+    <button class="btn btn-p btn-sm" onclick="quickSearch()"><i class="fas fa-search"></i></button>
+  </div>
+  <div id="qsResults"></div>
+</div>
+
+<!-- QUEUE SHEET -->
 <div class="overlay" id="queueBg" onclick="closeSheet('queueSheet','queueBg')"></div>
 <div class="sheet" id="queueSheet">
   <div class="handle"></div>
-  <div class="sh" id="qTitle">Kuyruk <span style="color:var(--rose);cursor:pointer;font-size:13px" onclick="clearQueue()" id="qClrBtn">Temizle</span></div>
-  <div id="queueList"></div>
+  <div class="sh-head" style="display:flex;align-items:center;justify-content:space-between">
+    <span>📋 Kuyruk</span>
+    <button class="btn btn-s btn-sm" onclick="clearQueue()">🗑️ Temizle</button>
+  </div>
+  <div id="queueBody"></div>
 </div>
 
 <!-- EQ SHEET -->
 <div class="overlay" id="eqBg" onclick="closeSheet('eqSheet','eqBg')"></div>
 <div class="sheet" id="eqSheet">
   <div class="handle"></div>
-  <div class="sh" id="eqTitle">🎛️ Ekolayzer</div>
-  <div class="eq-presets" id="eqPresets"></div>
-  <div class="eq-slider"><label id="eqBassLbl">Bass</label><input type="range" id="sldBass" min="-10" max="10" value="0" oninput="document.getElementById('valBass').textContent=this.value+'dB'"><span id="valBass">0dB</span></div>
-  <div class="eq-slider"><label id="eqTrebLbl">Treble</label><input type="range" id="sldTreb" min="-10" max="10" value="0" oninput="document.getElementById('valTreb').textContent=this.value+'dB'"><span id="valTreb">0dB</span></div>
-  <div class="eq-slider"><label id="eqMidLbl">Mid</label><input type="range" id="sldMid" min="-10" max="10" value="0" oninput="document.getElementById('valMid').textContent=this.value+'dB'"><span id="valMid">0dB</span></div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
-    <span style="font-size:13px;font-weight:600" id="normLbl">Ses Normalize</span>
-    <div class="tog" id="togNorm" onclick="toggleNorm(this)"></div>
+  <div class="sh-head">🎛️ Ekolayzer</div>
+  <div style="padding:0 14px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px" id="eqPresets"></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:6px">
+          <span>Bass</span><span id="bassVal">0 dB</span>
+        </div>
+        <input type="range" class="fp-vol-range" min="-10" max="10" value="0" id="bassRange"
+          oninput="setEqBand('bass',this.value)" style="width:100%">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:6px">
+          <span>Mid</span><span id="midVal">0 dB</span>
+        </div>
+        <input type="range" class="fp-vol-range" min="-10" max="10" value="0" id="midRange"
+          oninput="setEqBand('mid',this.value)" style="width:100%">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:6px">
+          <span>Treble</span><span id="trebVal">0 dB</span>
+        </div>
+        <input type="range" class="fp-vol-range" min="-10" max="10" value="0" id="trebRange"
+          oninput="setEqBand('treb',this.value)" style="width:100%">
+      </div>
+    </div>
   </div>
 </div>
 
@@ -599,1438 +657,1240 @@ h1 { font-family:'Syne',sans-serif; font-size:27px; font-weight:800; letter-spac
 <div class="overlay" id="sleepBg" onclick="closeSheet('sleepSheet','sleepBg')"></div>
 <div class="sheet" id="sleepSheet">
   <div class="handle"></div>
-  <div class="sh" id="sleepTitle">😴 Uyku Zamanlayıcısı</div>
-  <div class="sl-grid">
-    <button class="sl-btn" onclick="setSleep(15)">15 dk</button>
-    <button class="sl-btn" onclick="setSleep(30)">30 dk</button>
-    <button class="sl-btn" onclick="setSleep(45)">45 dk</button>
-    <button class="sl-btn" onclick="setSleep(60)">60 dk</button>
-    <button class="sl-btn" onclick="setSleep(90)">90 dk</button>
-    <button class="sl-btn" onclick="setSleep(120)">120 dk</button>
+  <div class="sh-head">😴 Uyku Zamanlayıcısı</div>
+  <div style="padding:0 14px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <button class="btn btn-s" onclick="setSleep(15)">15 dk</button>
+      <button class="btn btn-s" onclick="setSleep(30)">30 dk</button>
+      <button class="btn btn-s" onclick="setSleep(45)">45 dk</button>
+      <button class="btn btn-s" onclick="setSleep(60)">1 saat</button>
+      <button class="btn btn-s" onclick="setSleep(90)">1.5 saat</button>
+      <button class="btn btn-s" onclick="setSleep(120)">2 saat</button>
+    </div>
+    <div id="sleepStatus" style="text-align:center;font-size:13px;color:var(--txt2)"></div>
+    <button class="btn btn-s btn-full" onclick="cancelSleep()" style="margin-top:10px">❌ İptal</button>
   </div>
-  <button class="btn btn-s btn-sm" style="width:100%;margin-top:14px" onclick="cancelSleep();closeSheet('sleepSheet','sleepBg')" id="slpCancelBtn">İptal Et</button>
-  <div id="slpStatus" style="text-align:center;font-size:12px;color:var(--txt2);margin-top:10px"></div>
 </div>
 
-<!-- CONTEST SHEET -->
-<div class="overlay" id="ctBg" onclick="closeSheet('ctSheet','ctBg')"></div>
-<div class="sheet" id="ctSheet">
+<!-- SETTINGS SHEET -->
+<div class="overlay" id="settBg" onclick="closeSheet('settSheet','settBg')"></div>
+<div class="sheet" id="settSheet">
   <div class="handle"></div>
-  <div class="sh" id="ctTitle">🎤 Şarkı Yarışması</div>
-  <div id="ctBody"></div>
+  <div class="sh-head">⚙️ Ayarlar</div>
+  <div id="settSheetBody"></div>
+</div>
+
+<!-- TRACK MENU SHEET -->
+<div class="overlay" id="trackMenuBg" onclick="closeSheet('trackMenu','trackMenuBg')"></div>
+<div class="sheet" id="trackMenu">
+  <div class="handle"></div>
+  <div class="sh-head" id="trackMenuTitle">Seçenekler</div>
+  <div id="trackMenuBody"></div>
 </div>
 
 <!-- PLAYLIST SHEET -->
 <div class="overlay" id="plBg" onclick="closeSheet('plSheet','plBg')"></div>
 <div class="sheet" id="plSheet">
   <div class="handle"></div>
-  <div class="sh" id="plTitle">🎶 Çalma Listelerim</div>
-  <div style="display:flex;gap:8px;margin-bottom:14px">
-    <input type="text" id="plInp" placeholder="Yeni liste adı...">
-    <button class="btn btn-p btn-sm" onclick="createPl()" id="plAddBtn">+ Ekle</button>
+  <div class="sh-head" style="display:flex;align-items:center;justify-content:space-between">
+    <span>🎶 Çalma Listelerim</span>
+    <button class="btn btn-p btn-sm" onclick="createPl()">+ Yeni</button>
+  </div>
+  <div style="padding:0 14px 10px;display:flex;gap:8px">
+    <input class="inp" id="plInp" placeholder="Yeni liste adı...">
+    <button class="btn btn-p btn-sm" onclick="createPl()">Oluştur</button>
   </div>
   <div id="plList"></div>
 </div>
 
-<!-- SUGGEST SHEET -->
-<div class="overlay" id="sugBg" onclick="closeSheet('sugSheet','sugBg')"></div>
-<div class="sheet" id="sugSheet">
-  <div class="handle"></div>
-  <div class="sh" id="sugTitle">💡 Şarkı Önerileri</div>
-  <div style="display:flex;gap:8px;margin-bottom:14px">
-    <input type="text" id="sugInp" placeholder="Şarkı öner...">
-    <button class="btn btn-p btn-sm" onclick="addSug()" id="sugAddBtn">Öner</button>
-  </div>
-  <div id="sugList"></div>
-</div>
-
-<!-- SCHEDULE SHEET -->
-<div class="overlay" id="schdBg" onclick="closeSheet('schdSheet','schdBg')"></div>
-<div class="sheet" id="schdSheet">
-  <div class="handle"></div>
-  <div class="sh" id="schdTitle">⏰ Zamanlamalı Çal</div>
-  <div style="display:flex;flex-direction:column;gap:10px">
-    <div><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:5px" id="schdTimeLbl">Saat (20:30)</label><input type="time" id="schdTime" style="width:100%"></div>
-    <div><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:5px" id="schdSongLbl">Şarkı</label><input type="text" id="schdSong" placeholder="Şarkı adı..."></div>
-    <button class="btn btn-p" style="width:100%" onclick="schedulePlay()" id="schdBtn">⏰ Zamanla</button>
-  </div>
-  <div id="schdStatus" style="margin-top:12px;font-size:12px;color:var(--txt2)"></div>
-</div>
-
-<!-- ════════════════════════════════
-  APP
-════════════════════════════════ -->
-<div id="app">
-  <!-- Lang Bar -->
-  <div id="langBar">
-    <button class="lb on" onclick="setLang('tr',this)">🇹🇷 TR</button>
-    <button class="lb" onclick="setLang('az',this)">🇦🇿 AZ</button>
-    <button class="lb" onclick="setLang('en',this)">🇬🇧 EN</button>
-    <button class="lb" onclick="setLang('ru',this)">🇷🇺 RU</button>
-  </div>
-
-  <div id="scroller">
-
-    <!-- ═══ HOME ═══ -->
-    <div class="page active" id="pg-home">
-      <div class="pgtop pad">
-        <div>
-          <div style="font-size:11px;color:var(--txt2);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px" id="hWelcome">Hoşgeldin</div>
-          <h1 id="hName">👻 Hayalet Müzik</h1>
-        </div>
-        <button onclick="showPg('profile')" style="border:none;background:none;cursor:pointer">
-          <div id="hAv" class="prof-av" style="width:42px;height:42px;font-size:17px;margin:0;box-shadow:none">H</div>
-        </button>
-      </div>
-      <div class="pad">
-        <!-- Search Bar -->
-        <div class="inp-w" style="margin-bottom:13px">
-          <i class="fas fa-search"></i>
-          <input type="text" id="srchBar" oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')quickPlay()">
-        </div>
-        <div id="srchRes" style="margin-bottom:12px"></div>
-        <!-- Genre Chips -->
-        <div class="chips" id="genreChips" style="margin-bottom:15px">
-          <div class="chip on" onclick="setGenre(this,'all')">🎵 <span id="gAll">Tümü</span></div>
-          <div class="chip" onclick="setGenre(this,'tr')">🇹🇷 Türkçe</div>
-          <div class="chip" onclick="setGenre(this,'rap')">🎤 Rap</div>
-          <div class="chip" onclick="setGenre(this,'rock')">🎸 Rock</div>
-          <div class="chip" onclick="setGenre(this,'lofi')">☁️ Lo-fi</div>
-          <div class="chip" onclick="setGenre(this,'edm')">⚡ EDM</div>
-          <div class="chip" onclick="setGenre(this,'az')">🇦🇿 Azeri</div>
-          <div class="chip" onclick="setGenre(this,'ru')">🇷🇺 Rusça</div>
-        </div>
-        <!-- Quick Actions -->
-        <div class="qa-grid">
-          <button class="qa" onclick="openSheet('eqSheet','eqBg');buildEq()"><i class="fas fa-sliders-h" style="color:var(--p3)"></i><span id="qa-eq">EQ</span></button>
-          <button class="qa" onclick="openSheet('sleepSheet','sleepBg')"><i class="fas fa-moon" style="color:var(--acc2)"></i><span id="qa-sleep">Uyku</span></button>
-          <button class="qa" onclick="openSheet('ctSheet','ctBg');buildContest()"><i class="fas fa-trophy" style="color:var(--gold)"></i><span id="qa-battle">Yarışma</span></button>
-          <button class="qa" onclick="openSheet('schdSheet','schdBg')"><i class="fas fa-clock" style="color:var(--ok)"></i><span id="qa-sched">Zamanla</span></button>
-        </div>
-        <!-- Featured Banner -->
-        <div id="homeBanner"></div>
-        <!-- Popular -->
-        <div class="sh"><span id="sh-pop">🔥 Popüler</span><span class="see" onclick="showPg('search')" id="sh-all">Tümünü Gör</span></div>
-        <div class="card" style="padding:6px 10px;margin-bottom:16px" id="popList"></div>
-        <!-- Radio Short -->
-        <div class="sh"><span id="sh-radio">📻 Canlı Radyo</span><span class="see" onclick="showPg('library');switchTab('radio', null)">Tümü</span></div>
-        <div id="radioShort"></div>
-      </div>
-    </div>
-
-    <!-- ═══ SEARCH ═══ -->
-    <div class="page" id="pg-search">
-      <div class="pgtop pad"><h1 id="pg-s-title">🔍 Ara & Çal</h1></div>
-      <div class="pad">
-        <div class="inp-w" style="margin-bottom:10px">
-          <i class="fas fa-search"></i>
-          <input type="text" id="srchMain" onkeydown="if(event.key==='Enter')doPlay()">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:16px">
-          <button class="btn btn-p" onclick="doPlay()" style="width:100%"><i class="fas fa-play"></i><span id="btn-play">Çal</span></button>
-          <button class="btn btn-s btn-ico" onclick="doQueue()"><i class="fas fa-plus"></i></button>
-          <button class="btn btn-s btn-ico" onclick="openSheet('sugSheet','sugBg')"><i class="fas fa-lightbulb"></i></button>
-        </div>
-        <div id="botArea" style="margin-bottom:16px"></div>
-        <!-- Trending -->
-        <div class="sh"><span id="sh-trend">📈 Trend</span></div>
-        <div class="chips" id="trendChips" style="flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
-        <!-- Mood -->
-        <div class="sh"><span id="sh-mood">🎭 Ruh Haline Göre</span></div>
-        <div id="moodGrid" style="margin-bottom:16px"></div>
-        <!-- Random -->
-        <div class="sh"><span id="sh-random">🎲 Rastgele Tür</span></div>
-        <div class="chips" id="randomChips" style="flex-wrap:wrap;gap:6px"></div>
-      </div>
-    </div>
-
-    <!-- ═══ LIBRARY ═══ -->
-    <div class="page" id="pg-library">
-      <div class="pgtop pad"><h1 id="pg-l-title">📚 Kütüphane</h1></div>
-      <div class="pad">
-        <div class="chips" id="libTabs" style="margin-bottom:14px">
-          <div class="chip on" data-tab="fav" onclick="switchTab('fav',this)"><span id="tab-fav">❤️ Favoriler</span></div>
-          <div class="chip" data-tab="hist" onclick="switchTab('hist',this)"><span id="tab-hist">🕐 Geçmiş</span></div>
-          <div class="chip" data-tab="pl" onclick="switchTab('pl',this)"><span id="tab-pl">🎶 Listeler</span></div>
-          <div class="chip" data-tab="radio" onclick="switchTab('radio',this)"><span id="tab-radio">📻 Radyo</span></div>
-          <div class="chip" data-tab="score" onclick="switchTab('score',this)"><span id="tab-score">🏆 Sıralama</span></div>
-          <div class="chip" data-tab="cmds" onclick="switchTab('cmds',this)"><span id="tab-cmds">⌨️ Komutlar</span></div>
-        </div>
-        <div id="libBody"></div>
-      </div>
-    </div>
-
-    <!-- ═══ PROFILE ═══ -->
-    <div class="page" id="pg-profile">
-      <div class="pad" style="padding-top:16px">
-        <!-- Profile Head -->
-        <div style="text-align:center;padding:16px 0">
-          <div class="prof-av" id="profAv">H</div>
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800" id="profName">Kullanıcı</div>
-          <div style="font-size:12px;color:var(--txt2);margin-top:3px" id="profSub">Telegram bağlı</div>
-        </div>
-        <!-- Stats -->
-        <div class="stats4">
-          <div class="stat-box"><div class="stat-v" id="sv1">0</div><div class="stat-l" id="sv1l">Çalınan</div></div>
-          <div class="stat-box"><div class="stat-v" id="sv2">0</div><div class="stat-l" id="sv2l">Favori</div></div>
-          <div class="stat-box"><div class="stat-v" id="sv3">0</div><div class="stat-l" id="sv3l">Puan</div></div>
-          <div class="stat-box"><div class="stat-v" id="sv4">0</div><div class="stat-l" id="sv4l">Rozet</div></div>
-        </div>
-        <!-- Links -->
-        <div class="card" style="margin-bottom:10px">
-          <div class="sh" style="font-size:15px;margin-bottom:10px" id="linksTitle">🔗 Linkler</div>
-          <a class="link-card" href="https://t.me/HayaletMuzik" target="_blank">
-            <div class="link-ico" style="background:rgba(6,182,212,.12)">📢</div>
-            <div><div style="font-weight:700;font-size:13.5px" id="annTitle">Duyuru Kanalı</div><div style="font-size:11.5px;color:var(--txt2)">@HayaletMuzik</div></div>
-            <i class="fas fa-external-link-alt" style="color:var(--txt2);margin-left:auto;font-size:13px"></i>
-          </a>
-          <a class="link-card" href="https://t.me/HayaletDestek" target="_blank">
-            <div class="link-ico" style="background:rgba(124,58,237,.12)">🛠️</div>
-            <div><div style="font-weight:700;font-size:13.5px" id="suppTitle">Destek Grubu</div><div style="font-size:11.5px;color:var(--txt2)">@HayaletDestek</div></div>
-            <i class="fas fa-external-link-alt" style="color:var(--txt2);margin-left:auto;font-size:13px"></i>
-          </a>
-          <a class="link-card" href="tg://openmessage?user_id=8078887681" target="_blank">
-            <div class="link-ico" style="background:rgba(245,158,11,.12)">👻</div>
-            <div><div style="font-weight:700;font-size:13.5px" id="creatorTitle">Kurucu</div><div style="font-size:11.5px;color:var(--txt2)">@hayaletkomutan · Hayalet</div></div>
-            <i class="fas fa-external-link-alt" style="color:var(--txt2);margin-left:auto;font-size:13px"></i>
-          </a>
-        </div>
-        <!-- Theme -->
-        <div class="card" style="margin-bottom:10px">
-          <div class="sh" style="font-size:15px;margin-bottom:10px" id="themeTitle">🎨 Tema</div>
-          <div class="tgrid" id="tGrid"></div>
-        </div>
-        <!-- Settings -->
-        <div class="card" style="margin-bottom:10px">
-          <div class="sh" style="font-size:15px;margin-bottom:14px" id="settTitle">⚙️ Bot Ayarları</div>
-          <div style="display:flex;flex-direction:column;gap:13px">
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <div><div style="font-weight:600;font-size:13.5px" id="djTitle">DJ Modu</div><div style="font-size:11.5px;color:var(--txt2)" id="djDesc">Kapalıyken herkes çalabilir</div></div>
-              <div class="tog" id="togDJ" onclick="toggleCfg('dj_mode',this)"></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <div><div style="font-weight:600;font-size:13.5px" id="autoTitle">Oto Çalma</div><div style="font-size:11.5px;color:var(--txt2)" id="autoDesc">Kuyruk bitince öneri getir</div></div>
-              <div class="tog on" id="togAuto" onclick="toggleCfg('auto_play',this)"></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <div><div style="font-weight:600;font-size:13.5px" id="notifTitle">Bildirimler</div><div style="font-size:11.5px;color:var(--txt2)" id="notifDesc">Yeni özellik bildirimleri</div></div>
-              <div class="tog on" id="togNotif" onclick="toggleCfg('notif',this)"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Bot Info -->
-        <div class="card" style="margin-bottom:10px">
-          <div class="sh" style="font-size:15px;margin-bottom:10px" id="botInfoTitle">🤖 Bot Bilgisi</div>
-          <div id="botInfoCard" style="font-size:13px;color:var(--txt2);line-height:1.9">Yükleniyor...</div>
-          <button class="btn btn-p btn-sm" style="width:100%;margin-top:12px" onclick="openTg()">
-            <i class="fab fa-telegram"></i><span id="openBotBtn">Telegram'da Aç</span>
-          </button>
-        </div>
-        <!-- Music Report -->
-        <div class="card" style="margin-bottom:10px">
-          <div class="sh" style="font-size:15px;margin-bottom:10px" id="reportTitle">📊 Müzik Raporu</div>
-          <div id="reportBody" style="font-size:13px;color:var(--txt2);line-height:1.9"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-            <button class="btn btn-s btn-sm" onclick="botCmd('/rapor haftalik')" id="weekBtn">Haftalık</button>
-            <button class="btn btn-s btn-sm" onclick="botCmd('/rapor aylik')" id="monthBtn">Aylık</button>
-          </div>
-        </div>
-        <!-- Weather -->
-        <div class="weather-box" id="weatherBox">
-          <div class="sh" style="font-size:15px;margin-bottom:8px" id="wTitle">🌤️ Hava Durumu</div>
-          <div id="wBody" style="font-size:13px;color:var(--txt2)">Yükleniyor...</div>
-        </div>
-        <div style="text-align:center;color:var(--txt2);font-size:11px;padding:12px 0">
-          👻 Hayalet Müzik v9.0 · Kurucu: Hayalet · @hayaletkomutan
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /scroller -->
-
-  <!-- Mini Player -->
-  <div id="miniPlayer" onclick="openFP()">
-    <div class="mp-art" id="mpArt">🎵</div>
-    <div class="mp-info">
-      <div class="mp-title" id="mpTitle">Şarkı seçilmedi</div>
-      <div class="mp-artist" id="mpArtist">Çalmak için ara</div>
-    </div>
-    <div class="mp-btns" onclick="event.stopPropagation()">
-      <button onclick="prevTrack()"><i class="fas fa-step-backward"></i></button>
-      <button class="mpPlay" id="miniPlayBtn" onclick="togglePlay()"><i class="fas fa-play"></i></button>
-      <button onclick="nextTrack()"><i class="fas fa-step-forward"></i></button>
-    </div>
-    <div class="mp-prog"><div class="mp-prog-fill" id="mpFill"></div></div>
-  </div>
-
-  <!-- Bottom Nav -->
-  <nav id="bnav">
-    <div class="bnav-inner">
-      <button class="nb on" data-p="home" onclick="showPg('home')"><i class="fas fa-home"></i><span id="nav-home">Ana Sayfa</span></button>
-      <button class="nb" data-p="search" onclick="showPg('search')"><i class="fas fa-search"></i><span id="nav-search">Ara</span></button>
-      <button class="nb" data-p="library" onclick="showPg('library')"><i class="fas fa-layer-group"></i><span id="nav-lib">Kütüphane</span></button>
-      <button class="nb" data-p="profile" onclick="showPg('profile')"><i class="fas fa-user"></i><span id="nav-prof">Profil</span></button>
-    </div>
-  </nav>
-</div>
-
+<!-- ═══════════════ SCRIPT ═══════════════ -->
 <script>
-/* ══════════════════════════════════════
-   CONFIG
-══════════════════════════════════════ */
+// ── CONFIG ────────────────────────────────────────────
 const CFG = {
-  BOT_TOKEN: 'YOUR_BOT_TOKEN',
+  BOT_TOKEN:    'YOUR_BOT_TOKEN',
   BOT_USERNAME: 'HayaletMusicBot',
-  CHANNEL: 'https://t.me/HayaletMuzik',
-  SUPPORT: 'https://t.me/HayaletDestek',
-  OWNER_ID: '8078887681',
-  OWNER_TAG: '@hayaletkomutan',
-  VER: '9.0'
+  CHANNEL:      'https://t.me/HayaletMuzik',
+  SUPPORT:      'https://t.me/HayaletDestek',
+  OWNER_ID:     '8078887681',
+  OWNER_TAG:    '@hayaletkomutan',
+  OWNER_LINK:   'https://t.me/hayaletkomutan',
+  YT_KEY:       'AIzaSyDtwIzZfJC7XD7ndPxTi6Ctztqp3AHoKN8',
 };
 
-/* ══════════════════════════════════════
-   I18N
-══════════════════════════════════════ */
-const I18N = {
-  tr: {
-    welcome:'Hoşgeldin', hdrName:'👻 Hayalet Müzik',
-    navHome:'Ana Sayfa', navSearch:'Ara', navLib:'Kütüphane', navProf:'Profil',
-    nowPlay:'Şimdi Çalıyor', btnPlay:'Çal', speed:'⚡ Hız',
-    qaEq:'EQ', qaSleep:'Uyku', qaBattle:'Yarışma', qaSchd:'Zamanla',
-    shPop:'🔥 Popüler', shAll:'Tümünü Gör', shRadio:'📻 Canlı Radyo',
-    shTrend:'📈 Trend', shMood:'🎭 Ruh Haline Göre', shRandom:'🎲 Rastgele Tür',
-    pgSearch:'🔍 Ara & Çal', pgLib:'📚 Kütüphane',
-    tabFav:'❤️ Favoriler', tabHist:'🕐 Geçmiş', tabPl:'🎶 Listeler',
-    tabRadio:'📻 Radyo', tabScore:'🏆 Sıralama', tabCmds:'⌨️ Komutlar',
-    linksTitle:'🔗 Linkler', annTitle:'Duyuru Kanalı', suppTitle:'Destek Grubu', creatorTitle:'Kurucu',
-    themeTitle:'🎨 Tema', settTitle:'⚙️ Bot Ayarları', botInfoTitle:'🤖 Bot Bilgisi',
-    djTitle:'DJ Modu', djDesc:'Kapalıyken herkes çalabilir',
-    autoTitle:'Oto Çalma', autoDesc:'Kuyruk bitince öneri getir',
-    notifTitle:'Bildirimler', notifDesc:'Yeni özellik bildirimleri',
-    openBotBtn:"Telegram'da Aç", weekBtn:'Haftalık', monthBtn:'Aylık',
-    reportTitle:'📊 Müzik Raporu', wTitle:'🌤️ Hava Durumu',
-    sv1:'Çalınan', sv2:'Favori', sv3:'Puan', sv4:'Rozet',
-    qTitle:'Kuyruk', qClr:'Temizle', qEmpty:'Kuyruk boş', qEmptySub:'Şarkı eklemek için + dokun',
-    eqTitle:'🎛️ Ekolayzer', bassLbl:'Bass', trebLbl:'Treble', midLbl:'Mid', normLbl:'Ses Normalize',
-    sleepTitle:'😴 Uyku Zamanlayıcısı', slpCancel:'İptal Et',
-    ctTitle:'🎤 Şarkı Yarışması', plTitle:'🎶 Çalma Listelerim',
-    plInpPh:'Yeni liste adı...', plAddBtn:'+ Ekle',
-    sugTitle:'💡 Şarkı Önerileri', sugInpPh:'Şarkı öner...', sugAddBtn:'Öner',
-    schdTitle:'⏰ Zamanlamalı Çal', schdTimeLbl:'Saat', schdSongLbl:'Şarkı',
-    schdBtn:'⏰ Zamanla',
-    srchPh:'Şarkı, sanatçı, YouTube linki...', srchMainPh:'Şarkı adı, sanatçı, YouTube...',
-    noFav:'Henüz favori yok', noFavSub:'Şarkı çalarken ❤️ dokun',
-    noHist:'Geçmiş boş', noHistSub:'Bir şarkı çal',
-    noGroup:'Grupta botu aktive et, komutlar buradan gönderilebilir.',
-    tSent:'✅ Gönderildi', tFail:'❌ Gönderilemedi', tConn:'❌ Bağlantı hatası',
-    tFav:'❤️ Favorilere eklendi', tAlreadyFav:'⚠️ Zaten favoride!',
-    tRemoved:'Kaldırıldı', tQueueClear:'🗑️ Kuyruk temizlendi',
-    tQueue:'➕ Kuyruğa eklendi', tShuffle:'🔀 Karıştırma',
-    tLoop:'🔁 Döngü', tOn:'Açık', tOff:'Kapalı', tNoSong:'❌ Şarkı adı girin',
-    tQueueEmpty:'📭 Kuyruk boş', tCopied:'📋 kopyalandı',
-    tSleep:'😴 Zamanlayıcı ayarlandı', tSlpCancel:'❌ Zamanlayıcı iptal', tSlpStop:'😴 Müzik durdu (zamanlayıcı)',
-    tScheduled:'⏰ Zamanlandı', groupConn:'✅ Grup bağlı', privateChat:'⚠️ Özel sohbet',
-    moods:['😊 Mutlu','😢 Hüzünlü','💪 Enerjik','😴 Sakin','❤️ Romantik','🔥 Ateşli','🌙 Gece','🌊 Ferahlatıcı'],
-    genres:['Pop','Rock','Jazz','Lo-fi','Rap','EDM','Türkçe','Arabesk','Metal','Klasik'],
-    weekDays:['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'],
-    infoUser:'Kullanıcı', infoBot:'Bot', infoVer:'Versiyon', infoPlugin:'Plugin', infoStatus:'Durum',
-    ctNewBtn:'🎲 Yeni Yarışma', ctSendBtn:'📤 Gruba Gönder', fpSpdLbl:'⚡ Hız',
-    votes:'oy', newListEmpty:'Liste boş', listsEmpty:'Henüz liste yok'
-  },
-  az: {
-    welcome:'Xoş gəldiniz', hdrName:'👻 Hayalet Musiqi',
-    navHome:'Ana Səhifə', navSearch:'Axtar', navLib:'Kitabxana', navProf:'Profil',
-    nowPlay:'İndi Çalır', btnPlay:'Çal', speed:'⚡ Sürət',
-    qaEq:'EQ', qaSleep:'Yuxu', qaBattle:'Yarışma', qaSchd:'Zamanla',
-    shPop:'🔥 Populyar', shAll:'Hamısını Gör', shRadio:'📻 Canlı Radio',
-    shTrend:'📈 Trend', shMood:'🎭 Əhval-ruhiyyə', shRandom:'🎲 Təsadüfi',
-    pgSearch:'🔍 Axtar & Çal', pgLib:'📚 Kitabxana',
-    tabFav:'❤️ Sevimlilər', tabHist:'🕐 Tarixçə', tabPl:'🎶 Siyahılar',
-    tabRadio:'📻 Radio', tabScore:'🏆 Reytinq', tabCmds:'⌨️ Əmrlər',
-    linksTitle:'🔗 Linklər', annTitle:'Elan Kanalı', suppTitle:'Dəstək Qrupu', creatorTitle:'Qurucu',
-    themeTitle:'🎨 Tema', settTitle:'⚙️ Bot Ayarları', botInfoTitle:'🤖 Bot Məlumatı',
-    djTitle:'DJ Rejimi', djDesc:'Qapalıyken hamı çala bilər',
-    autoTitle:'Oto Çalma', autoDesc:'Növbə bitəndə tövsiyə gətir',
-    notifTitle:'Bildirişlər', notifDesc:'Yeni xüsusiyyət bildirişləri',
-    openBotBtn:"Telegram'da Aç", weekBtn:'Həftəlik', monthBtn:'Aylıq',
-    reportTitle:'📊 Musiqi Hesabatı', wTitle:'🌤️ Hava Vəziyyəti',
-    sv1:'Çalınan', sv2:'Sevimli', sv3:'Xal', sv4:'Nişan',
-    qTitle:'Növbə', qClr:'Təmizlə', qEmpty:'Növbə boşdur', qEmptySub:'Mahnı əlavə etmək üçün + toxun',
-    eqTitle:'🎛️ Ekvalayzır', bassLbl:'Bass', trebLbl:'Tıkıltı', midLbl:'Orta', normLbl:'Səs Normaliz',
-    sleepTitle:'😴 Yuxu Zamanlayıcısı', slpCancel:'İmtina',
-    ctTitle:'🎤 Mahnı Yarışması', plTitle:'🎶 Çalma Siyahılarım',
-    plInpPh:'Yeni siyahı adı...', plAddBtn:'+ Əlavə',
-    sugTitle:'💡 Mahnı Təklifləri', sugInpPh:'Mahnı təklif et...', sugAddBtn:'Təklif',
-    schdTitle:'⏰ Zamanlamalı Çal', schdTimeLbl:'Saat', schdSongLbl:'Mahnı',
-    schdBtn:'⏰ Zamanla',
-    srchPh:'Mahnı, ifaçı, YouTube linki...', srchMainPh:'Mahnı adı, ifaçı...',
-    noFav:'Hələ sevimli yoxdur', noFavSub:'Çalarkən ❤️ toxun',
-    noHist:'Tarixçə boşdur', noHistSub:'Bir mahnı çal',
-    noGroup:'Qrupda botu aktivləşdir, əmrlər buradan göndərilə bilər.',
-    tSent:'✅ Göndərildi', tFail:'❌ Göndərilmədi', tConn:'❌ Bağlantı xətası',
-    tFav:'❤️ Sevimlilərə əlavə edildi', tAlreadyFav:'⚠️ Artıq sevimlilerdədir!',
-    tRemoved:'Silindi', tQueueClear:'🗑️ Növbə təmizləndi',
-    tQueue:'➕ Növbəyə əlavə edildi', tShuffle:'🔀 Qarışdırma',
-    tLoop:'🔁 Dövr', tOn:'Açıq', tOff:'Bağlı', tNoSong:'❌ Mahnı adı daxil edin',
-    tQueueEmpty:'📭 Növbə boşdur', tCopied:'📋 kopyalandı',
-    tSleep:'😴 Zamanlayıcı təyin edildi', tSlpCancel:'❌ Zamanlayıcı ləğv edildi', tSlpStop:'😴 Musiqi dayandı',
-    tScheduled:'⏰ Zamanlandı', groupConn:'✅ Qrup bağlı', privateChat:'⚠️ Şəxsi söhbət',
-    moods:['😊 Şən','😢 Kədərli','💪 Enerjili','😴 Sakit','❤️ Romantik','🔥 Alovlu','🌙 Gecə','🌊 Təravətli'],
-    genres:['Pop','Rock','Caz','Lo-fi','Rep','EDM','Azərbaycan','Ərəb','Metal','Klassik'],
-    weekDays:['Bazar','Bazar ertəsi','Çərş. axş.','Çərşənbə','Cümə axş.','Cümə','Şənbə'],
-    infoUser:'İstifadəçi', infoBot:'Bot', infoVer:'Versiya', infoPlugin:'Plugin', infoStatus:'Vəziyyət',
-    ctNewBtn:'🎲 Yeni Yarışma', ctSendBtn:'📤 Qrupa Göndər', fpSpdLbl:'⚡ Sürət',
-    votes:'səs', newListEmpty:'Siyahı boşdur', listsEmpty:'Hələ siyahı yoxdur'
-  },
-  en: {
-    welcome:'Welcome', hdrName:'👻 Hayalet Music',
-    navHome:'Home', navSearch:'Search', navLib:'Library', navProf:'Profile',
-    nowPlay:'Now Playing', btnPlay:'Play', speed:'⚡ Speed',
-    qaEq:'EQ', qaSleep:'Sleep', qaBattle:'Battle', qaSchd:'Schedule',
-    shPop:'🔥 Popular', shAll:'See All', shRadio:'📻 Live Radio',
-    shTrend:'📈 Trending', shMood:'🎭 By Mood', shRandom:'🎲 Random Genre',
-    pgSearch:'🔍 Search & Play', pgLib:'📚 Library',
-    tabFav:'❤️ Favorites', tabHist:'🕐 History', tabPl:'🎶 Playlists',
-    tabRadio:'📻 Radio', tabScore:'🏆 Leaderboard', tabCmds:'⌨️ Commands',
-    linksTitle:'🔗 Links', annTitle:'Announcement Channel', suppTitle:'Support Group', creatorTitle:'Founder',
-    themeTitle:'🎨 Theme', settTitle:'⚙️ Bot Settings', botInfoTitle:'🤖 Bot Info',
-    djTitle:'DJ Mode', djDesc:"When off, everyone can play",
-    autoTitle:'Auto Play', autoDesc:'Suggest when queue ends',
-    notifTitle:'Notifications', notifDesc:'New feature notifications',
-    openBotBtn:'Open in Telegram', weekBtn:'Weekly', monthBtn:'Monthly',
-    reportTitle:'📊 Music Report', wTitle:'🌤️ Weather',
-    sv1:'Played', sv2:'Favorites', sv3:'Points', sv4:'Badges',
-    qTitle:'Queue', qClr:'Clear', qEmpty:'Queue is empty', qEmptySub:'Tap + to add songs',
-    eqTitle:'🎛️ Equalizer', bassLbl:'Bass', trebLbl:'Treble', midLbl:'Mid', normLbl:'Normalize',
-    sleepTitle:'😴 Sleep Timer', slpCancel:'Cancel',
-    ctTitle:'🎤 Song Battle', plTitle:'🎶 My Playlists',
-    plInpPh:'New playlist name...', plAddBtn:'+ Add',
-    sugTitle:'💡 Song Suggestions', sugInpPh:'Suggest a song...', sugAddBtn:'Suggest',
-    schdTitle:'⏰ Schedule Play', schdTimeLbl:'Time', schdSongLbl:'Song',
-    schdBtn:'⏰ Schedule',
-    srchPh:'Song, artist, YouTube link...', srchMainPh:'Song name, artist, YouTube...',
-    noFav:'No favorites yet', noFavSub:'Tap ❤️ while playing',
-    noHist:'History is empty', noHistSub:'Play a song first',
-    noGroup:'Activate the bot in a group to use quick commands.',
-    tSent:'✅ Sent', tFail:'❌ Failed to send', tConn:'❌ Connection error',
-    tFav:'❤️ Added to favorites', tAlreadyFav:'⚠️ Already in favorites!',
-    tRemoved:'Removed', tQueueClear:'🗑️ Queue cleared',
-    tQueue:'➕ Added to queue', tShuffle:'🔀 Shuffle',
-    tLoop:'🔁 Loop', tOn:'On', tOff:'Off', tNoSong:'❌ Enter a song name',
-    tQueueEmpty:'📭 Queue is empty', tCopied:'📋 copied',
-    tSleep:'😴 Sleep timer set', tSlpCancel:'❌ Timer cancelled', tSlpStop:'😴 Music stopped (sleep)',
-    tScheduled:'⏰ Scheduled', groupConn:'✅ Group connected', privateChat:'⚠️ Private chat',
-    moods:['😊 Happy','😢 Sad','💪 Energetic','😴 Calm','❤️ Romantic','🔥 Fiery','🌙 Night','🌊 Fresh'],
-    genres:['Pop','Rock','Jazz','Lo-fi','Rap','EDM','Turkish','Arabic','Metal','Classical'],
-    weekDays:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-    infoUser:'User', infoBot:'Bot', infoVer:'Version', infoPlugin:'Plugins', infoStatus:'Status',
-    ctNewBtn:'🎲 New Battle', ctSendBtn:'📤 Send to Group', fpSpdLbl:'⚡ Speed',
-    votes:'votes', newListEmpty:'Playlist empty', listsEmpty:'No playlists yet'
-  },
-  ru: {
-    welcome:'Добро пожаловать', hdrName:'👻 Hayalet Музыка',
-    navHome:'Главная', navSearch:'Поиск', navLib:'Библиотека', navProf:'Профиль',
-    nowPlay:'Сейчас играет', btnPlay:'Играть', speed:'⚡ Скорость',
-    qaEq:'EQ', qaSleep:'Сон', qaBattle:'Батл', qaSchd:'Расписание',
-    shPop:'🔥 Популярное', shAll:'Смотреть всё', shRadio:'📻 Радио онлайн',
-    shTrend:'📈 Тренды', shMood:'🎭 По настроению', shRandom:'🎲 Случайный жанр',
-    pgSearch:'🔍 Поиск & Воспроизведение', pgLib:'📚 Библиотека',
-    tabFav:'❤️ Избранное', tabHist:'🕐 История', tabPl:'🎶 Плейлисты',
-    tabRadio:'📻 Радио', tabScore:'🏆 Рейтинг', tabCmds:'⌨️ Команды',
-    linksTitle:'🔗 Ссылки', annTitle:'Канал объявлений', suppTitle:'Группа поддержки', creatorTitle:'Создатель',
-    themeTitle:'🎨 Тема', settTitle:'⚙️ Настройки бота', botInfoTitle:'🤖 О боте',
-    djTitle:'DJ режим', djDesc:'Когда выкл., все могут играть',
-    autoTitle:'Авто воспр.', autoDesc:'Предложить при пустой очереди',
-    notifTitle:'Уведомления', notifDesc:'Уведомления о новых функциях',
-    openBotBtn:'Открыть в Telegram', weekBtn:'За неделю', monthBtn:'За месяц',
-    reportTitle:'📊 Отчёт по музыке', wTitle:'🌤️ Погода',
-    sv1:'Прослушано', sv2:'Избранное', sv3:'Очки', sv4:'Значки',
-    qTitle:'Очередь', qClr:'Очистить', qEmpty:'Очередь пуста', qEmptySub:'Нажмите + для добавления',
-    eqTitle:'🎛️ Эквалайзер', bassLbl:'Бас', trebLbl:'Высокие', midLbl:'Средние', normLbl:'Нормализация',
-    sleepTitle:'😴 Таймер сна', slpCancel:'Отмена',
-    ctTitle:'🎤 Батл песен', plTitle:'🎶 Мои плейлисты',
-    plInpPh:'Название нового плейлиста...', plAddBtn:'+ Добавить',
-    sugTitle:'💡 Предложения', sugInpPh:'Предложить песню...', sugAddBtn:'Предложить',
-    schdTitle:'⏰ Запланировать', schdTimeLbl:'Время', schdSongLbl:'Песня',
-    schdBtn:'⏰ Запланировать',
-    srchPh:'Песня, исполнитель, YouTube...', srchMainPh:'Название песни, исполнитель...',
-    noFav:'Нет избранного', noFavSub:'Нажмите ❤️ при воспроизведении',
-    noHist:'История пуста', noHistSub:'Воспроизведите песню',
-    noGroup:'Активируйте бота в группе для быстрых команд.',
-    tSent:'✅ Отправлено', tFail:'❌ Не отправлено', tConn:'❌ Ошибка подключения',
-    tFav:'❤️ Добавлено в избранное', tAlreadyFav:'⚠️ Уже в избранном!',
-    tRemoved:'Удалено', tQueueClear:'🗑️ Очередь очищена',
-    tQueue:'➕ Добавлено в очередь', tShuffle:'🔀 Перемешать',
-    tLoop:'🔁 Повтор', tOn:'Вкл', tOff:'Выкл', tNoSong:'❌ Введите название',
-    tQueueEmpty:'📭 Очередь пуста', tCopied:'📋 скопировано',
-    tSleep:'😴 Таймер установлен', tSlpCancel:'❌ Таймер отменён', tSlpStop:'😴 Музыка остановлена',
-    tScheduled:'⏰ Запланировано', groupConn:'✅ Группа подключена', privateChat:'⚠️ Личный чат',
-    moods:['😊 Радостный','😢 Грустный','💪 Энергичный','😴 Спокойный','❤️ Романтичный','🔥 Горячий','🌙 Ночной','🌊 Освежающий'],
-    genres:['Поп','Рок','Джаз','Lo-fi','Рэп','EDM','Турецкий','Арабский','Металл','Классика'],
-    weekDays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
-    infoUser:'Пользователь', infoBot:'Бот', infoVer:'Версия', infoPlugin:'Плагины', infoStatus:'Статус',
-    ctNewBtn:'🎲 Новый батл', ctSendBtn:'📤 Отправить в группу', fpSpdLbl:'⚡ Скорость',
-    votes:'голосов', newListEmpty:'Плейлист пуст', listsEmpty:'Плейлистов пока нет'
-  }
-};
-
-/* ══════════════════════════════════════
-   DATA
-══════════════════════════════════════ */
-const TRACKS = [
-  {t:'Şımarık',a:'Tarkan',e:'🎶',d:'3:45'},
-  {t:'Müptezhel',a:'Ezhel',e:'🔥',d:'4:12'},
-  {t:'Ağlayamıyorum',a:'Duman',e:'🎸',d:'4:05'},
-  {t:'Firuze',a:'Sezen Aksu',e:'💜',d:'3:58'},
-  {t:'Paramparça',a:'Teoman',e:'🎵',d:'4:33'},
-  {t:'Ölürüm Sana',a:'Mor ve Ötesi',e:'🤘',d:'3:22'},
-  {t:'Seni Sildim',a:'Norm Ender',e:'🎤',d:'3:15'},
-  {t:'Gitme',a:'Cem Adrian',e:'🌙',d:'4:50'},
-  {t:'Suspus',a:'Ceza',e:'💢',d:'3:30'},
-  {t:'Dal',a:'Mabel Matiz',e:'🌿',d:'4:20'},
-  {t:'Neyim Var Ki',a:'Haluk Levent',e:'💙',d:'4:10'},
-  {t:'Kelebek',a:'Aleyna Tilki',e:'🦋',d:'3:40'},
-  {t:'Yüksek Kalite',a:'Uzi',e:'🎧',d:'3:55'},
-];
-const RADIOS = [
-  {n:'Power FM',e:'📻',c:'#7c3aed'},
-  {n:'Kral FM',e:'👑',c:'#f59e0b'},
-  {n:'NTV Radyo',e:'📡',c:'#0ea5e9'},
-  {n:'Lofi Chill',e:'☁️',c:'#10b981'},
-  {n:'Jazz 24',e:'🎷',c:'#f472b6'},
-  {n:'Rock FM',e:'🎸',c:'#ef4444'},
-  {n:'Azerbaycan Radio',e:'🇦🇿',c:'#0ea5e9'},
-  {n:'Mayak Radio',e:'🔊',c:'#f97316'},
-];
-const TRENDS = ['Tarkan Şımarık','Ezhel Müptezhel','Duman Ağlayamıyorum','Sagopa Issız Adam','Şanışer 06','Ben Fero','Ceza Rapstar','Norm Ender','Teoman Paramparça','Sezen Aksu Firuze'];
-const EQ_PRESETS = [
-  {id:'normal',l:'Normal',b:0,t:0,m:0},
-  {id:'bass',l:'Bass Boost',b:8,t:0,m:0},
-  {id:'rock',l:'Rock',b:4,t:4,m:-2},
-  {id:'pop',l:'Pop',b:2,t:3,m:2},
-  {id:'jazz',l:'Jazz',b:3,t:2,m:-1},
-  {id:'classical',l:'Classical',b:1,t:3,m:0},
-  {id:'vocal',l:'Vocal',b:-2,t:2,m:4},
-  {id:'edm',l:'EDM',b:6,t:2,m:-2},
-  {id:'lofi',l:'Lo-fi',b:2,t:-2,m:-1},
-  {id:'flat',l:'Flat',b:0,t:0,m:0},
-  {id:'live',l:'Live',b:1,t:2,m:3},
-  {id:'club',l:'Club',b:5,t:2,m:0},
-];
+// ── DATA ─────────────────────────────────────────────
 const THEMES = [
-  /* ── Orijinal 7 ── */
-  {id:'ghost',    l:'👻 Ghost',      g:'linear-gradient(135deg,#7c3aed,#a78bfa)'},
-  {id:'fire',     l:'🔥 Ateş',       g:'linear-gradient(135deg,#c2410c,#fb923c)'},
-  {id:'ocean',    l:'🌊 Okyanus',    g:'linear-gradient(135deg,#0369a1,#06d6a0)'},
-  {id:'neon',     l:'🌿 Neon',       g:'linear-gradient(135deg,#4d7c0f,#a3e635)'},
-  {id:'rose',     l:'🌹 Gül',        g:'linear-gradient(135deg,#9f1239,#fb7185)'},
-  {id:'gold',     l:'✨ Altın',      g:'linear-gradient(135deg,#92400e,#fbbf24)'},
-  {id:'cyber',    l:'💻 Cyber',      g:'linear-gradient(135deg,#00875a,#00ff9f)'},
-  /* ── 30 Yeni ── */
-  {id:'aurora',   l:'🌌 Aurora',     g:'linear-gradient(135deg,#059669,#818cf8)'},
-  {id:'sakura',   l:'🌸 Sakura',     g:'linear-gradient(135deg,#be185d,#e879f9)'},
-  {id:'midnight', l:'🌙 Midnight',   g:'linear-gradient(135deg,#1e40af,#60a5fa)'},
-  {id:'lava',     l:'🌋 Lav',        g:'linear-gradient(135deg,#991b1b,#f97316)'},
-  {id:'ice',      l:'❄️ Buz',        g:'linear-gradient(135deg,#0e7490,#a5f3fc)'},
-  {id:'sunset',   l:'🌅 Gün Batımı', g:'linear-gradient(135deg,#9333ea,#f97316)'},
-  {id:'toxic',    l:'☢️ Toxic',      g:'linear-gradient(135deg,#65a30d,#facc15)'},
-  {id:'dracula',  l:'🧛 Dracula',    g:'linear-gradient(135deg,#6272a4,#ff79c6)'},
-  {id:'monokai',  l:'🎨 Monokai',    g:'linear-gradient(135deg,#f92672,#a6e22e)'},
-  {id:'nord',     l:'🏔️ Nord',       g:'linear-gradient(135deg,#4c566a,#88c0d0)'},
-  {id:'vapor',    l:'🌸 Vaporwave',  g:'linear-gradient(135deg,#b5179e,#4cc9f0)'},
-  {id:'matrix',   l:'💊 Matrix',     g:'linear-gradient(135deg,#166534,#4ade80)'},
-  {id:'copper',   l:'🪙 Bakır',      g:'linear-gradient(135deg,#92400e,#78716c)'},
-  {id:'cobalt',   l:'💎 Kobalt',     g:'linear-gradient(135deg,#1d4ed8,#67e8f9)'},
-  {id:'orchid',   l:'🌺 Orkide',     g:'linear-gradient(135deg,#7c3aed,#f0abfc)'},
-  {id:'teal',     l:'🦚 Teal',       g:'linear-gradient(135deg,#0f766e,#818cf8)'},
-  {id:'blood',    l:'🩸 Kanlı Ay',   g:'linear-gradient(135deg,#7f1d1d,#fca5a5)'},
-  {id:'galaxy',   l:'🌌 Galaksi',    g:'linear-gradient(135deg,#4f46e5,#f472b6)'},
-  {id:'amber',    l:'🍯 Kehribar',   g:'linear-gradient(135deg,#b45309,#f87171)'},
-  {id:'mint',     l:'🌿 Nane',       g:'linear-gradient(135deg,#065f46,#67e8f9)'},
-  {id:'crimson',  l:'💋 Crimson',    g:'linear-gradient(135deg,#881337,#fda4af)'},
-  {id:'slate',    l:'🪨 Çelik',      g:'linear-gradient(135deg,#334155,#38bdf8)'},
-  {id:'magma',    l:'🔴 Magma',      g:'linear-gradient(135deg,#c2410c,#fde68a)'},
-  {id:'indigo',   l:'🔷 İndigo',     g:'linear-gradient(135deg,#312e81,#c7d2fe)'},
-  {id:'emerald',  l:'💚 Zümrüt',     g:'linear-gradient(135deg,#065f46,#fbbf24)'},
-  {id:'lavender', l:'💜 Lavanta',    g:'linear-gradient(135deg,#7e22ce,#fce7f3)'},
-  {id:'rust',     l:'🦀 Pas',        g:'linear-gradient(135deg,#7c2d12,#fbbf24)'},
-  {id:'aqua',     l:'💧 Aqua',       g:'linear-gradient(135deg,#0e7490,#a78bfa)'},
-  {id:'mono',     l:'⬛ Mono',       g:'linear-gradient(135deg,#374151,#d1d5db)'},
-  {id:'deeppurp', l:'🫐 Derin Mor',  g:'linear-gradient(135deg,#4a044e,#e879f9)'},
-];
-const COMMANDS = [
-  {c:'/oynat [şarkı]',d:'Şarkı çal (herkes)',i:'▶️',g:true},
-  {c:'/kuyruk',d:'Kuyruk listesi',i:'📋',g:true},
-  {c:'/np',d:'Şu an çalıyor',i:'🎵',g:true},
-  {c:'/atla',d:'Sonraki şarkı',i:'⏭️',g:true},
-  {c:'/duraklat',d:'Duraklat',i:'⏸️',g:true},
-  {c:'/devam',d:'Devam et',i:'▶️',g:true},
-  {c:'/durdur',d:'Durdur + kuyruğu temizle',i:'⏹️',g:true},
-  {c:'/ses [0-200]',d:'Ses seviyesi',i:'🔊',g:true},
-  {c:'/karistir',d:'Karıştır',i:'🔀',g:true},
-  {c:'/radyo',d:'Canlı radyo',i:'📻',g:true},
-  {c:'/liste olustur',d:'Çalma listesi oluştur',i:'🎶',g:false},
-  {c:'/liste ekle [şarkı]',d:'Listeye şarkı ekle',i:'➕',g:false},
-  {c:'/liste oynat',d:'Listeyi çal',i:'▶️',g:false},
-  {c:'/sozler',d:'Şarkı sözleri (karaoke)',i:'📝',g:true},
-  {c:'/tani',d:'Şarkı tanı (ses dosyası)',i:'🎤',g:true},
-  {c:'/indir',d:'MP3 indir + VDS temizle',i:'📥',g:false},
-  {c:'/eq [preset]',d:'Ekolayzer 12 preset',i:'🎛️',g:true},
-  {c:'/siralama',d:'Skor tablosu',i:'🏆',g:true},
-  {c:'/rastgele [tür]',d:'Rastgele çal',i:'🎲',g:true},
-  {c:'/yarisma [s1] vs [s2]',d:'Şarkı yarışması 60sn',i:'🎤',g:true},
-  {c:'/yorum [metin]',d:'Şarkı yorumu',i:'💬',g:true},
-  {c:'/hediye @kullanıcı [şarkı]',d:'Şarkı hediye et',i:'🎁',g:false},
-  {c:'/hediyelerim',d:'Bekleyen hediyeler',i:'📦',g:false},
-  {c:'/zamanla [ss:dd] [şarkı]',d:'Zamanlamalı çal',i:'⏰',g:true},
-  {c:'/karaliste ekle/kaldir',d:'Kara liste yönetimi',i:'🚫',g:true},
-  {c:'/rapor',d:'Haftalık/aylık rapor',i:'📊',g:false},
-  {c:'/muzik_limit',d:'Günlük süre limiti (admin)',i:'⏱️',g:true},
-  {c:'/sc [şarkı]',d:'SoundCloud',i:'🔈',g:true},
-  {c:'/deezer [şarkı]',d:'Deezer',i:'🎵',g:true},
-  {c:'/cevir [dil] [metin]',d:'Anlık çeviri 12 dil',i:'🌍',g:true},
-  {c:'/sleep [dk]',d:'Uyku zamanlayıcısı',i:'😴',g:false},
-  {c:'/voteskip',d:'Oylamayla geç',i:'🗳️',g:true},
-  {c:'/suggest [şarkı]',d:'Öneri + oylama',i:'💡',g:true},
-  {c:'/weather',d:'Hava durumu',i:'🌤️',g:false},
-  {c:'/stats',d:'CPU/RAM/Disk + bot stats',i:'📊',g:true},
-  {c:'/ping',d:'Gecikme ölçer',i:'🏓',g:true},
-  {c:'/rozetler',d:'Rozet görüntüle',i:'🏅',g:false},
-  {c:'/dil [tr/en/ru/az]',d:'Bot dili değiştir',i:'🌐',g:true},
-  {c:'/ayarlar',d:'Grup ayarları (admin)',i:'⚙️',g:true},
+  {id:'ghost',   l:'👻 Ghost',     g:'linear-gradient(135deg,#7c3aed,#a78bfa)'},
+  {id:'fire',    l:'🔥 Ateş',      g:'linear-gradient(135deg,#c2410c,#fb923c)'},
+  {id:'ocean',   l:'🌊 Okyanus',   g:'linear-gradient(135deg,#0369a1,#06d6a0)'},
+  {id:'neon',    l:'🌿 Neon',      g:'linear-gradient(135deg,#4d7c0f,#a3e635)'},
+  {id:'rose',    l:'🌹 Gül',       g:'linear-gradient(135deg,#9f1239,#fb7185)'},
+  {id:'gold',    l:'✨ Altın',     g:'linear-gradient(135deg,#92400e,#fbbf24)'},
+  {id:'cyber',   l:'💻 Cyber',     g:'linear-gradient(135deg,#00875a,#00ff9f)'},
+  {id:'aurora',  l:'🌌 Aurora',    g:'linear-gradient(135deg,#059669,#818cf8)'},
+  {id:'sakura',  l:'🌸 Sakura',    g:'linear-gradient(135deg,#be185d,#e879f9)'},
+  {id:'midnight',l:'🌙 Midnight',  g:'linear-gradient(135deg,#1e40af,#60a5fa)'},
+  {id:'lava',    l:'🌋 Lav',       g:'linear-gradient(135deg,#991b1b,#f97316)'},
+  {id:'ice',     l:'❄️ Buz',       g:'linear-gradient(135deg,#0e7490,#a5f3fc)'},
+  {id:'sunset',  l:'🌅 Batım',     g:'linear-gradient(135deg,#9333ea,#f97316)'},
+  {id:'toxic',   l:'☢️ Toxic',     g:'linear-gradient(135deg,#65a30d,#facc15)'},
+  {id:'dracula', l:'🧛 Dracula',   g:'linear-gradient(135deg,#6272a4,#ff79c6)'},
+  {id:'monokai', l:'🎨 Monokai',   g:'linear-gradient(135deg,#f92672,#a6e22e)'},
+  {id:'nord',    l:'🏔️ Nord',      g:'linear-gradient(135deg,#4c566a,#88c0d0)'},
+  {id:'vapor',   l:'🌸 Vapor',     g:'linear-gradient(135deg,#b5179e,#4cc9f0)'},
+  {id:'matrix',  l:'💊 Matrix',    g:'linear-gradient(135deg,#166534,#4ade80)'},
+  {id:'copper',  l:'🪙 Bakır',     g:'linear-gradient(135deg,#92400e,#78716c)'},
+  {id:'cobalt',  l:'💎 Kobalt',    g:'linear-gradient(135deg,#1d4ed8,#67e8f9)'},
+  {id:'orchid',  l:'🌺 Orkide',    g:'linear-gradient(135deg,#7c3aed,#f0abfc)'},
+  {id:'teal',    l:'🦚 Teal',      g:'linear-gradient(135deg,#0f766e,#818cf8)'},
+  {id:'blood',   l:'🩸 Kan',       g:'linear-gradient(135deg,#7f1d1d,#fca5a5)'},
+  {id:'galaxy',  l:'🌌 Galaksi',   g:'linear-gradient(135deg,#4f46e5,#f472b6)'},
+  {id:'amber',   l:'🍯 Kehribar',  g:'linear-gradient(135deg,#b45309,#f87171)'},
+  {id:'mint',    l:'🌿 Nane',      g:'linear-gradient(135deg,#065f46,#67e8f9)'},
+  {id:'crimson', l:'💋 Crimson',   g:'linear-gradient(135deg,#881337,#fda4af)'},
+  {id:'slate',   l:'🪨 Çelik',     g:'linear-gradient(135deg,#334155,#38bdf8)'},
+  {id:'magma',   l:'🔴 Magma',     g:'linear-gradient(135deg,#c2410c,#fde68a)'},
+  {id:'indigo',  l:'🔷 İndigo',    g:'linear-gradient(135deg,#312e81,#c7d2fe)'},
+  {id:'emerald', l:'💚 Zümrüt',    g:'linear-gradient(135deg,#065f46,#fbbf24)'},
+  {id:'lavender',l:'💜 Lavanta',   g:'linear-gradient(135deg,#7e22ce,#fce7f3)'},
+  {id:'rust',    l:'🦀 Pas',       g:'linear-gradient(135deg,#7c2d12,#fbbf24)'},
+  {id:'aqua',    l:'💧 Aqua',      g:'linear-gradient(135deg,#0e7490,#a78bfa)'},
+  {id:'mono',    l:'⬛ Mono',      g:'linear-gradient(135deg,#374151,#d1d5db)'},
+  {id:'deeppurp',l:'🫐 Derin Mor', g:'linear-gradient(135deg,#4a044e,#e879f9)'},
 ];
 
-/* ══════════════════════════════════════
-   STATE
-══════════════════════════════════════ */
-const S = {
-  tg: (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null,
-  user: null, chatId: null, lang: 'tr',
-  playing: false, shuffle: false, loop: false, liked: false,
-  vol: 75, speed: 1, prog: 0, dur: 200,
-  cur: null, queue: [], hist: [], favs: [], playlists: [], suggestions: [],
-  theme: 'ghost', cfg: {dj_mode:false, auto_play:true, notif:true},
-  stats: {played:0, points:0},
-  sleepTimer: null, sleepMin: 0, eqPreset: 'normal',
-  schedules: [],
-  _timer: null, _pv: 0
+const RADIOS = [
+  {n:'Power FM',    u:'https://playerservices.streamtheworld.com/api/livestream-redirect/POWER_FM.mp3',  e:'📻',c:'#7c3aed'},
+  {n:'Kral FM',     u:'https://listen.radyokral.com/kral-fm/mp3-128/',                                   e:'👑',c:'#f59e0b'},
+  {n:'NTV Radyo',   u:'https://listen.radyokral.com/ntv-radyo/mp3-128/',                                 e:'📡',c:'#0ea5e9'},
+  {n:'Best FM',     u:'https://listen.radyokral.com/best-fm/mp3-128/',                                   e:'⭐',c:'#10b981'},
+  {n:'Lofi Chill',  u:'http://stream.zeno.fm/0r0xa792kwzuv',                                             e:'☁️',c:'#6366f1'},
+  {n:'Jazz 24',     u:'http://live.amperwave.net/direct/ppm-jazz24aac-ibc1',                             e:'🎷',c:'#f472b6'},
+  {n:'Rock FM',     u:'http://stream.zeno.fm/ggjnfzrveqhvv',                                             e:'🎸',c:'#ef4444'},
+  {n:'Lider FM AZ', u:'http://lider.fm:8000/stream',                                                     e:'🇦🇿',c:'#22c55e'},
+  {n:'Mayak RU',    u:'https://icecast.vgtrk.cdnvideo.ru/mayak_mobile_mp3',                              e:'🇷🇺',c:'#f97316'},
+];
+
+const MOODS = [
+  {n:'😊 Mutlu',    q:'happy upbeat music 2024',       c:'linear-gradient(135deg,#f59e0b,#fde68a)'},
+  {n:'😢 Hüzünlü', q:'sad emotional music',            c:'linear-gradient(135deg,#3b82f6,#93c5fd)'},
+  {n:'💪 Enerjik',  q:'energetic workout music 2024',  c:'linear-gradient(135deg,#ef4444,#f97316)'},
+  {n:'😴 Sakin',   q:'calm relaxing ambient music',    c:'linear-gradient(135deg,#8b5cf6,#a78bfa)'},
+  {n:'❤️ Romantik',q:'romantic love songs',            c:'linear-gradient(135deg,#e11d48,#fb7185)'},
+  {n:'🌙 Gece',    q:'night chill music playlist',     c:'linear-gradient(135deg,#1e3a8a,#3b82f6)'},
+];
+
+const GENRES = ['Pop','Rock','Jazz','Lo-fi','Rap','EDM','Türkçe','Arabesk','Metal','Klasik'];
+const GENRE_Q = {
+  'Pop':     'türkçe pop hit 2024',
+  'Rock':    'rock hits classic',
+  'Jazz':    'smooth jazz playlist',
+  'Lo-fi':   'lofi hip hop beats',
+  'Rap':     'türkçe rap 2024',
+  'EDM':     'edm dance 2024',
+  'Türkçe':  'türkçe pop 2024 en iyi',
+  'Arabesk': 'arabesk müzik klasikler',
+  'Metal':   'heavy metal hits',
+  'Klasik':  'klasik müzik piano',
 };
 
-/* ══════════════════════════════════════
-   HELPERS
-══════════════════════════════════════ */
-const T = (k) => (I18N[S.lang] || I18N.tr)[k] || (I18N.tr[k] || k);
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
-const fmt = (s) => { const m=Math.floor(s/60),sc=Math.floor(s%60); return m+':'+(sc<10?'0':'')+sc; };
-function setEl(id, txt) { const e=$(id); if(e) e.textContent = txt; }
-function setAttr(id, attr, val) { const e=$(id); if(e) e[attr] = val; }
+const POPULAR = [
+  {t:'Şımarık',      a:'Tarkan',            e:'🎶',vid:'XO6oJmHIBog'},
+  {t:'Hepsi Yalan',  a:'Tarkan',            e:'🎵',vid:'nYzGBFPoOJ4'},
+  {t:'Müptezhel',    a:'Ezhel',             e:'🎤',vid:'HzFM_XLH3bk'},
+  {t:'Sor',          a:'Norm Ender',         e:'🎸',vid:'Lkp9MbsKzgo'},
+  {t:'Beni Bul',     a:'Duman',             e:'🎵',vid:'lGWZ2RCYJQU'},
+  {t:'Ölürüm Sana',  a:'Mor ve Ötesi',      e:'🎶',vid:'Kw0bKEzRSK0'},
+  {t:'Seni Sildim',  a:'Norm Ender',         e:'🎤',vid:'CJi-MXFLP8A'},
+  {t:'Neyim Var Ki', a:'Haluk Levent',      e:'🎵',vid:'8FQrKRovFuM'},
+];
 
-/* ══════════════════════════════════════
-   STORAGE
-══════════════════════════════════════ */
-function loadLS() {
-  try {
-    const d = JSON.parse(localStorage.getItem('hm9') || '{}');
-    if(d.favs) S.favs = d.favs;
-    if(d.hist) S.hist = d.hist;
-    if(d.theme) S.theme = d.theme;
-    if(d.cfg) Object.assign(S.cfg, d.cfg);
-    if(d.stats) Object.assign(S.stats, d.stats);
-    if(d.queue) S.queue = d.queue;
-    if(d.vol !== undefined) S.vol = d.vol;
-    if(d.lang) S.lang = d.lang;
-    if(d.playlists) S.playlists = d.playlists;
-    if(d.suggestions) S.suggestions = d.suggestions;
-  } catch(e) {}
-}
-function saveLS() {
-  try {
-    localStorage.setItem('hm9', JSON.stringify({
-      favs:S.favs, hist:S.hist, theme:S.theme, cfg:S.cfg, stats:S.stats,
-      queue:S.queue, vol:S.vol, lang:S.lang, playlists:S.playlists, suggestions:S.suggestions
-    }));
-  } catch(e) {}
-}
+const EQ_PRESETS = [
+  {n:'Normal',b:0,m:0,t:0},
+  {n:'Bass+',  b:6,m:0,t:-2},
+  {n:'Rock',   b:3,m:-1,t:4},
+  {n:'Pop',    b:2,m:2,t:3},
+  {n:'Jazz',   b:2,m:-1,t:2},
+  {n:'Vokal',  b:-2,m:4,t:2},
+  {n:'EDM',    b:5,m:-2,t:2},
+  {n:'Lo-fi',  b:2,m:-1,t:-2},
+];
 
-/* ══════════════════════════════════════
-   INIT
-══════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  loadLS();
-  document.querySelectorAll('.lb').forEach(b => b.classList.toggle('on', b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+S.lang+"'")));
-  initTG();
-  applyLang(S.lang, false);
-  applyTheme(S.theme, false);
-  renderHome();
-  renderSearch();
-  buildThemes();
-  buildProfile();
-  renderLib('fav');
-  buildEq();
-  loadWeather();
-  checkSchedules();
-  // Sync lang buttons
-  document.querySelectorAll('.lb').forEach(b => {
-    b.classList.toggle('on', b.textContent.includes(S.lang.toUpperCase().slice(0,2)));
+// ── STATE ─────────────────────────────────────────────
+const S = {
+  tg:null, user:null, chatId:null,
+  lang:'tr', theme:'ghost',
+  playing:false, shuffle:false, loop:false,
+  vol:80, speed:1,
+  cur:null,
+  queue:[],
+  hist:[],
+  favs:[],
+  playlists:[],
+  stats:{played:0,points:0},
+  _timer:null, _prog:0, _dur:0,
+  _sleepTimer:null, _sleepMin:0,
+  _eqBass:0, _eqMid:0, _eqTreb:0,
+};
+
+// ── YOUTUBE PLAYER ─────────────────────────────────────
+let YT_READY = false;
+let ytPlayer  = null;
+let audioEl   = null;   // For radio streams (HTML5 Audio)
+let _isRadio  = false;
+
+// Load YouTube IFrame API
+(function(){
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+})();
+
+window.onYouTubeIframeAPIReady = function(){
+  YT_READY = true;
+  ytPlayer = new YT.Player('ytPlayer',{
+    height:'1', width:'1',
+    playerVars:{autoplay:0,controls:0,playsinline:1,rel:0,fs:0,modestbranding:1},
+    events:{
+      onReady: onYTReady,
+      onStateChange: onYTState,
+    }
   });
-});
+};
 
-function initTG() {
-  const tg = S.tg;
-  if(!tg) return;
-  try { tg.ready(); tg.expand(); } catch(e) {}
-  try { tg.setHeaderColor('#08081a'); tg.setBackgroundColor('#08081a'); } catch(e) {}
-  const u = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
-  if(!u) return;
-  S.user = u;
-  S.chatId = (tg.initDataUnsafe && tg.initDataUnsafe.chat) ? tg.initDataUnsafe.chat.id : null;
-  const nm = u.first_name || 'User';
-  setEl('hName', '👻 ' + nm);
-  setEl('hAv', nm[0].toUpperCase());
-  const hAv2 = $('hAv'); if(hAv2) hAv2.textContent = nm[0].toUpperCase();
-  setEl('profAv', nm[0].toUpperCase());
-  setEl('profName', nm + (u.last_name ? ' ' + u.last_name : ''));
-  setEl('profSub', '@' + (u.username||'hayalet') + ' · ID: ' + u.id);
-}
+function onYTReady(){ }
 
-/* ══════════════════════════════════════
-   LANGUAGE
-══════════════════════════════════════ */
-function setLang(lang, el) {
-  S.lang = lang;
-  document.querySelectorAll('.lb').forEach(b => b.classList.remove('on'));
-  if(el) el.classList.add('on');
-  applyLang(lang, true);
-  botCmd('/dil ' + lang);
-}
-
-function applyLang(lang, save) {
-  S.lang = lang;
-  const L = I18N[lang] || I18N.tr;
-  // Nav
-  setEl('nav-home', L.navHome); setEl('nav-search', L.navSearch);
-  setEl('nav-lib', L.navLib); setEl('nav-prof', L.navProf);
-  // Home
-  setEl('hWelcome', L.welcome);
-  setEl('sh-pop', L.shPop); setEl('sh-all', L.shAll); setEl('sh-radio', L.shRadio);
-  setEl('qa-eq', L.qaEq); setEl('qa-sleep', L.qaSleep); setEl('qa-battle', L.qaBattle); setEl('qa-sched', L.qaSchd);
-  // FP
-  setEl('fpLbl', L.nowPlay); setEl('fpSpdLbl', L.fpSpdLbl);
-  // Search
-  setEl('pg-s-title', L.pgSearch); setEl('btn-play', L.btnPlay);
-  setEl('sh-trend', L.shTrend); setEl('sh-mood', L.shMood); setEl('sh-random', L.shRandom);
-  const sb = $('srchBar'); if(sb) sb.placeholder = L.srchPh;
-  const sm = $('srchMain'); if(sm) sm.placeholder = L.srchMainPh;
-  // Library
-  setEl('pg-l-title', L.pgLib);
-  setEl('tab-fav', L.tabFav); setEl('tab-hist', L.tabHist); setEl('tab-pl', L.tabPl);
-  setEl('tab-radio', L.tabRadio); setEl('tab-score', L.tabScore); setEl('tab-cmds', L.tabCmds);
-  // Profile
-  setEl('linksTitle', L.linksTitle); setEl('annTitle', L.annTitle);
-  setEl('suppTitle', L.suppTitle); setEl('creatorTitle', L.creatorTitle);
-  setEl('themeTitle', L.themeTitle); setEl('settTitle', L.settTitle); setEl('botInfoTitle', L.botInfoTitle);
-  setEl('djTitle', L.djTitle); setEl('djDesc', L.djDesc);
-  setEl('autoTitle', L.autoTitle); setEl('autoDesc', L.autoDesc);
-  setEl('notifTitle', L.notifTitle); setEl('notifDesc', L.notifDesc);
-  setEl('openBotBtn', L.openBotBtn); setEl('weekBtn', L.weekBtn); setEl('monthBtn', L.monthBtn);
-  setEl('reportTitle', L.reportTitle); setEl('wTitle', L.wTitle);
-  setEl('sv1l', L.sv1); setEl('sv2l', L.sv2); setEl('sv3l', L.sv3); setEl('sv4l', L.sv4);
-  // Sheets
-  setEl('qTitle', L.qTitle); setEl('qClrBtn', L.qClr);
-  setEl('eqTitle', L.eqTitle); setEl('eqBassLbl', L.bassLbl); setEl('eqTrebLbl', L.trebLbl); setEl('eqMidLbl', L.midLbl); setEl('normLbl', L.normLbl);
-  setEl('sleepTitle', L.sleepTitle); setEl('slpCancelBtn', L.slpCancel);
-  setEl('ctTitle', L.ctTitle);
-  setEl('plTitle', L.plTitle);
-  const pi = $('plInp'); if(pi) pi.placeholder = L.plInpPh;
-  setEl('plAddBtn', L.plAddBtn);
-  setEl('sugTitle', L.sugTitle);
-  const si = $('sugInp'); if(si) si.placeholder = L.sugInpPh;
-  setEl('sugAddBtn', L.sugAddBtn);
-  setEl('schdTitle', L.schdTitle); setEl('schdTimeLbl', L.schdTimeLbl); setEl('schdSongLbl', L.schdSongLbl); setEl('schdBtn', L.schdBtn);
-  // Re-render dynamic sections
-  renderMoodGrid(); renderRandomChips(); buildReport();
-  if(save) saveLS();
-}
-
-/* ══════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════ */
-function showPg(p) {
-  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(x => x.classList.remove('on'));
-  const pg = $('pg-' + p); if(pg) pg.classList.add('active');
-  const nb = document.querySelector('.nb[data-p="' + p + '"]'); if(nb) nb.classList.add('on');
-  if(p === 'library') renderLib(null);
-  if(p === 'profile') { buildProfile(); buildThemes(); buildBotInfo(); buildReport(); }
-}
-/* openSheet defined below */
-function closeSheet(sid, bid) { $(sid).classList.remove('on'); $(bid).classList.remove('on'); }
-
-/* ══════════════════════════════════════
-   RENDER HOME
-══════════════════════════════════════ */
-function renderHome() {
-  const L = I18N[S.lang] || I18N.tr;
-  const days = L.weekDays;
-  const day = days[new Date().getDay()];
-  const pick = TRACKS[Math.floor(Math.random() * TRACKS.length)];
-  const hb = $('homeBanner');
-  if(hb) hb.innerHTML =
-    '<div class="banner" onclick="playSong(\'' + esc(pick.t+' '+pick.a) + '\',\'' + pick.e + '\',\'' + esc(pick.a) + '\',\'' + esc(pick.t) + '\')">'
-    + '<div class="bn-emoji">' + pick.e + '</div>'
-    + '<div class="bn-tag">📅 ' + day + '</div>'
-    + '<div class="bn-title">' + pick.t + '</div>'
-    + '<div class="bn-sub">' + pick.a + '</div>'
-    + '<button class="btn btn-p btn-sm" style="margin-top:14px" onclick="event.stopPropagation();playSong(\'' + esc(pick.t+' '+pick.a) + '\',\'' + pick.e + '\',\'' + esc(pick.a) + '\',\'' + esc(pick.t) + '\')">'
-    + '<i class="fas fa-play"></i> ' + T('btnPlay') + '</button></div>';
-
-  const pl = $('popList');
-  if(pl) pl.innerHTML = TRACKS.map((tr, i) =>
-    '<div class="tr-row" onclick="playSong(\'' + esc(tr.t+' '+tr.a) + '\',\'' + tr.e + '\',\'' + esc(tr.a) + '\',\'' + esc(tr.t) + '\')">'
-    + '<div class="tr-num" style="width:18px;font-size:11px;color:var(--txt2);text-align:center;flex-shrink:0">' + (i+1) + '</div>'
-    + '<div class="tr-art">' + tr.e + '</div>'
-    + '<div class="tr-info"><div class="tr-name">' + tr.t + '</div><div class="tr-sub">' + tr.a + '</div></div>'
-    + '<div class="tr-dur">' + tr.d + '</div>'
-    + '<button class="tr-more" onclick="event.stopPropagation();addQueue(\'' + esc(tr.t+' '+tr.a) + '\',\'' + tr.e + '\',\'' + esc(tr.a) + '\',\'' + esc(tr.t) + '\')"><i class="fas fa-plus"></i></button>'
-    + '</div>'
-  ).join('');
-
-  const rs = $('radioShort');
-  if(rs) rs.innerHTML = RADIOS.slice(0,4).map(r =>
-    '<div class="ri-row" onclick="playRadio(\'' + esc(r.n) + '\',\'' + r.e + '\')">'
-    + '<div class="ri-ico" style="background:' + r.c + '22;border:1px solid ' + r.c + '33">' + r.e + '</div>'
-    + '<div style="flex:1"><div style="font-weight:600;font-size:13.5px">' + r.n + '</div><div style="font-size:11px;color:var(--txt2)">Canlı</div></div>'
-    + '<div class="wave"><span></span><span></span><span></span></div>'
-    + '</div>'
-  ).join('');
-}
-
-/* ══════════════════════════════════════
-   RENDER SEARCH
-══════════════════════════════════════ */
-function renderSearch() {
-  const tc = $('trendChips');
-  if(tc) tc.innerHTML = TRENDS.map(tr =>
-    '<div class="chip" onclick="quickPick(\'' + esc(tr) + '\')">' + tr + '</div>'
-  ).join('');
-  renderMoodGrid();
-  renderRandomChips();
-  renderBotArea();
-}
-function renderMoodGrid() {
-  const mg = $('moodGrid'); if(!mg) return;
-  const moods = T('moods') || I18N.tr.moods;
-  mg.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    + moods.map(m =>
-      '<div class="card" style="padding:11px;cursor:pointer;text-align:center" onclick="playMood(\'' + esc(m) + '\')">'
-      + '<div style="font-size:22px">' + m.split(' ')[0] + '</div>'
-      + '<div style="font-size:12px;font-weight:600;margin-top:4px">' + m.split(' ').slice(1).join(' ') + '</div>'
-      + '</div>'
-    ).join('') + '</div>';
-}
-function renderRandomChips() {
-  const rc = $('randomChips'); if(!rc) return;
-  const genres = T('genres') || I18N.tr.genres;
-  rc.innerHTML = genres.map(g =>
-    '<div class="chip" onclick="playRandom(\'' + esc(g) + '\')">' + g + '</div>'
-  ).join('');
-}
-function renderBotArea() {
-  const el = $('botArea'); if(!el) return;
-  if(S.chatId) {
-    el.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--txt2);text-transform:uppercase;margin-bottom:8px">⚡ Hızlı Komutlar</div>'
-      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">'
-      + [['▶️ NP','/np'],['⏸ Duraklat','/duraklat'],['⏭ Atla','/atla'],['⏹ Durdur','/durdur']].map(([l,c]) =>
-        '<button class="fp-bot-btn" onclick="botCmd(\'' + c + '\')">' + l + '<i class="fas fa-paper-plane"></i></button>'
-      ).join('') + '</div>';
-  } else {
-    el.innerHTML = '<div class="notice"><i class="fas fa-info-circle"></i><span>' + T('noGroup') + '</span></div>';
+function onYTState(e){
+  if(e.data === YT.PlayerState.PLAYING){
+    S.playing = true;
+    S._dur = ytPlayer.getDuration() || 0;
+    updateUI();
+    startProg();
+  } else if(e.data === YT.PlayerState.PAUSED){
+    S.playing = false;
+    updateUI();
+  } else if(e.data === YT.PlayerState.ENDED){
+    nextTrack();
+  } else if(e.data === YT.PlayerState.BUFFERING){
+    // loading
   }
 }
 
-/* ══════════════════════════════════════
-   LIBRARY
-══════════════════════════════════════ */
-function renderLib(tab) {
-  const cur = tab || (document.querySelector('#libTabs .on') && document.querySelector('#libTabs .on').dataset.tab) || 'fav';
-  if(tab) document.querySelectorAll('#libTabs .chip').forEach(c => c.classList.toggle('on', c.dataset.tab === tab));
-  const body = $('libBody'); if(!body) return;
+// ── PLAY A YOUTUBE VIDEO ───────────────────────────────
+function playSong(videoId, title, artist, emoji, thumb){
+  if(!videoId) return;
+  _isRadio = false;
+  stopRadio();
 
-  if(cur === 'fav') {
-    if(!S.favs.length) { body.innerHTML = emptyState('far fa-heart', T('noFav'), T('noFavSub')); return; }
-    body.innerHTML = '<div class="card" style="padding:6px 10px">'
-      + S.favs.map((tr, i) =>
-        '<div class="tr-row" onclick="playSong(\'' + esc(tr.q) + '\',\'' + (tr.e||'🎵') + '\',\'' + esc(tr.a||'') + '\',\'' + esc(tr.t) + '\')">'
-        + '<div class="tr-art">' + (tr.e||'🎵') + '</div>'
-        + '<div class="tr-info"><div class="tr-name">' + tr.t + '</div><div class="tr-sub">' + (tr.a||'') + '</div></div>'
-        + '<button class="tr-more" onclick="event.stopPropagation();rmFav(' + i + ')"><i class="fas fa-times" style="color:var(--rose)"></i></button>'
-        + '</div>'
-      ).join('') + '</div>';
+  S.cur = {videoId, t:title||'', a:artist||'', e:emoji||'🎵', thumb:thumb||''};
+  S.playing = true;
+  S._prog = 0;
 
-  } else if(cur === 'hist') {
-    if(!S.hist.length) { body.innerHTML = emptyState('fas fa-history', T('noHist'), T('noHistSub')); return; }
-    body.innerHTML = '<div class="card" style="padding:6px 10px">'
-      + S.hist.slice(0,25).map(tr =>
-        '<div class="tr-row" onclick="playSong(\'' + esc(tr.q) + '\',\'' + (tr.e||'🎵') + '\',\'' + esc(tr.a||'') + '\',\'' + esc(tr.t) + '\')">'
-        + '<div class="tr-art">' + (tr.e||'🎵') + '</div>'
-        + '<div class="tr-info"><div class="tr-name">' + tr.t + '</div><div class="tr-sub">' + (tr.a||'') + '</div></div>'
-        + '</div>'
-      ).join('') + '</div>';
+  // History
+  S.hist = S.hist.filter(h=>h.videoId!==videoId);
+  S.hist.unshift({...S.cur});
+  if(S.hist.length>50) S.hist.pop();
 
-  } else if(cur === 'pl') {
-    openSheet('plSheet','plBg');
+  S.stats.played++;
+  S.stats.points += 10;
 
-  } else if(cur === 'radio') {
-    body.innerHTML = RADIOS.map(r =>
-      '<div class="card" style="cursor:pointer;margin-bottom:8px" onclick="playRadio(\'' + esc(r.n) + '\',\'' + r.e + '\')">'
-      + '<div style="display:flex;align-items:center;gap:13px">'
-      + '<div class="ri-ico" style="background:' + r.c + '22;width:48px;height:48px;border-radius:14px;font-size:24px">' + r.e + '</div>'
-      + '<div style="flex:1"><div style="font-weight:700;font-size:14px">' + r.n + '</div><div style="font-size:11.5px;color:var(--txt2)">Canlı · FM</div></div>'
-      + '<div class="wave"><span></span><span></span><span></span></div>'
-      + '</div></div>'
-    ).join('');
-
-  } else if(cur === 'score') {
-    const scores = TRACKS.map((tr, i) => ({name:tr.t, artist:tr.a, pts:Math.floor(Math.random()*1000)+100+i*60}))
-      .sort((a,b) => b.pts - a.pts);
-    body.innerHTML = '<div style="margin-bottom:10px"><div class="chips">'
-      + ['Tüm Zamanlar','Haftalık','Günlük'].map((l,i) =>
-        '<div class="chip' + (i===0?' on':'') + '">' + l + '</div>'
-      ).join('') + '</div></div>'
-      + scores.map((s,i) =>
-        '<div class="sc-row">'
-        + '<div class="sc-rank">' + (i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)) + '</div>'
-        + '<div style="flex:1"><div style="font-weight:600;font-size:13px">' + s.name + '</div><div style="font-size:11px;color:var(--txt2)">' + s.artist + '</div></div>'
-        + '<div style="font-size:13px;font-weight:700;color:var(--p3)">' + s.pts + ' pt</div>'
-        + '</div>'
-      ).join('');
-
-  } else if(cur === 'cmds') {
-    body.innerHTML = COMMANDS.map(c =>
-      '<div class="cmd-row">'
-      + '<div class="cmd-ico">' + c.i + '</div>'
-      + '<div style="flex:1;min-width:0">'
-      + '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">'
-      + '<span class="cmd-txt">' + c.c + '</span>'
-      + '<span class="badge ' + (c.g?'badge-p':'badge-a') + '">' + (c.g?'Grup':'PM') + '</span>'
-      + '</div>'
-      + '<div class="cmd-desc">' + c.d + '</div>'
-      + '</div>'
-      + '<button class="btn btn-s btn-sm btn-ico" onclick="copyCmd(\'' + esc(c.c.split(' ')[0]) + '\')" style="width:36px;height:36px;padding:0;border-radius:50%"><i class="fas fa-copy" style="font-size:12px"></i></button>'
-      + '</div>'
-    ).join('');
+  if(YT_READY && ytPlayer && ytPlayer.loadVideoById){
+    ytPlayer.loadVideoById(videoId);
+    ytPlayer.setVolume(S.vol);
   }
-}
-function switchTab(tab, el) {
-  if(el) {
-    document.querySelectorAll('#libTabs .chip').forEach(c => c.classList.remove('on'));
-    el.classList.add('on');
-  } else {
-    document.querySelectorAll('#libTabs .chip').forEach(c => {
-      c.classList.toggle('on', c.dataset.tab === tab);
-    });
-  }
-  if($('pg-library').classList.contains('active')) renderLib(tab);
-}
-function emptyState(ico, title, sub) {
-  return '<div style="text-align:center;padding:50px 0;color:var(--txt2)">'
-    + '<i class="' + ico + '" style="font-size:40px;margin-bottom:12px;display:block;opacity:.35"></i>'
-    + '<div style="font-weight:600;margin-bottom:4px">' + title + '</div>'
-    + '<div style="font-size:12px">' + sub + '</div></div>';
-}
 
-/* ══════════════════════════════════════
-   PLAYER
-══════════════════════════════════════ */
-function playSong(q, e, a, tt) {
-  if(!e) e = '🎵'; if(!a) a = ''; if(!tt) tt = q.split(' ')[0];
-  S.cur = {q, e, a, t:tt};
-  S.playing = true; S._pv = 0; S.liked = false;
-  S.stats.played++; S.stats.points += 10;
-  S.hist = S.hist.filter(h => h.q !== q);
-  S.hist.unshift({q, e, a, t:tt});
-  if(S.hist.length > 30) S.hist.pop();
-  updateMini(); updateFP(); startProg();
-  $('miniPlayer').classList.add('show');
-  botCmd('/oynat ' + q);
-  toast('▶️ ' + tt, 'ok');
+  updateUI();
+  updateMini();
+  updateFP();
+  document.getElementById('miniPlayer').classList.add('show');
   saveLS();
-  const bl = $('btnLike'); if(bl) bl.innerHTML = '<i class="far fa-heart"></i>';
+  toast('▶️ ' + (title||'Çalınıyor'), 'ok');
 }
-function playRadio(n, e) {
-  if(!e) e = '📻';
-  playSong('/canli ' + n, e, 'Canlı Radyo', n);
+
+// ── PLAY RADIO (HTML5 Audio) ───────────────────────────
+function playRadio(name, url, emoji){
+  _isRadio = true;
+  // Stop YT
+  if(ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
+  // Stop old audio
+  stopRadio();
+
+  audioEl = new Audio(url);
+  audioEl.crossOrigin = 'anonymous';
+  audioEl.volume = S.vol / 100;
+  audioEl.play().catch(e=>{
+    toast('❌ Radyo bağlanamadı: ' + name, 'err');
+    audioEl = null;
+    _isRadio = false;
+  });
+  audioEl.onerror = ()=>{ toast('❌ Radyo hatası: '+name,'err'); };
+
+  S.cur = {videoId:null, t:name, a:'🔴 Canlı Yayın', e:emoji||'📻', thumb:'', isRadio:true, radioUrl:url};
+  S.playing = true;
+  S._dur = 0;
+  S._prog = 0;
+
+  updateUI();
+  updateMini();
+  updateFP();
+  document.getElementById('miniPlayer').classList.add('show');
+  toast('📻 ' + name + ' bağlandı', 'ok');
 }
-function playRandom(genre) {
-  const r = TRACKS[Math.floor(Math.random() * TRACKS.length)];
-  playSong(r.t + ' ' + r.a, r.e, r.a, r.t);
-  botCmd('/rastgele ' + (genre||''));
-  toast('🎲 ' + (genre||''), 'info');
-}
-function playMood(m) {
-  playSong(m.replace(/[^\wğüşıöçĞÜŞİÖÇa-z ]/giu,'').trim() + ' müzik', '😊', 'Ruh Hali', m);
-}
-function addQueue(q, e, a, tt) {
-  if(!e) e = '🎵'; if(!a) a = ''; if(!tt) tt = q.split(' ')[0];
-  S.queue.push({q, e, a, t:tt}); saveLS();
-  toast(T('tQueue') + ': ' + tt, 'ok');
-}
-function togglePlay() {
-  if(!S.cur) { showPg('search'); return; }
-  S.playing = !S.playing;
-  if(S.playing) startProg(); else stopProg();
-  updatePlayIco();
-}
-function prevTrack() {
-  if(S.hist.length > 1) playSong(S.hist[1].q, S.hist[1].e, S.hist[1].a, S.hist[1].t);
-}
-function nextTrack() {
-  if(S.loop && S.cur) { playSong(S.cur.q, S.cur.e, S.cur.a, S.cur.t); return; }
-  if(S.shuffle && S.queue.length > 0) {
-    const idx = Math.floor(Math.random() * S.queue.length);
-    const nx = S.queue.splice(idx, 1)[0];
-    playSong(nx.q, nx.e, nx.a, nx.t); saveLS(); return;
-  }
-  if(S.queue.length > 0) {
-    const nx = S.queue.shift();
-    playSong(nx.q, nx.e, nx.a, nx.t); saveLS();
-  } else if(S.cfg.auto_play && TRACKS.length > 0) {
-    const r = TRACKS[Math.floor(Math.random() * TRACKS.length)];
-    playSong(r.t + ' ' + r.a, r.e, r.a, r.t);
-  } else {
-    toast(T('tQueueEmpty'), 'info'); S.playing = false; updatePlayIco();
+
+function stopRadio(){
+  if(audioEl){
+    audioEl.pause();
+    audioEl.src = '';
+    audioEl = null;
   }
 }
-function updatePlayIco() {
-  const ic = S.playing ? 'fa-pause' : 'fa-play';
-  const mpb = $('miniPlayBtn'); if(mpb) mpb.innerHTML = '<i class="fas ' + ic + '"></i>';
-  const fpb = $('fpPlay'); if(fpb) fpb.innerHTML = '<i class="fas ' + ic + '"></i>';
-  const fa = $('fpArt'); if(fa) fa.classList.toggle('pl', S.playing);
-  const ma = $('mpArt'); if(ma) ma.classList.toggle('pl', S.playing);
-}
-function updateMini() {
-  if(!S.cur) return;
-  setEl('mpTitle', S.cur.t); setEl('mpArtist', S.cur.a || 'Hayalet Müzik');
-  const ma = $('mpArt'); if(ma) ma.textContent = S.cur.e;
-  updatePlayIco();
-}
-function updateFP() {
-  if(!S.cur) return;
-  setEl('fpSong', S.cur.t); setEl('fpSinger', S.cur.a || 'Hayalet Müzik');
-  const fa = $('fpArt'); if(fa) fa.textContent = S.cur.e;
-  const grid = $('fpBotGrid');
-  if(grid) {
-    if(S.chatId) {
-      grid.innerHTML = [
-        ['▶️ Gruba Çal', '/oynat ' + (S.cur ? S.cur.q : '')],
-        ['⏭ Atla', '/atla'], ['📋 Kuyruk', '/kuyruk'], ['⏸ Duraklat', '/duraklat']
-      ].map(([l,c]) =>
-        '<button class="fp-bot-btn" onclick="botCmd(\'' + esc(c) + '\')">' + l + '<i class="fas fa-paper-plane"></i></button>'
-      ).join('');
-    } else grid.innerHTML = '';
-  }
-}
-function startProg() {
+
+// ── PROGRESS ──────────────────────────────────────────
+function startProg(){
   stopProg();
-  S._timer = setInterval(() => {
+  S._timer = setInterval(()=>{
     if(!S.playing) return;
-    S._pv = Math.min(S._pv + (100 / S.dur) * S.speed, 100);
-    const mf = $('mpFill'); if(mf) mf.style.width = S._pv + '%';
-    const fr = $('fpRange'); if(fr) fr.value = S._pv;
-    const fc = $('fpCur'); if(fc) fc.textContent = fmt(S._pv * S.dur / 100);
-    const fd = $('fpDur'); if(fd) fd.textContent = fmt(S.dur);
-    if(S._pv >= 100) { S._pv = 0; nextTrack(); }
-  }, 1000);
+    if(_isRadio){
+      // Radio: just animate
+      S._prog = (S._prog+0.1) % 100;
+    } else if(ytPlayer && ytPlayer.getCurrentTime){
+      const cur = ytPlayer.getCurrentTime() || 0;
+      const dur = ytPlayer.getDuration()    || 0;
+      S._dur  = dur;
+      S._prog = dur > 0 ? (cur/dur)*100 : 0;
+      updateTimes(cur, dur);
+    }
+    updateProgBar();
+  }, 500);
 }
-function stopProg() { if(S._timer) { clearInterval(S._timer); S._timer = null; } }
-function seekTo(v) { S._pv = +v; const mf = $('mpFill'); if(mf) mf.style.width = v + '%'; }
-function setVol(v) { S.vol = +v; const fv = $('fpVol'); if(fv) fv.value = v; saveLS(); }
-function setSpd(s, el) {
-  S.speed = s;
-  document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
-  if(el) el.classList.add('on');
-  toast('⚡ ' + s + '×', 'info');
+
+function stopProg(){
+  if(S._timer){ clearInterval(S._timer); S._timer=null; }
 }
-function toggleShuffle() {
+
+function updateTimes(cur, dur){
+  const el1 = document.getElementById('fpCur');
+  const el2 = document.getElementById('fpTot');
+  if(el1) el1.textContent = fmtTime(cur);
+  if(el2) el2.textContent = fmtTime(dur);
+}
+
+function updateProgBar(){
+  const fill  = document.getElementById('mpFill');
+  const range = document.getElementById('fpRange');
+  if(fill)  fill.style.width = S._prog + '%';
+  if(range){
+    range.value = S._prog;
+    range.style.setProperty('--pct', S._prog + '%');
+  }
+}
+
+function fmtTime(s){
+  s = Math.floor(s||0);
+  const m = Math.floor(s/60), sec = s%60;
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+function seekTo(pct){
+  if(_isRadio) return;
+  if(ytPlayer && ytPlayer.getDuration && S._dur>0){
+    const t = (pct/100)*S._dur;
+    ytPlayer.seekTo(t, true);
+    S._prog = pct;
+    updateProgBar();
+  }
+}
+
+// ── CONTROLS ──────────────────────────────────────────
+function togglePlay(){
+  if(!S.cur){ showPg('search'); return; }
+  if(_isRadio){
+    if(S.playing && audioEl){
+      audioEl.pause();
+      S.playing = false;
+      stopProg();
+    } else {
+      if(audioEl) audioEl.play();
+      S.playing = true;
+      startProg();
+    }
+    updateUI();
+    return;
+  }
+  if(!ytPlayer || !ytPlayer.getPlayerState) return;
+  const state = ytPlayer.getPlayerState();
+  if(state === YT.PlayerState.PLAYING){
+    ytPlayer.pauseVideo();
+    S.playing = false;
+    stopProg();
+  } else {
+    ytPlayer.playVideo();
+    S.playing = true;
+    startProg();
+  }
+  updateUI();
+}
+
+function nextTrack(){
+  if(S.loop && S.cur){
+    if(_isRadio && S.cur.radioUrl) playRadio(S.cur.t, S.cur.radioUrl, S.cur.e);
+    else if(S.cur.videoId) playSong(S.cur.videoId, S.cur.t, S.cur.a, S.cur.e, S.cur.thumb);
+    return;
+  }
+  if(S.shuffle && S.queue.length>0){
+    const idx = Math.floor(Math.random()*S.queue.length);
+    const nx  = S.queue.splice(idx,1)[0];
+    playSong(nx.videoId, nx.t, nx.a, nx.e, nx.thumb);
+    saveLS(); return;
+  }
+  if(S.queue.length>0){
+    const nx = S.queue.shift();
+    if(nx.isRadio) playRadio(nx.t, nx.radioUrl, nx.e);
+    else playSong(nx.videoId, nx.t, nx.a, nx.e, nx.thumb);
+    saveLS(); return;
+  }
+  toast('📭 Kuyruk boş', 'info');
+}
+
+function prevTrack(){
+  if(S.hist.length>1){
+    const prev = S.hist[1];
+    if(prev.isRadio) playRadio(prev.t, prev.radioUrl, prev.e);
+    else playSong(prev.videoId, prev.t, prev.a, prev.e, prev.thumb);
+  }
+}
+
+function setVol(v){
+  S.vol = parseInt(v);
+  if(ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(S.vol);
+  if(audioEl) audioEl.volume = S.vol/100;
+}
+
+function toggleShuffle(){
   S.shuffle = !S.shuffle;
-  const bs = $('btnShuf'); if(bs) bs.classList.toggle('on', S.shuffle);
-  toast(T('tShuffle') + ' ' + (S.shuffle ? T('tOn') : T('tOff')), 'info');
+  const btn = document.getElementById('btnShuffle');
+  if(btn) btn.classList.toggle('on', S.shuffle);
+  toast(S.shuffle?'🔀 Karıştırma açık':'🔀 Karıştırma kapalı','info');
 }
-function toggleLoop() {
+
+function toggleLoop(){
   S.loop = !S.loop;
-  const bl = $('btnLoop'); if(bl) bl.classList.toggle('on', S.loop);
-  toast(T('tLoop') + ' ' + (S.loop ? T('tOn') : T('tOff')), 'info');
-}
-function toggleLike() {
-  if(!S.cur) return;
-  S.liked = !S.liked;
-  const bl = $('btnLike');
-  if(bl) bl.innerHTML = S.liked ? '<i class="fas fa-heart" style="color:var(--rose)"></i>' : '<i class="far fa-heart"></i>';
-  if(S.liked) { S.favs.unshift(Object.assign({}, S.cur)); toast(T('tFav'), 'ok'); }
-  else { S.favs = S.favs.filter(f => f.q !== S.cur.q); toast(T('tRemoved'), 'info'); }
-  saveLS();
-}
-function addFav() {
-  if(!S.cur) return;
-  if(!S.favs.find(f => f.q === S.cur.q)) { S.favs.unshift(Object.assign({}, S.cur)); saveLS(); toast(T('tFav'), 'ok'); }
-  else toast(T('tAlreadyFav'), 'info');
-}
-function rmFav(i) { S.favs.splice(i, 1); renderLib('fav'); saveLS(); toast(T('tRemoved'), 'info'); }
-function shareTrack() {
-  if(!S.cur) return;
-  const txt = '🎵 ' + S.cur.t + ' — @' + CFG.BOT_USERNAME + " ile dinle!";
-  if(navigator.share) { try { navigator.share({text:txt}); } catch(e) { navigator.clipboard && navigator.clipboard.writeText(txt); toast('📋 ' + T('tCopied'), 'ok'); } }
-  else { navigator.clipboard && navigator.clipboard.writeText(txt); toast('📋 ' + T('tCopied'), 'ok'); }
+  const btn = document.getElementById('btnLoop');
+  if(btn) btn.classList.toggle('on', S.loop);
+  toast(S.loop?'🔁 Döngü açık':'🔁 Döngü kapalı','info');
 }
 
-/* ══════════════════════════════════════
-   FULL PLAYER
-══════════════════════════════════════ */
-function openFP() { updateFP(); $('fullPlayer').classList.add('show'); }
-function closeFP() { $('fullPlayer').classList.remove('show'); }
+// ── SEARCH (YouTube Data API v3) ────────────────────────
+let _srchDebounce = null;
 
-/* ══════════════════════════════════════
-   QUEUE
-══════════════════════════════════════ */
-function renderQueue() {
-  const el = $('queueList'); if(!el) return;
-  if(!S.queue.length) { el.innerHTML = emptyState('fas fa-list-ul', T('qEmpty'), T('qEmptySub')); return; }
-  el.innerHTML = S.queue.map((tr, i) =>
-    '<div class="tr-row">'
-    + '<div style="width:22px;font-size:11px;color:var(--txt2);text-align:center">' + (i+1) + '</div>'
-    + '<div class="tr-art" style="width:38px;height:38px">' + (tr.e||'🎵') + '</div>'
-    + '<div class="tr-info"><div class="tr-name">' + tr.t + '</div><div class="tr-sub">' + (tr.a||'') + '</div></div>'
-    + '<button onclick="rmQueue(' + i + ')" style="border:none;background:none;color:var(--rose);cursor:pointer;padding:8px;font-size:14px"><i class="fas fa-times"></i></button>'
-    + '</div>'
+function onSearchInput(v){
+  clearTimeout(_srchDebounce);
+  if(!v.trim()){ renderSearchEmpty(); return; }
+  _srchDebounce = setTimeout(()=>doSearch(v), 600);
+}
+
+async function doSearch(q){
+  if(!q){
+    const inp = document.getElementById('srchInp');
+    if(inp) q = inp.value.trim();
+  }
+  if(!q){ toast('❌ Şarkı adı girin','err'); return; }
+
+  const el = document.getElementById('srchResults');
+  if(!el) return;
+  el.innerHTML = '<div class="srch-loading"><i class="fas fa-spinner"></i> Aranıyor...</div>';
+  showPg('search');
+
+  try {
+    const results = await ytSearch(q);
+    if(!results || !results.length){
+      el.innerHTML = '<div class="empty"><i class="fas fa-search"></i><div class="empty-title">Sonuç bulunamadı</div><div class="empty-sub">Farklı bir şarkı dene</div></div>';
+      return;
+    }
+    renderSearchResults(results, el);
+  } catch(e){
+    el.innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle"></i><div class="empty-title">Arama hatası</div><div class="empty-sub">'+e.message+'</div></div>';
+  }
+}
+
+async function ytSearch(q, maxResults){
+  maxResults = maxResults || 10;
+
+  // If YouTube API key available, use Data API v3
+  if(CFG.YT_KEY){
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&maxResults=${maxResults}&type=video&videoCategoryId=10&key=${CFG.YT_KEY}`;
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('YouTube API hatası: ' + r.status);
+    const data = await r.json();
+    if(!data.items) throw new Error('Sonuç yok');
+    return data.items.map(item=>({
+      videoId: item.id.videoId,
+      title:   item.snippet.title,
+      artist:  item.snippet.channelTitle,
+      thumb:   item.snippet.thumbnails.medium.url,
+      e:       '🎵',
+    }));
+  }
+
+  // Fallback: use YouTube oEmbed + custom search (no key needed)
+  // We use a CORS proxy approach with youtube-nocookie
+  throw new Error('YouTube API key gerekli. CFG.YT_KEY değerini gir.');
+}
+
+function renderSearchResults(results, el){
+  el.innerHTML = results.map((r,i)=>
+    `<div class="tr-row" onclick="playSong('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}')">
+      <div class="tr-art">${r.thumb?`<img src="${r.thumb}" loading="lazy">`:'🎵'}</div>
+      <div class="tr-info">
+        <div class="tr-name">${r.title}</div>
+        <div class="tr-sub">${r.artist}</div>
+      </div>
+      <button class="tr-menu" onclick="event.stopPropagation();addToQueue('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}')">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>`
   ).join('');
 }
-function clearQueue() { S.queue = []; renderQueue(); saveLS(); toast(T('tQueueClear'), 'info'); }
-function rmQueue(i) { S.queue.splice(i, 1); renderQueue(); saveLS(); }
-function openQueueSheet() {
+
+function renderSearchEmpty(){
+  const el = document.getElementById('srchResults');
+  if(el) el.innerHTML = '<div class="empty"><i class="fas fa-search"></i><div class="empty-title">Müzik Ara</div><div class="empty-sub">YouTube\'dan arama için API key gerekmez, video ID ile direkt çalabilirsin</div></div>';
+}
+
+// Quick search (sheet)
+async function quickSearch(){
+  const inp = document.getElementById('qsInp');
+  if(!inp) return;
+  const q = inp.value.trim();
+  if(!q) return;
+  const el = document.getElementById('qsResults');
+  if(!el) return;
+  el.innerHTML = '<div class="srch-loading"><i class="fas fa-spinner"></i></div>';
+  try {
+    const results = await ytSearch(q, 5);
+    el.innerHTML = results.map(r=>
+      `<div class="tr-row" onclick="playSong('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}');closeSheet('searchSheet','searchBg')">
+        <div class="tr-art">${r.thumb?`<img src="${r.thumb}" loading="lazy">`:'🎵'}</div>
+        <div class="tr-info">
+          <div class="tr-name">${r.title}</div>
+          <div class="tr-sub">${r.artist}</div>
+        </div>
+      </div>`
+    ).join('');
+  } catch(e){
+    el.innerHTML = `<div class="empty"><i class="fas fa-key"></i><div class="empty-title">API Key Gerekli</div><div class="empty-sub">Arama için CFG.YT_KEY değerini gir<br><a href="https://console.cloud.google.com" target="_blank" style="color:var(--p3)">Google Console'dan al</a></div></div>`;
+  }
+}
+
+// ── QUEUE ─────────────────────────────────────────────
+function addToQueue(videoId, title, artist, emoji, thumb){
+  S.queue.push({videoId, t:title, a:artist, e:emoji, thumb});
+  toast('➕ Kuyruğa eklendi: '+title,'info');
+  saveLS();
+}
+
+function clearQueue(){
+  S.queue = [];
+  saveLS();
+  renderQueue();
+  toast('🗑️ Kuyruk temizlendi','info');
+}
+
+function rmFromQueue(idx){
+  S.queue.splice(idx,1);
+  saveLS();
+  renderQueue();
+}
+
+function renderQueue(){
+  const el = document.getElementById('queueBody');
+  if(!el) return;
+  if(!S.queue.length){
+    el.innerHTML = '<div class="empty"><i class="fas fa-list-ul"></i><div class="empty-title">Kuyruk boş</div><div class="empty-sub">Şarkılara + dokun</div></div>';
+    return;
+  }
+  el.innerHTML = S.queue.map((s,i)=>
+    `<div class="q-item" onclick="playFromQueue(${i})">
+      <div class="q-num">${i+1}</div>
+      <div class="q-art">${s.thumb?`<img src="${s.thumb}" loading="lazy">`:s.e}</div>
+      <div class="q-info">
+        <div class="q-title">${s.t}</div>
+        <div class="q-artist">${s.a}</div>
+      </div>
+      <button class="q-rm" onclick="event.stopPropagation();rmFromQueue(${i})">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>`
+  ).join('');
+}
+
+function playFromQueue(idx){
+  const track = S.queue.splice(idx,1)[0];
+  if(track.isRadio) playRadio(track.t, track.radioUrl, track.e);
+  else playSong(track.videoId, track.t, track.a, track.e, track.thumb);
+  saveLS();
+  renderQueue();
+}
+
+function openQueue(){
   renderQueue();
   openSheet('queueSheet','queueBg');
 }
-function closeQueueSheet() {
-  closeSheet('queueSheet','queueBg');
-}
 
-/* ══════════════════════════════════════
-   SEARCH ACTIONS
-══════════════════════════════════════ */
-function liveSearch(q) {
-  const el = $('srchRes'); if(!el) return;
-  if(!q) { el.innerHTML = ''; return; }
-  const rs = TRACKS.filter(tr => tr.t.toLowerCase().includes(q.toLowerCase()) || tr.a.toLowerCase().includes(q.toLowerCase()));
-  if(!rs.length) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div class="card" style="padding:4px 8px;margin-bottom:4px">'
-    + rs.map(tr =>
-      '<div class="tr-row" onclick="playSong(\'' + esc(tr.t+' '+tr.a) + '\',\'' + tr.e + '\',\'' + esc(tr.a) + '\',\'' + esc(tr.t) + '\')">'
-      + '<div class="tr-art">' + tr.e + '</div>'
-      + '<div class="tr-info"><div class="tr-name">' + tr.t + '</div><div class="tr-sub">' + tr.a + '</div></div>'
-      + '</div>'
-    ).join('') + '</div>';
-}
-function quickPlay() {
-  const q = $('srchBar') && $('srchBar').value.trim(); if(!q) return;
-  playSong(q, '🎵', '', q.split(' ').slice(0,2).join(' '));
-  $('srchBar').value = ''; $('srchRes').innerHTML = '';
-}
-function doPlay() {
-  const q = $('srchMain') && $('srchMain').value.trim();
-  if(!q) { toast(T('tNoSong'), 'err'); return; }
-  playSong(q, '🎵', '', q.split(' ').slice(0,2).join(' '));
-}
-function doQueue() {
-  const q = $('srchMain') && $('srchMain').value.trim();
-  if(!q) { toast(T('tNoSong'), 'err'); return; }
-  addQueue(q, '🎵', '', q.split(' ').slice(0,2).join(' '));
-}
-function quickPick(q) { const sm = $('srchMain'); if(sm) sm.value = q; showPg('search'); doPlay(); }
-function setGenre(el) { document.querySelectorAll('#genreChips .chip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
-function copyCmd(c) { navigator.clipboard && navigator.clipboard.writeText(c).then(() => toast('📋 ' + c + ' ' + T('tCopied'), 'ok')); }
-
-/* ══════════════════════════════════════
-   BOT COMMAND
-══════════════════════════════════════ */
-async function botCmd(cmd) {
-  const cid = S.chatId;
-  if(!cid) { navigator.clipboard && navigator.clipboard.writeText(cmd); toast('📋 ' + cmd + ' ' + T('tCopied'), 'info'); return; }
-  try {
-    const r = await fetch('https://api.telegram.org/bot' + CFG.BOT_TOKEN + '/sendMessage', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({chat_id: cid, text: cmd})
-    });
-    const d = await r.json();
-    if(d.ok) toast(T('tSent'), 'ok');
-    else toast(T('tFail'), 'err');
-  } catch(e) { toast(T('tConn'), 'err'); }
-}
-function openTg() {
-  const url = 'https://t.me/' + CFG.BOT_USERNAME;
-  if(S.tg && S.tg.openLink) { try { S.tg.openLink(url); return; } catch(e) {} }
-  window.open(url, '_blank');
-}
-
-/* ══════════════════════════════════════
-   THEME
-══════════════════════════════════════ */
-function applyTheme(id, save) {
-  if(save === undefined) save = true;
-  S.theme = id; document.body.className = 'th-' + id;
-  document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.id === id));
-  if(save) saveLS();
-}
-function buildThemes() {
-  const tg = $('tGrid'); if(!tg) return;
-  tg.innerHTML = THEMES.map(th =>
-    '<div><div class="tdot' + (th.id===S.theme?' on':'') + '" data-id="' + th.id + '" style="background:' + th.g + '" onclick="applyTheme(\'' + th.id + '\')">'
-    + '<div class="tdot-ck">✓</div></div>'
-    + '<div class="tlbl">' + th.l + '</div></div>'
-  ).join('');
-}
-
-/* ══════════════════════════════════════
-   PROFILE
-══════════════════════════════════════ */
-function buildProfile() {
-  setEl('sv1', S.stats.played);
-  setEl('sv2', S.favs.length);
-  setEl('sv3', S.stats.points);
-  setEl('sv4', Math.floor(S.stats.played / 5));
-  const td = $('togDJ'); if(td) td.classList.toggle('on', S.cfg.dj_mode);
-  const ta = $('togAuto'); if(ta) ta.classList.toggle('on', S.cfg.auto_play);
-  const tn = $('togNotif'); if(tn) tn.classList.toggle('on', S.cfg.notif);
-}
-function toggleCfg(k, el) {
-  S.cfg[k] = !S.cfg[k]; el.classList.toggle('on', S.cfg[k]);
-  saveLS(); toast(S.cfg[k] ? '✅ ' + T('tOn') : '❌ ' + T('tOff'), 'info');
-}
-function buildBotInfo() {
-  const u = S.user; const nm = u ? u.first_name : 'User';
-  const L = I18N[S.lang] || I18N.tr;
-  const conn = S.chatId
-    ? '<span style="color:var(--ok)">' + T('groupConn') + '</span>'
-    : '<span style="color:var(--gold)">' + T('privateChat') + '</span>';
-  const el = $('botInfoCard');
-  if(el) el.innerHTML = L.infoUser + ': ' + nm + '<br>' + L.infoBot + ': @' + CFG.BOT_USERNAME + '<br>' + L.infoVer + ': ' + CFG.VER + '<br>' + L.infoPlugin + ': 40<br>' + L.infoStatus + ': ' + conn;
-}
-function buildReport() {
-  const rb = $('reportBody'); if(!rb) return;
-  const L = I18N[S.lang] || I18N.tr;
-  const top = S.hist.slice(0,1);
-  rb.innerHTML = (L.sv1||'Çalınan') + ': <b style="color:var(--p3)">' + S.stats.played + '</b><br>'
-    + (L.sv3||'Puan') + ': <b style="color:var(--p3)">' + S.stats.points + '</b><br>'
-    + (L.sv2||'Favori') + ': <b style="color:var(--p3)">' + S.favs.length + '</b><br>'
-    + 'Top: <b style="color:var(--p3)">' + (top.length ? top[0].t : '—') + '</b>';
-}
-function loadWeather() {
-  const wb = $('wBody'); if(!wb) return;
-  const ws = ['☀️ 22°C','⛅ 18°C','🌧️ 15°C','❄️ -2°C','🌤️ 20°C'];
-  const w = ws[Math.floor(Math.random() * ws.length)];
-  setTimeout(() => {
-    if(wb) wb.innerHTML = '<div style="font-size:32px">' + w.split(' ')[0] + '</div><div style="font-size:18px;font-weight:700;margin-top:4px">' + w.split(' ')[1] + '</div><div style="font-size:12px;color:var(--txt2);margin-top:4px">' + new Date().toLocaleDateString() + '</div>';
-    botCmd('/weather');
-  }, 700);
-}
-
-/* ══════════════════════════════════════
-   EQ
-══════════════════════════════════════ */
-function buildEq() {
-  const ep = $('eqPresets'); if(!ep) return;
-  ep.innerHTML = EQ_PRESETS.map(p =>
-    '<button class="eq-p' + (p.id===S.eqPreset?' on':'') + '" onclick="applyEqPreset(\'' + p.id + '\',this)">' + p.l + '</button>'
-  ).join('');
-}
-function applyEqPreset(id, el) {
-  S.eqPreset = id;
-  const p = EQ_PRESETS.find(x => x.id === id); if(!p) return;
-  document.querySelectorAll('.eq-p').forEach(b => b.classList.remove('on'));
-  if(el) el.classList.add('on');
-  const eb = $('sldBass'); if(eb) { eb.value = p.b; $('valBass').textContent = p.b + 'dB'; }
-  const et = $('sldTreb'); if(et) { et.value = p.t; $('valTreb').textContent = p.t + 'dB'; }
-  const em = $('sldMid'); if(em) { em.value = p.m; $('valMid').textContent = p.m + 'dB'; }
-  toast('🎛️ ' + p.l, 'ok');
-  botCmd('/eq ' + id);
-}
-function toggleNorm(el) { el.classList.toggle('on'); toast('☁️ Normalize ' + (el.classList.contains('on') ? T('tOn') : T('tOff')), 'info'); }
-
-/* ══════════════════════════════════════
-   SLEEP TIMER
-══════════════════════════════════════ */
-function setSleep(min) {
-  cancelSleep();
-  S.sleepMin = min;
-  S.sleepTimer = setTimeout(() => {
-    S.playing = false; stopProg(); updatePlayIco();
-    toast(T('tSlpStop'), 'info'); S.sleepTimer = null; S.sleepMin = 0;
-    const ss = $('slpStatus'); if(ss) ss.textContent = '';
-  }, min * 60000);
-  toast(T('tSleep') + ' (' + min + ' dk)', 'ok');
-  const ss = $('slpStatus'); if(ss) ss.textContent = '⏱️ ' + min + ' dk';
-  closeSheet('sleepSheet','sleepBg');
-  botCmd('/sleep ' + min);
-}
-function cancelSleep() {
-  if(S.sleepTimer) { clearTimeout(S.sleepTimer); S.sleepTimer = null; S.sleepMin = 0; }
-  toast(T('tSlpCancel'), 'info');
-  const ss = $('slpStatus'); if(ss) ss.textContent = '';
-}
-
-/* ══════════════════════════════════════
-   CONTEST
-══════════════════════════════════════ */
-let ctData = null;
-function buildContest() {
-  if(!ctData) {
-    const t1 = TRACKS[Math.floor(Math.random()*TRACKS.length)];
-    let t2 = TRACKS[Math.floor(Math.random()*TRACKS.length)];
-    while(t2.t === t1.t) t2 = TRACKS[Math.floor(Math.random()*TRACKS.length)];
-    ctData = {s1:{name:t1.t,votes:0}, s2:{name:t2.t,votes:0}};
+// ── FAVORITES ──────────────────────────────────────────
+function addFav(){
+  if(!S.cur){ toast('❌ Şarkı çalmıyor','err'); return; }
+  if(S.favs.find(f=>f.videoId===S.cur.videoId)){
+    toast('⚠️ Zaten favoride!','info'); return;
   }
-  renderContest();
+  S.favs.unshift({...S.cur});
+  if(S.favs.length>100) S.favs.pop();
+  saveLS();
+  updateLikeBtn(true);
+  toast('❤️ Favorilere eklendi!','ok');
 }
-function renderContest() {
-  const body = $('ctBody'); if(!body || !ctData) return;
-  const tot = ctData.s1.votes + ctData.s2.votes || 1;
-  const p1 = Math.round(ctData.s1.votes/tot*100), p2 = 100-p1;
-  body.innerHTML =
-    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px">'
-    + '<button onclick="ctVote(1)" style="flex:1;padding:16px 8px;border-radius:14px;border:2px solid var(--p1);background:rgba(124,58,237,.1);color:var(--p3);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center">'
-    + '🎵 ' + ctData.s1.name + '<br><small style="color:var(--txt2)">' + ctData.s1.votes + ' ' + T('votes') + ' (' + p1 + '%)</small></button>'
-    + '<div style="font-size:20px;font-weight:900;color:var(--txt2)">VS</div>'
-    + '<button onclick="ctVote(2)" style="flex:1;padding:16px 8px;border-radius:14px;border:2px solid var(--acc);background:rgba(6,182,212,.1);color:var(--acc2);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center">'
-    + '🎵 ' + ctData.s2.name + '<br><small style="color:var(--txt2)">' + ctData.s2.votes + ' ' + T('votes') + ' (' + p2 + '%)</small></button>'
-    + '</div>'
-    + '<div class="ct-bar"><div class="ct-a" style="width:' + p1 + '%"></div><div class="ct-b" style="width:' + p2 + '%"></div></div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'
-    + '<button class="btn btn-s btn-sm" onclick="newContest()">' + T('ctNewBtn') + '</button>'
-    + '<button class="btn btn-p btn-sm" onclick="botCmd(\'/yarisma ' + esc(ctData.s1.name) + ' vs ' + esc(ctData.s2.name) + '\')">' + T('ctSendBtn') + '</button>'
-    + '</div>';
-}
-function ctVote(n) {
-  if(n===1) ctData.s1.votes++; else ctData.s2.votes++;
-  S.stats.points += 5; renderContest(); saveLS();
-}
-function newContest() { ctData = null; buildContest(); }
 
-/* ══════════════════════════════════════
-   PLAYLISTS
-══════════════════════════════════════ */
-function renderPlList(container) {
-  const c = container || $('plList'); if(!c) return;
-  if(!S.playlists.length) { c.innerHTML = '<div style="text-align:center;color:var(--txt2);padding:20px;font-size:13px">' + T('listsEmpty') + '</div>'; return; }
-  c.innerHTML = S.playlists.map((p, i) =>
-    '<div class="pl-item">'
-    + '<i class="fas fa-music" style="color:var(--p3);font-size:18px"></i>'
-    + '<div style="flex:1"><div style="font-weight:600">' + p.name + '</div><div style="font-size:11px;color:var(--txt2)">' + p.tracks.length + ' şarkı</div></div>'
-    + '<button onclick="playPl(' + i + ')" style="border:none;background:none;color:var(--p3);cursor:pointer;font-size:18px"><i class="fas fa-play-circle"></i></button>'
-    + '<button onclick="delPl(' + i + ')" style="border:none;background:none;color:var(--rose);cursor:pointer;font-size:15px"><i class="fas fa-trash"></i></button>'
-    + '</div>'
-  ).join('');
+function rmFav(idx){
+  S.favs.splice(idx,1);
+  saveLS();
+  renderLib(document.querySelector('#libTabs .chip.on')?.dataset.tab||'fav');
 }
-function createPl() {
-  const inp = $('plInp'); if(!inp) return;
-  const name = inp.value.trim(); if(!name) return;
-  S.playlists.push({name, tracks:[]}); inp.value = '';
-  renderPlList($('plList')); saveLS();
-  toast('🎶 ' + name, 'ok');
-  botCmd('/liste olustur ' + name);
+
+function toggleLike(){
+  if(!S.cur) return;
+  const idx = S.favs.findIndex(f=>f.videoId===S.cur.videoId);
+  if(idx>=0){
+    S.favs.splice(idx,1);
+    updateLikeBtn(false);
+    toast('💔 Favoriden kaldırıldı','info');
+  } else {
+    addFav();
+  }
+  saveLS();
 }
-function playPl(i) {
-  const p = S.playlists[i]; if(!p) return;
-  if(p.tracks.length) { S.queue = p.tracks.slice(); nextTrack(); }
-  else toast(T('newListEmpty'), 'info');
+
+function updateLikeBtn(liked){
+  const btn = document.getElementById('fpLikeBtn');
+  if(btn) btn.innerHTML = liked?'<i class="fas fa-heart" style="color:var(--red)"></i>':'<i class="far fa-heart"></i>';
+}
+
+// ── PLAYLISTS ──────────────────────────────────────────
+function createPl(){
+  const inp = document.getElementById('plInp');
+  if(!inp) return;
+  const name = inp.value.trim();
+  if(!name){ toast('❌ Liste adı girin','err'); return; }
+  if(S.playlists.find(p=>p.name===name)){
+    toast('⚠️ Bu isimde liste var','info'); return;
+  }
+  S.playlists.push({name, tracks:[]});
+  inp.value='';
+  saveLS();
+  renderPlList();
+  toast('✅ Liste oluşturuldu: '+name,'ok');
+}
+
+function playPl(i){
+  const pl = S.playlists[i];
+  if(!pl||!pl.tracks.length){ toast('📭 Liste boş','info'); return; }
+  const [first,...rest] = pl.tracks;
+  S.queue = [...rest];
+  playSong(first.videoId, first.t, first.a, first.e, first.thumb);
+  saveLS();
   closeSheet('plSheet','plBg');
 }
-function delPl(i) { S.playlists.splice(i, 1); renderPlList($('plList')); saveLS(); }
 
-/* ══════════════════════════════════════
-   SUGGESTIONS
-══════════════════════════════════════ */
-function renderSug() {
-  const sl = $('sugList'); if(!sl) return;
-  if(!S.suggestions.length) { sl.innerHTML = '<div style="text-align:center;color:var(--txt2);padding:20px;font-size:13px">Henüz öneri yok</div>'; return; }
-  sl.innerHTML = S.suggestions.map((s, i) => {
-    const tot = s.up + s.down || 1, pct = Math.round(s.up/tot*100);
-    return '<div class="sug-item">'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
-      + '<span style="font-weight:600;font-size:13px">🎵 ' + s.song + '</span>'
-      + '<span style="font-size:11px;color:var(--txt2)">' + s.up + ' 👍</span>'
-      + '</div>'
-      + '<div class="vote-bar"><div class="vote-fill" style="width:' + pct + '%"></div></div>'
-      + '<div style="display:flex;gap:8px;margin-top:8px">'
-      + '<button onclick="voteSug(' + i + ',1)" style="border:none;background:rgba(16,185,129,.12);color:var(--ok);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px">👍</button>'
-      + '<button onclick="voteSug(' + i + ',-1)" style="border:none;background:rgba(244,63,94,.12);color:var(--rose);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px">👎</button>'
-      + '<button onclick="playSug(' + i + ')" style="border:none;background:rgba(124,58,237,.12);color:var(--p3);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px">▶️</button>'
-      + '</div></div>';
-  }).join('');
+function delPl(i){
+  S.playlists.splice(i,1);
+  saveLS();
+  renderPlList();
 }
-function addSug() {
-  const inp = $('sugInp'); if(!inp) return;
-  const song = inp.value.trim(); if(!song) return;
-  S.suggestions.push({song, up:0, down:0}); inp.value = '';
-  renderSug(); saveLS(); toast('💡 ' + song, 'ok');
-  botCmd('/suggest ' + song);
+
+function addCurToPl(i){
+  if(!S.cur){ toast('❌ Şarkı çalmıyor','err'); return; }
+  S.playlists[i].tracks.push({...S.cur});
+  saveLS();
+  closeSheet('trackMenu','trackMenuBg');
+  toast('✅ Listeye eklendi','ok');
 }
-function voteSug(i, v) {
-  if(!S.suggestions[i]) return;
-  if(v > 0) S.suggestions[i].up++; else S.suggestions[i].down++;
-  S.stats.points += 2; renderSug(); saveLS();
+
+function renderPlList(){
+  const el = document.getElementById('plList');
+  if(!el) return;
+  if(!S.playlists.length){
+    el.innerHTML = '<div class="empty"><i class="fas fa-music"></i><div class="empty-title">Liste yok</div><div class="empty-sub">Yeni liste oluştur</div></div>';
+    return;
+  }
+  el.innerHTML = S.playlists.map((p,i)=>
+    `<div class="row">
+      <div class="row-icon" style="background:linear-gradient(135deg,var(--p1),var(--p3))">🎶</div>
+      <div class="row-info">
+        <div class="row-title">${p.name}</div>
+        <div class="row-sub">${p.tracks.length} şarkı</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="playPl(${i})">▶️</button>
+      <button class="btn btn-s btn-sm" onclick="delPl(${i})">🗑️</button>
+    </div>`
+  ).join('');
 }
-function playSug(i) {
-  if(!S.suggestions[i]) return;
-  playSong(S.suggestions[i].song, '🎵', '', S.suggestions[i].song);
-  closeSheet('sugSheet','sugBg');
+
+// ── EQ ────────────────────────────────────────────────
+function setEqBand(band, val){
+  val = parseInt(val);
+  if(band==='bass'){ S._eqBass=val; document.getElementById('bassVal').textContent=val+' dB'; }
+  if(band==='mid'){  S._eqMid =val; document.getElementById('midVal').textContent=val+' dB'; }
+  if(band==='treb'){ S._eqTreb=val; document.getElementById('trebVal').textContent=val+' dB'; }
 }
-// Auto-render suggestions when sheet opens
-document.addEventListener('DOMContentLoaded', () => {
-  $('sugBg') && $('sugBg').addEventListener('click', () => {});
+
+function applyEqPreset(b,m,t){
+  S._eqBass=b; S._eqMid=m; S._eqTreb=t;
+  const br=document.getElementById('bassRange');
+  const mr=document.getElementById('midRange');
+  const tr=document.getElementById('trebRange');
+  if(br){br.value=b; document.getElementById('bassVal').textContent=b+' dB';}
+  if(mr){mr.value=m; document.getElementById('midVal').textContent=m+' dB';}
+  if(tr){tr.value=t; document.getElementById('trebVal').textContent=t+' dB';}
+}
+
+function buildEq(){
+  const el = document.getElementById('eqPresets');
+  if(!el) return;
+  el.innerHTML = EQ_PRESETS.map(p=>
+    `<button class="btn btn-s btn-sm" onclick="applyEqPreset(${p.b},${p.m},${p.t})" style="font-size:11px">${p.n}</button>`
+  ).join('');
+}
+
+// ── SLEEP ──────────────────────────────────────────────
+function setSleep(min){
+  cancelSleep();
+  S._sleepMin = min;
+  S._sleepTimer = setTimeout(()=>{
+    if(ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+    if(audioEl) audioEl.pause();
+    S.playing = false;
+    updateUI();
+    toast('😴 Uyku zamanlayıcısı doldu','info');
+    S._sleepTimer=null; S._sleepMin=0;
+    const ss = document.getElementById('sleepStatus');
+    if(ss) ss.textContent='';
+  }, min*60000);
+  const ss = document.getElementById('sleepStatus');
+  if(ss) ss.textContent='⏰ '+min+' dakika sonra duracak';
+  closeSheet('sleepSheet','sleepBg');
+  toast('😴 '+min+' dk sonra duracak','info');
+}
+
+function cancelSleep(){
+  if(S._sleepTimer){ clearTimeout(S._sleepTimer); S._sleepTimer=null; S._sleepMin=0; }
+  const ss = document.getElementById('sleepStatus');
+  if(ss) ss.textContent='';
+  toast('✅ Zamanlayıcı iptal edildi','info');
+}
+
+// ── SHARE ──────────────────────────────────────────────
+function shareTrack(){
+  if(!S.cur) return;
+  const url = S.cur.videoId ? `https://youtu.be/${S.cur.videoId}` : '';
+  const text = `🎵 ${S.cur.t} - ${S.cur.a}\n${url}\n\n👻 Hayalet Müzik ile çalıyorum!`;
+  if(navigator.share){ navigator.share({title:S.cur.t, text, url}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text); toast('📋 Kopyalandı','ok'); }
+}
+
+// ── UI UPDATE ──────────────────────────────────────────
+function updateUI(){
+  const isPlaying = S.playing;
+  // Mini player buttons
+  const mpBtn = document.getElementById('mpPlayBtn');
+  if(mpBtn) mpBtn.innerHTML = isPlaying?'<i class="fas fa-pause"></i>':'<i class="fas fa-play"></i>';
+  // Full player button
+  const fpBtn = document.getElementById('fpPlayBtn');
+  if(fpBtn) fpBtn.innerHTML = isPlaying?'<i class="fas fa-pause"></i>':'<i class="fas fa-play"></i>';
+  // Art animation
+  const vd = document.getElementById('vinylDisc');
+  if(vd) {
+    if(isPlaying) { vd.style.animation = 'vinylSpin 4s linear infinite'; }
+    else { vd.style.animationPlayState = 'paused'; }
+  }
+  if(isPlaying) startProg(); else stopProg();
+}
+
+function updateMini(){
+  if(!S.cur) return;
+  const el1 = document.getElementById('mpTitle');
+  const el2 = document.getElementById('mpArtist');
+  const el3 = document.getElementById('mpArt');
+  if(el1) el1.textContent = S.cur.t;
+  if(el2) el2.textContent = S.cur.a;
+  if(el3) el3.textContent = S.cur.e;
+  // Banner
+  const bn = document.getElementById('bannerTitle');
+  const ba = document.getElementById('bannerArtist');
+  const bb = document.getElementById('bannerBg');
+  if(bn) bn.textContent = S.cur.t;
+  if(ba) ba.textContent = S.cur.a;
+  if(bb) bb.textContent = S.cur.e;
+}
+
+function updateFP(){
+  if(!S.cur) return;
+  setEl('fpSong', S.cur.t);
+  setEl('fpSinger', S.cur.a);
+  const fa  = document.getElementById('fpArtFallback');
+  const img = document.getElementById('fpArtImg');
+  if(fa) fa.textContent = S.cur.e;
+  if(img && S.cur.thumb){
+    img.src = S.cur.thumb;
+    img.style.display = 'block';
+    if(fa) fa.style.display = 'none';
+    img.onerror = ()=>{ img.style.display='none'; if(fa) fa.style.display='flex'; };
+  } else {
+    if(img) img.style.display = 'none';
+    if(fa)  fa.style.display  = 'flex';
+  }
+  // Like button
+  const liked = S.favs.some(f=>f.videoId===S.cur.videoId);
+  updateLikeBtn(liked);
+  // Vol slider
+  const vr = document.getElementById('volRange');
+  if(vr) vr.value = S.vol;
+}
+
+// ── FULL PLAYER OPEN/CLOSE ─────────────────────────────
+function openFP(){
+  document.getElementById('fullPlayer').classList.add('open');
+  if(S.cur) updateFP();
+}
+function closeFP(){
+  document.getElementById('fullPlayer').classList.remove('open');
+}
+
+// ── NAVIGATION ─────────────────────────────────────────
+function showPg(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById('pg-'+id);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('on', n.id==='nav-'+id);
+  });
+  if(id==='library') renderLib(document.querySelector('#libTabs .chip.on')?.dataset.tab||'fav');
+  if(id==='profile') buildProfile();
+  if(id==='search'){
+    const inp = document.getElementById('srchInp');
+    if(inp) setTimeout(()=>inp.focus(),200);
+  }
+}
+
+function switchTab(tab, el){
+  if(el){
+    document.querySelectorAll('#libTabs .chip').forEach(c=>c.classList.remove('on'));
+    el.classList.add('on');
+  } else {
+    document.querySelectorAll('#libTabs .chip').forEach(c=>{
+      c.classList.toggle('on', c.dataset.tab===tab);
+    });
+  }
+  renderLib(tab);
+}
+
+// ── LIBRARY ─────────────────────────────────────────────
+function renderLib(tab){
+  const el = document.getElementById('libBody');
+  if(!el) return;
+  tab = tab || 'fav';
+
+  if(tab==='fav'){
+    if(!S.favs.length){
+      el.innerHTML='<div class="empty"><i class="fas fa-heart"></i><div class="empty-title">Favori yok</div><div class="empty-sub">Şarkı çalarken ❤️ dok</div></div>';
+      return;
+    }
+    el.innerHTML = S.favs.map((s,i)=>
+      `<div class="tr-row ${S.cur&&S.cur.videoId===s.videoId?'playing':''}" onclick="playSong('${s.videoId}','${esc(s.t)}','${esc(s.a)}','${s.e}','${esc(s.thumb||'')}')">
+        <div class="tr-art">${s.thumb?`<img src="${s.thumb}" loading="lazy">`:s.e}</div>
+        <div class="tr-info"><div class="tr-name">${s.t}</div><div class="tr-sub">${s.a}</div></div>
+        <button class="q-rm" onclick="event.stopPropagation();rmFav(${i})"><i class="fas fa-times"></i></button>
+      </div>`
+    ).join('');
+  }
+
+  else if(tab==='hist'){
+    if(!S.hist.length){
+      el.innerHTML='<div class="empty"><i class="fas fa-clock"></i><div class="empty-title">Geçmiş boş</div><div class="empty-sub">Bir şarkı çal</div></div>';
+      return;
+    }
+    el.innerHTML = S.hist.map(s=>
+      `<div class="tr-row ${S.cur&&S.cur.videoId===s.videoId?'playing':''}" onclick="playSong('${s.videoId}','${esc(s.t)}','${esc(s.a)}','${s.e}','${esc(s.thumb||'')}')">
+        <div class="tr-art">${s.thumb?`<img src="${s.thumb}" loading="lazy">`:s.e}</div>
+        <div class="tr-info"><div class="tr-name">${s.t}</div><div class="tr-sub">${s.a}</div></div>
+      </div>`
+    ).join('');
+  }
+
+  else if(tab==='pl'){
+    openSheet('plSheet','plBg');
+    renderPlList();
+    el.innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-music"></i><div class="empty-title">Çalma Listeleri</div><div class="empty-sub">Yukarıda yönet</div></div>';
+  }
+
+  else if(tab==='radio'){
+    el.innerHTML = RADIOS.map(r=>
+      `<div class="radio-card" onclick="playRadio('${esc(r.n)}','${r.u}','${r.e}')">
+        <div class="radio-ico" style="background:${r.c}22">${r.e}</div>
+        <div class="radio-info">
+          <div class="radio-name">${r.n}</div>
+          <div class="radio-live">● CANLI</div>
+        </div>
+        <i class="fas fa-play" style="color:var(--p3)"></i>
+      </div>`
+    ).join('');
+  }
+
+  else if(tab==='queue'){
+    renderQueue();
+    const qb = document.getElementById('queueBody');
+    if(qb) el.innerHTML = qb.innerHTML;
+  }
+}
+
+// ── HOME ──────────────────────────────────────────────
+function buildHome(){
+  // Popular list
+  const pl = document.getElementById('popularList');
+  if(pl){
+    pl.innerHTML = POPULAR.map(s=>
+      `<div class="tr-row ${S.cur&&S.cur.videoId===s.vid?'playing':''}"
+        onclick="playSong('${s.vid}','${esc(s.t)}','${esc(s.a)}','${s.e}','')">
+        <div class="tr-art">${s.e}</div>
+        <div class="tr-info">
+          <div class="tr-name">${s.t}</div>
+          <div class="tr-sub">${s.a}</div>
+        </div>
+        <button class="tr-menu" onclick="event.stopPropagation();addToQueue('${s.vid}','${esc(s.t)}','${esc(s.a)}','${s.e}','')">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>`
+    ).join('');
+  }
+
+  // Radio scroll
+  const rs = document.getElementById('radioScroll');
+  if(rs){
+    rs.innerHTML = RADIOS.map(r=>
+      `<div class="hcard" onclick="playRadio('${esc(r.n)}','${r.u}','${r.e}')">
+        <div class="hcard-art" style="background:${r.c}33">${r.e}</div>
+        <div class="hcard-title">${r.n}</div>
+        <div class="hcard-sub" style="color:var(--red);font-size:10px;font-weight:700">● CANLI</div>
+      </div>`
+    ).join('');
+  }
+
+  // Mood grid
+  const mg = document.getElementById('moodGrid');
+  if(mg){
+    mg.innerHTML = MOODS.map(m=>
+      `<div class="mood-card" style="background:${m.c}" onclick="searchMood('${esc(m.q)}','${m.n}')">
+        <div class="mood-ico">${m.n.split(' ')[0]}</div>
+        <div class="mood-name">${m.n.split(' ').slice(1).join(' ')}</div>
+      </div>`
+    ).join('');
+  }
+
+  // Genre chips
+  const gc = document.getElementById('genreChips');
+  if(gc){
+    gc.innerHTML = GENRES.map(g=>
+      `<div class="chip" onclick="searchGenre('${g}')">${g}</div>`
+    ).join('');
+  }
+}
+
+function searchMood(q, label){
+  showPg('search');
+  const inp = document.getElementById('srchInp');
+  if(inp) inp.value = label;
+  doSearch(q);
+}
+
+function searchGenre(g){
+  const q = GENRE_Q[g] || g + ' music';
+  showPg('search');
+  const inp = document.getElementById('srchInp');
+  if(inp) inp.value = g;
+  doSearch(q);
+}
+
+// ── PROFILE ────────────────────────────────────────────
+function buildProfile(){
+  // Stats
+  const sg = document.getElementById('statGrid');
+  if(sg){
+    sg.innerHTML = [
+      {n:S.stats.played, l:'Çalınan'},
+      {n:S.favs.length,  l:'Favori'},
+      {n:S.stats.points, l:'Puan'},
+      {n:S.playlists.length,l:'Liste'},
+    ].map(s=>`<div class="stat-item"><div class="stat-num">${s.n}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+  }
+
+  // Links
+  const ll = document.getElementById('linksList');
+  if(ll){
+    ll.innerHTML = [
+      {i:'fas fa-bullhorn', n:'Kanal',   u:CFG.CHANNEL,    c:'#7c3aed'},
+      {i:'fas fa-headset',  n:'Destek',  u:CFG.SUPPORT,    c:'#0ea5e9'},
+      {i:'fas fa-ghost',    n:'Kurucu',  u:CFG.OWNER_LINK, c:'#e11d48'},
+    ].map(l=>
+      `<div class="row" onclick="window.open('${l.u}','_blank')" style="cursor:pointer">
+        <div class="row-icon" style="background:${l.c}22;color:${l.c}">
+          <i class="${l.i}"></i>
+        </div>
+        <div class="row-info">
+          <div class="row-title">${l.n}</div>
+          <div class="row-sub">${l.u.replace('https://','')}</div>
+        </div>
+        <i class="fas fa-chevron-right" style="color:var(--txt2);font-size:14px"></i>
+      </div>`
+    ).join('');
+  }
+
+  // Themes
+  buildThemes();
+
+  // Settings rows
+  const sr = document.getElementById('settRows');
+  if(sr){
+    sr.innerHTML = `
+      <div class="row">
+        <div class="row-icon"><i class="fas fa-shuffle"></i></div>
+        <div class="row-info"><div class="row-title">Karıştırma</div><div class="row-sub">Rastgele sıra</div></div>
+        <button class="toggle ${S.shuffle?'on':''}" id="togShuffle" onclick="toggleShuffle();this.classList.toggle('on')"></button>
+      </div>
+      <div class="row">
+        <div class="row-icon"><i class="fas fa-repeat"></i></div>
+        <div class="row-info"><div class="row-title">Döngü</div><div class="row-sub">Şarkıyı tekrarla</div></div>
+        <button class="toggle ${S.loop?'on':''}" id="togLoop" onclick="toggleLoop();this.classList.toggle('on')"></button>
+      </div>
+      <div class="row" style="cursor:pointer" onclick="openSheet('eqSheet','eqBg')">
+        <div class="row-icon"><i class="fas fa-sliders"></i></div>
+        <div class="row-info"><div class="row-title">Ekolayzer</div><div class="row-sub">Bass, Mid, Treble</div></div>
+        <i class="fas fa-chevron-right" style="color:var(--txt2)"></i>
+      </div>
+      <div class="row" style="cursor:pointer" onclick="openSheet('sleepSheet','sleepBg')">
+        <div class="row-icon"><i class="fas fa-moon"></i></div>
+        <div class="row-info"><div class="row-title">Uyku Zamanlayıcısı</div><div class="row-sub">${S._sleepMin?S._sleepMin+' dk sonra':'Kapalı'}</div></div>
+        <i class="fas fa-chevron-right" style="color:var(--txt2)"></i>
+      </div>
+    `;
+  }
+}
+
+// ── THEMES ─────────────────────────────────────────────
+function buildThemes(){
+  const tg = document.getElementById('tGrid');
+  if(!tg) return;
+  tg.innerHTML = THEMES.map(th=>
+    `<div>
+      <div class="tdot ${th.id===S.theme?'on':''}" data-id="${th.id}"
+        style="background:${th.g}" onclick="applyTheme('${th.id}')">
+        <div class="tdot-ck">✓</div>
+      </div>
+      <div class="tlbl">${th.l}</div>
+    </div>`
+  ).join('');
+}
+
+function applyTheme(id){
+  S.theme = id;
+  document.body.className = 'th-' + id;
+  document.querySelectorAll('.tdot').forEach(d=>d.classList.toggle('on', d.dataset.id===id));
+  // Update Telegram header color if available
+  const colors = {
+    ghost:'#08081a',fire:'#110500',ocean:'#000c12',neon:'#030801',
+    rose:'#0f0009',gold:'#0c0700',cyber:'#000a05',midnight:'#020510',
+  };
+  if(S.tg && S.tg.setHeaderColor){
+    try{ S.tg.setHeaderColor(colors[id]||'#08081a'); }catch(e){}
+  }
+  saveLS();
+}
+
+// ── SHEETS ─────────────────────────────────────────────
+function openSheet(sid, bid){
+  const s = document.getElementById(sid);
+  const b = document.getElementById(bid);
+  if(s) s.classList.add('on');
+  if(b) b.classList.add('on');
+  // Trigger renders
+  if(sid==='queueSheet') renderQueue();
+  if(sid==='plSheet')    renderPlList();
+  if(sid==='eqSheet')    buildEq();
+  if(sid==='settSheet')  buildSettSheet();
+}
+
+function closeSheet(sid, bid){
+  const s = document.getElementById(sid);
+  const b = document.getElementById(bid);
+  if(s) s.classList.remove('on');
+  if(b) b.classList.remove('on');
+}
+
+function buildSettSheet(){
+  const el = document.getElementById('settSheetBody');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="row">
+      <div class="row-icon"><i class="fas fa-volume-high"></i></div>
+      <div class="row-info"><div class="row-title">Ses: ${S.vol}%</div></div>
+    </div>
+    <div style="padding:0 16px 14px">
+      <input type="range" class="fp-vol-range" min="0" max="100" value="${S.vol}"
+        oninput="setVol(this.value);this.previousElementSibling.querySelector('.row-title').textContent='Ses: '+this.value+'%'" style="width:100%">
+    </div>
+    <div class="divider"></div>
+    <div class="sh" style="padding:10px 16px">🎨 Tema Seç</div>
+    <div class="tgrid" id="settTGrid" style="padding:0 14px 14px"></div>
+  `;
+  const tg = document.getElementById('settTGrid');
+  if(tg){
+    tg.innerHTML = THEMES.map(th=>
+      `<div>
+        <div class="tdot ${th.id===S.theme?'on':''}" data-id="${th.id}"
+          style="background:${th.g}" onclick="applyTheme('${th.id}');document.querySelectorAll('.tdot').forEach(d=>d.classList.toggle('on',d.dataset.id==='${th.id}'))">
+          <div class="tdot-ck">✓</div>
+        </div>
+        <div class="tlbl">${th.l}</div>
+      </div>`
+    ).join('');
+  }
+}
+
+// ── TRACK MENU ─────────────────────────────────────────
+function openTrackMenu(videoId, title, artist, emoji, thumb){
+  const el = document.getElementById('trackMenuBody');
+  const tl = document.getElementById('trackMenuTitle');
+  if(tl) tl.textContent = title;
+  if(el){
+    const plItems = S.playlists.map((p,i)=>
+      `<div class="row" onclick="addCurToPl(${i})" style="cursor:pointer">
+        <div class="row-icon">🎶</div>
+        <div class="row-info"><div class="row-title">${p.name}</div><div class="row-sub">${p.tracks.length} şarkı</div></div>
+      </div>`
+    ).join('');
+    el.innerHTML = `
+      <div class="row" onclick="addToQueue('${videoId}','${esc(title)}','${esc(artist)}','${emoji}','${esc(thumb||'')}');closeSheet('trackMenu','trackMenuBg')" style="cursor:pointer">
+        <div class="row-icon"><i class="fas fa-plus"></i></div>
+        <div class="row-info"><div class="row-title">Kuyruğa Ekle</div></div>
+      </div>
+      <div class="row" onclick="S.favs.push({videoId:'${videoId}',t:'${esc(title)}',a:'${esc(artist)}',e:'${emoji}',thumb:'${esc(thumb||'')}'});saveLS();closeSheet('trackMenu','trackMenuBg');toast('❤️ Favorilere eklendi','ok')" style="cursor:pointer">
+        <div class="row-icon"><i class="fas fa-heart"></i></div>
+        <div class="row-info"><div class="row-title">Favorilere Ekle</div></div>
+      </div>
+      ${S.playlists.length?'<div class="divider"></div><div class="sh" style="padding:8px 16px">Listeye Ekle</div>'+plItems:''}
+      <div class="row" onclick="shareTrack();closeSheet('trackMenu','trackMenuBg')" style="cursor:pointer">
+        <div class="row-icon"><i class="fas fa-share-nodes"></i></div>
+        <div class="row-info"><div class="row-title">Paylaş</div></div>
+      </div>
+      <div class="row" onclick="window.open('https://youtu.be/${videoId}','_blank');closeSheet('trackMenu','trackMenuBg')" style="cursor:pointer">
+        <div class="row-icon" style="color:var(--red)"><i class="fab fa-youtube"></i></div>
+        <div class="row-info"><div class="row-title">YouTube'da Aç</div></div>
+      </div>
+    `;
+  }
+  openSheet('trackMenu','trackMenuBg');
+}
+
+// ── STORAGE ────────────────────────────────────────────
+function saveLS(){
+  try{
+    localStorage.setItem('hm10', JSON.stringify({
+      theme:S.theme, vol:S.vol, lang:S.lang,
+      favs:S.favs, hist:S.hist.slice(0,30),
+      queue:S.queue, playlists:S.playlists,
+      stats:S.stats, shuffle:S.shuffle, loop:S.loop,
+    }));
+  }catch(e){}
+}
+
+function loadLS(){
+  try{
+    const d = JSON.parse(localStorage.getItem('hm10')||'{}');
+    if(d.theme)     S.theme     = d.theme;
+    if(d.vol!==undefined) S.vol = d.vol;
+    if(d.lang)      S.lang      = d.lang;
+    if(d.favs)      S.favs      = d.favs;
+    if(d.hist)      S.hist      = d.hist;
+    if(d.queue)     S.queue     = d.queue;
+    if(d.playlists) S.playlists = d.playlists;
+    if(d.stats)     S.stats     = d.stats;
+    if(d.shuffle!==undefined) S.shuffle = d.shuffle;
+    if(d.loop!==undefined)    S.loop    = d.loop;
+  }catch(e){}
+}
+
+// ── TELEGRAM WEBAPP ─────────────────────────────────────
+function initTG(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  S.tg = tg || null;
+  if(!tg) return;
+  try{ tg.ready(); tg.expand(); }catch(e){}
+  try{ tg.setHeaderColor('#08081a'); tg.setBackgroundColor('#08081a'); }catch(e){}
+  const u = tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if(!u) return;
+  S.user = u;
+  const name = u.first_name || 'Kullanıcı';
+  setEl('hAv',   name[0].toUpperCase());
+  setEl('hName', '👻 ' + name);
+  setEl('hSub',  '@' + (u.username||'hayaletkomutan'));
+  setEl('profAv',name[0].toUpperCase());
+  setEl('profName', name);
+  const chatInfo = tg.initDataUnsafe && tg.initDataUnsafe.chat;
+  S.chatId = chatInfo ? chatInfo.id : null;
+}
+
+// ── HELPERS ────────────────────────────────────────────
+const esc = s => String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+function setEl(id, txt){ const e=document.getElementById(id); if(e) e.textContent=txt; }
+function toast(msg, type, dur){
+  dur = dur||2500;
+  const w = document.getElementById('toastWrap');
+  if(!w) return;
+  const t = document.createElement('div');
+  t.className = 'toast '+(type||'info');
+  t.innerHTML = `<span>${msg}</span>`;
+  w.appendChild(t);
+  setTimeout(()=>t.style.opacity='0', dur-300);
+  setTimeout(()=>t.remove(), dur);
+}
+
+// ── INIT ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadLS();
+  initTG();
+  applyTheme(S.theme);
+  buildHome();
+  buildEq();
+
+  // Search quick tags
+  const tags = ['Türkçe Pop','Rock','Lo-fi','EDM','Jazz'];
+  const tc   = document.getElementById('srchTags');
+  if(tc){
+    tc.innerHTML = tags.map(t=>
+      `<div class="chip" onclick="doSearch('${t}')">${t}</div>`
+    ).join('');
+  }
+
+  // Keyboard shortcut: Space = play/pause
+  document.addEventListener('keydown', e=>{
+    if(e.code==='Space' && e.target.tagName!=='INPUT'){
+      e.preventDefault();
+      togglePlay();
+    }
+    if(e.code==='ArrowRight') nextTrack();
+    if(e.code==='ArrowLeft')  prevTrack();
+  });
+
+  // Update vol slider
+  const vr = document.getElementById('volRange');
+  if(vr) vr.value = S.vol;
 });
-
-/* ══════════════════════════════════════
-   SCHEDULE PLAY
-══════════════════════════════════════ */
-function schedulePlay() {
-  const time = $('schdTime') && $('schdTime').value;
-  const song = $('schdSong') && $('schdSong').value.trim();
-  if(!time || !song) { toast('❌ Saat ve şarkı girin', 'err'); return; }
-  const [h,m] = time.split(':').map(Number);
-  const now = new Date();
-  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
-  if(target <= now) target.setDate(target.getDate() + 1);
-  const delay = target - now;
-  setTimeout(() => { playSong(song, '🎵', '', song); }, delay);
-  const ss = $('schdStatus');
-  if(ss) ss.textContent = '⏰ ' + song + ' → ' + time;
-  toast(T('tScheduled') + ' ' + time, 'ok');
-  botCmd('/zamanla ' + time + ' ' + song);
-  closeSheet('schdSheet','schdBg');
-}
-function checkSchedules() { /* persistent schedules would need backend */ }
-
-/* ══════════════════════════════════════
-   TOAST
-══════════════════════════════════════ */
-let _tt = null;
-function toast(msg, type) {
-  if(!type) type = 'info';
-  const el = $('toast'); if(!el) return;
-  el.textContent = msg; el.className = 'show ' + type;
-  clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('show'), 2700);
-}
-
-// Open suggest sheet with fresh render
-const origOpen = openSheet;
-function openSheet(sid, bid) {
-  $(sid).classList.add('on');
-  $(bid).classList.add('on');
-  if(sid === 'sugSheet')    renderSug();
-  if(sid === 'queueSheet')  renderQueue();
-  if(sid === 'plSheet')     renderPlList($('plList'));
-  if(sid === 'ctSheet')     buildContest();
-}
 </script>
 </body>
 </html>
