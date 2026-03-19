@@ -422,6 +422,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   <div class="sh">🔥 Popüler Şarkılar</div>
   <div id="popularList"></div>
 
+  <div class="sh">🎤 Sanatçılar</div>
+  <div class="hscroll" id="artistScroll"></div>
+
   <div class="sh">📻 Canlı Radyo <span class="see" onclick="showPg('library');switchTab('radio',null)">Tümü</span></div>
   <div class="hscroll" id="radioScroll"></div>
 
@@ -435,20 +438,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 
 <!-- SEARCH -->
 <div class="page" id="pg-search">
-  <div class="srch-bar">
-    <input class="srch-inp" id="srchInp" placeholder="Şarkı, sanatçı, YouTube linki..." autocomplete="off"
-      oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
-    <button class="srch-btn" onclick="doSearch()"><i class="fas fa-search"></i> Ara</button>
-  </div>
-  <div class="chips" id="srchTags"></div>
-  <div id="srchResults">
-    <div class="empty">
-      <i class="fas fa-search"></i>
-      <div class="empty-title">Müzik Ara</div>
-      <div class="empty-sub">YouTube'da ara veya şarkı adı yaz</div>
+  <div class="srch-hero" style="padding:20px 14px 8px;background:linear-gradient(to bottom,var(--bg2),var(--bg))">
+    <div style="font-size:22px;font-weight:800;margin-bottom:3px">🔍 Müzik Ara</div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:14px">YouTube'da ara, tıkla, direkt dinle</div>
+    <div style="display:flex;gap:8px;background:var(--bg3);border-radius:18px;padding:6px 6px 6px 16px;border:1.5px solid var(--brd);" id="srchBarWrap">
+      <input id="srchInp" placeholder="Şarkı, sanatçı, YouTube linki..."
+        autocomplete="off" spellcheck="false" style="flex:1;background:none;border:none;outline:none;color:var(--txt);font-size:15px;padding:4px 0"
+        oninput="onSrchType(this.value)"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch()}">
+      <button onclick="doSearch()" style="background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;border-radius:12px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap">
+        <i class="fas fa-search"></i> Ara
+      </button>
     </div>
   </div>
+  <div id="srchCats" style="display:flex;gap:8px;padding:10px 14px 4px;overflow-x:auto;scrollbar-width:none"></div>
+  <div id="srchRes"></div>
 </div>
+
+<!-- LIBRARY
 
 <!-- LIBRARY -->
 <div class="page" id="pg-library">
@@ -779,7 +786,27 @@ const MOODS = [
   {n:'🌙 Gece',    q:'night chill music playlist',     c:'linear-gradient(135deg,#1e3a8a,#3b82f6)'},
 ];
 
+const ARTISTS = [
+  {n:'Tarkan',      e:'👑', q:'Tarkan official müzik'},
+  {n:'Ezhel',       e:'🎤', q:'Ezhel official'},
+  {n:'Sezen Aksu',  e:'🌟', q:'Sezen Aksu'},
+  {n:'Duman',       e:'🎸', q:'Duman grup'},
+  {n:'Norm Ender',  e:'🎵', q:'Norm Ender official'},
+  {n:'Haluk Levent',e:'🎶', q:'Haluk Levent'},
+  {n:'Ceza',        e:'🔊', q:'Ceza rap'},
+  {n:'Neşet Ertaş', e:'🎻', q:'Neşet Ertaş'},
+];
 const GENRES = ['Pop','Rock','Jazz','Lo-fi','Rap','EDM','Türkçe','Arabesk','Metal','Klasik'];
+const SRCH_CATS = [
+  {l:'🔥 Trend',    q:'trend müzik 2024'},
+  {l:'🇹🇷 Türkçe', q:'türkçe pop 2024'},
+  {l:'🎸 Rock',     q:'rock hits classic'},
+  {l:'☁️ Lo-fi',   q:'lofi hip hop beats'},
+  {l:'⚡ EDM',      q:'edm dance 2024'},
+  {l:'🎷 Jazz',     q:'smooth jazz playlist'},
+  {l:'🎤 Rap',      q:'türkçe rap 2024'},
+  {l:'❤️ Aşk',      q:'romantic love songs'},
+];
 const GENRE_Q = {
   'Pop':     'türkçe pop hit 2024',
   'Rock':    'rock hits classic',
@@ -1082,12 +1109,25 @@ function toggleLoop(){
 // ── SEARCH (YouTube Data API v3) ────────────────────────
 let _srchDebounce = null;
 
+function onSrchType(v){ onSearchInput(v); }
+function onSrchType_orig(v){ clearTimeout(_srchDebounce); if(!v.trim()){renderSearchEmpty();return;} _srchDebounce=setTimeout(()=>doSearch(v),500); }
 function onSearchInput(v){
   clearTimeout(_srchDebounce);
   if(!v.trim()){ renderSearchEmpty(); return; }
   _srchDebounce = setTimeout(()=>doSearch(v), 600);
 }
 
+function _skeleton(n){
+  return Array.from({length:n},(_,i)=>
+    `<div style="display:flex;gap:12px;padding:10px 14px;align-items:center;animation-delay:${i*0.06}s">
+      <div style="width:46px;height:46px;border-radius:12px;flex-shrink:0;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+        <div style="height:13px;border-radius:4px;width:${55+Math.floor(Math.random()*30)}%;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite"></div>
+        <div style="height:10px;border-radius:4px;width:${30+Math.floor(Math.random()*20)}%;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite"></div>
+      </div>
+    </div>`
+  ).join('');
+}
 async function doSearch(q){
   if(!q){
     const inp = document.getElementById('srchInp');
@@ -1095,9 +1135,9 @@ async function doSearch(q){
   }
   if(!q){ toast('❌ Şarkı adı girin','err'); return; }
 
-  const el = document.getElementById('srchResults');
+  const el = document.getElementById('srchRes');
   if(!el) return;
-  el.innerHTML = '<div class="srch-loading"><i class="fas fa-spinner"></i> Aranıyor...</div>';
+  el.innerHTML = _skeleton(6);
   showPg('search');
 
   try {
@@ -1114,35 +1154,57 @@ async function doSearch(q){
 
 async function ytSearch(q, maxResults){
   maxResults = maxResults || 10;
-
-  // If YouTube API key available, use Data API v3
-  if(CFG.YT_KEY){
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&maxResults=${maxResults}&type=video&videoCategoryId=10&key=${CFG.YT_KEY}`;
-    const r = await fetch(url);
-    if(!r.ok) throw new Error('YouTube API hatası: ' + r.status);
-    const data = await r.json();
-    if(!data.items) throw new Error('Sonuç yok');
-    return data.items.map(item=>({
-      videoId: item.id.videoId,
-      title:   item.snippet.title,
-      artist:  item.snippet.channelTitle,
-      thumb:   item.snippet.thumbnails.medium.url,
-      e:       '🎵',
-    }));
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&maxResults=${maxResults}&type=video&key=${CFG.YT_KEY}`;
+  const r = await fetch(url);
+  if(!r.ok){
+    const d = await r.json().catch(()=>({}));
+    throw new Error(d.error?.message || 'YouTube API hatası: '+r.status);
   }
+  const data = await r.json();
+  if(!data.items?.length) return [];
+  const items = data.items.map(item=>({
+    videoId: item.id.videoId,
+    title:   item.snippet.title.replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/&quot;/g,'"'),
+    artist:  item.snippet.channelTitle,
+    thumb:   `https://i.ytimg.com/vi/${item.id.videoId}/mqdefault.jpg`,
+    e:       '🎵',
+    duration: '',
+  }));
+  // Fetch durations in background (non-blocking)
+  fetchDurations(items.map(i=>i.videoId)).then(dMap=>{
+    items.forEach(i=>{ if(dMap[i.videoId]) i.duration = dMap[i.videoId]; });
+  }).catch(()=>{});
+  return items;
+}
 
-  // Fallback: use YouTube oEmbed + custom search (no key needed)
-  // We use a CORS proxy approach with youtube-nocookie
-  throw new Error('YouTube API key gerekli. CFG.YT_KEY değerini gir.');
+async function fetchDurations(videoIds){
+  if(!videoIds.length) return {};
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(',')}&key=${CFG.YT_KEY}`;
+  const r = await fetch(url);
+  if(!r.ok) return {};
+  const data = await r.json();
+  const map = {};
+  (data.items||[]).forEach(item=>{
+    const d = item.contentDetails.duration;
+    const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if(m){
+      const h=+m[1]||0, mn=+m[2]||0, s=+m[3]||0;
+      map[item.id] = h ? h+':'+String(mn).padStart(2,'0')+':'+String(s).padStart(2,'0')
+                       : mn+':'+String(s).padStart(2,'0');
+    }
+  });
+  return map;
 }
 
 function renderSearchResults(results, el){
-  el.innerHTML = results.map((r,i)=>
-    `<div class="tr-row" onclick="playSong('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}')">
+  el.innerHTML = '<div style="padding:10px 14px 4px;font-size:12px;color:var(--txt2);font-weight:700;display:flex;justify-content:space-between;align-items:center"><span>Sonuçlar</span><span style="background:var(--p2);color:#fff;border-radius:20px;font-size:10px;font-weight:700;padding:2px 8px">'+results.length+' şarkı</span></div>' +
+  results.map((r,i)=>
+    `<div class="tr-row ${S.cur&&S.cur.videoId===r.videoId?'playing':''}" style="animation-delay:${i*0.04}s"
+      onclick="playSong('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}')">
       <div class="tr-art">${r.thumb?`<img src="${r.thumb}" loading="lazy">`:'🎵'}</div>
       <div class="tr-info">
         <div class="tr-name">${r.title}</div>
-        <div class="tr-sub">${r.artist}</div>
+        <div class="tr-sub">${r.artist}${r.duration?' · '+r.duration:''}</div>
       </div>
       <button class="tr-menu" onclick="event.stopPropagation();addToQueue('${r.videoId}','${esc(r.title)}','${esc(r.artist)}','🎵','${esc(r.thumb||'')}')">
         <i class="fas fa-plus"></i>
@@ -1152,7 +1214,7 @@ function renderSearchResults(results, el){
 }
 
 function renderSearchEmpty(){
-  const el = document.getElementById('srchResults');
+  const el = document.getElementById('srchRes');
   if(el) el.innerHTML = '<div class="empty"><i class="fas fa-search"></i><div class="empty-title">Müzik Ara</div><div class="empty-sub">YouTube\'dan arama için API key gerekmez, video ID ile direkt çalabilirsin</div></div>';
 }
 
@@ -1570,6 +1632,17 @@ function buildHome(){
     ).join('');
   }
 
+  // Artists
+  const as = document.getElementById('artistScroll');
+  if(as && typeof ARTISTS !== 'undefined') as.innerHTML = ARTISTS.map(a=>
+    `<div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;width:90px"
+      onclick="searchArtist('${a.q}','${a.n}')">
+      <div style="width:68px;height:68px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--p1),var(--p3));display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid var(--brd);transition:all .25s"
+        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">${a.e}</div>
+      <div style="font-size:11px;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:90px">${a.n}</div>
+    </div>`
+  ).join('');
+
   // Radio scroll
   const rs = document.getElementById('radioScroll');
   if(rs){
@@ -1602,6 +1675,18 @@ function buildHome(){
   }
 }
 
+function searchArtist(q, name){
+  showPg('search');
+  const inp = document.getElementById('srchInp');
+  if(inp) inp.value = name;
+  doSearch(q);
+}
+function searchCat(q, label){
+  const inp = document.getElementById('srchInp');
+  if(inp) inp.value = label.replace(/^[\S]+ /,'');
+  doSearch(q);
+  document.querySelectorAll('.srch-cat').forEach(c=>c.classList.toggle('on',c.dataset.q===q));
+}
 function searchMood(q, label){
   showPg('search');
   const inp = document.getElementById('srchInp');
@@ -1870,7 +1955,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // Search quick tags
   const tags = ['Türkçe Pop','Rock','Lo-fi','EDM','Jazz'];
-  const tc   = document.getElementById('srchTags');
+  const tc   = document.getElementById('srchCats');
   if(tc){
     tc.innerHTML = tags.map(t=>
       `<div class="chip" onclick="doSearch('${t}')">${t}</div>`
