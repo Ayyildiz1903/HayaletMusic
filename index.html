@@ -578,7 +578,7 @@ button{font-family:var(--fb)}
 textarea.inp{resize:none;line-height:1.6}
 
 /* ══ SHEETS ══ */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.74);z-index:300;
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:300;
   opacity:0;transition:opacity .28s;pointer-events:none;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .overlay.show{opacity:1;pointer-events:all}
@@ -1363,6 +1363,16 @@ textarea.inp{resize:none;line-height:1.6}
 /* Animasyonlu arka plan orb güncellemesi */
 .amb-o{transition:background .5s ease}
 
+
+/* ══ DİL SEÇICI ══ */
+.lang-selector{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 12px}
+.lang-btn{padding:7px 14px;border-radius:var(--pill);font-size:11px;font-weight:700;
+  background:var(--glass-wh);border:1px solid var(--brd3);cursor:pointer;
+  color:var(--txt2);font-family:var(--fb);transition:all .16s;display:flex;align-items:center;gap:5px}
+.lang-btn.on{background:var(--glass-bg);border-color:var(--h2)55;color:var(--h3)}
+.lang-btn:active{transform:scale(.9)}
+.lang-flag{font-size:15px}
+
 </style>
 
 
@@ -1379,6 +1389,7 @@ textarea.inp{resize:none;line-height:1.6}
   <div class="spl-title">Hayalet Müzik</div>
   <div class="spl-sub" id="splSub">Müziğin ruhu — her an seninle</div>
   <div class="spl-dots"><span class="spl-dot"></span><span class="spl-dot"></span><span class="spl-dot"></span></div>
+  <div style="position:absolute;bottom:28px;left:0;right:0;text-align:center;font-size:10px;color:rgba(255,255,255,.2);font-weight:600;letter-spacing:.5px">@HayaletMusic</div>
 </div>
 
 <div class="wrapper">
@@ -1555,7 +1566,7 @@ textarea.inp{resize:none;line-height:1.6}
 
   <!-- Tabs -->
   <div class="ptab-row">
-    <div style="display:flex;overflow-x:auto;scrollbar-width:none">
+    <div style="display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
       <button class="ptab-btn on" data-ptab="stats" onclick="profTab(this)">📊 İstatistik</button>
       <button class="ptab-btn" data-ptab="themes" onclick="profTab(this)">🎨 Tema</button>
       <button class="ptab-btn" data-ptab="links" onclick="profTab(this)">🔗 Bağlantılar</button>
@@ -1605,26 +1616,52 @@ textarea.inp{resize:none;line-height:1.6}
 
   <!-- Tab: Links -->
   <div id="ptab-links" style="display:none;padding:12px 14px 20px">
-    <a href="https://t.me/HayaletMuzik" target="_blank" class="row-link">
+    <!-- Duyuru Kanalı -->
+    <div class="row-link" onclick="openTGLink('https://t.me/HayaletMusic')" style="cursor:pointer">
       <div class="row-link-ico" style="background:#229ed920;color:#229ed9"><i class="fab fa-telegram"></i></div>
-      <div style="flex:1"><div style="font-weight:700;font-size:13px">Kanal</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletMuzik • Haberler</div></div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">📢 Duyuru Kanalı</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletMusic • Haberler & Güncellemeler</div>
+      </div>
       <i class="fas fa-arrow-right" style="color:rgba(255,255,255,.2);font-size:12px"></i>
-    </a>
-    <a href="https://t.me/HayaletDestek" target="_blank" class="row-link">
+    </div>
+    <!-- Destek -->
+    <div class="row-link" onclick="openTGLink('https://t.me/HayaletDestek')" style="cursor:pointer">
       <div class="row-link-ico" style="background:rgba(52,211,153,.1);color:var(--green)"><i class="fas fa-headset"></i></div>
-      <div style="flex:1"><div style="font-weight:700;font-size:13px">Destek Grubu</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletDestek • Yardım</div></div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">💬 Destek Grubu</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletDestek • Yardım & Destek</div>
+      </div>
       <i class="fas fa-arrow-right" style="color:rgba(255,255,255,.2);font-size:12px"></i>
-    </a>
-    <a href="https://t.me/HayaletMusicBot" target="_blank" class="row-link">
-      <div class="row-link-ico" style="background:rgba(139,92,246,.15);color:var(--p3)"><i class="fas fa-robot"></i></div>
-      <div style="flex:1"><div style="font-weight:700;font-size:13px">Müzik Botu</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletMusicBot</div></div>
+    </div>
+    <!-- Bot -->
+    <div class="row-link" onclick="openTGLink('https://t.me/HayaletMusicBot')" style="cursor:pointer">
+      <div class="row-link-ico" style="background:rgba(139,92,246,.15);color:var(--h3)"><i class="fas fa-robot"></i></div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">🤖 Müzik Botu</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@HayaletMusicBot • Gruba ekle & çal</div>
+      </div>
       <i class="fas fa-arrow-right" style="color:rgba(255,255,255,.2);font-size:12px"></i>
-    </a>
-    <a href="https://t.me/hayaletkomutan" target="_blank" class="row-link">
-      <div class="row-link-ico" style="background:rgba(251,191,36,.1);color:var(--gold)"><i class="fas fa-crown"></i></div>
-      <div style="flex:1"><div style="font-weight:700;font-size:13px">Geliştirici</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">@hayaletkomutan</div></div>
+    </div>
+    <!-- Kurucu -->
+    <div class="row-link" onclick="openTGLink('tg://openmessage?user_id=8078887681')" style="cursor:pointer;background:linear-gradient(135deg,rgba(251,191,36,.06),var(--glass-wh));border-color:rgba(251,191,36,.2)">
+      <div class="row-link-ico" style="background:rgba(251,191,36,.15);color:#fbbf24"><i class="fas fa-crown"></i></div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px">
+          👑 Kurucu
+          <span class="owner-badge" style="font-size:8px;padding:2px 7px">FOUNDER</span>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">Hayalet Müzik kurucusu ile iletişim</div>
+      </div>
       <i class="fas fa-arrow-right" style="color:rgba(255,255,255,.2);font-size:12px"></i>
-    </a>
+    </div>
+    <!-- App info -->
+    <div style="margin-top:16px;padding:14px;background:var(--glass-wh);border:1px solid var(--brd3);border-radius:18px;text-align:center">
+      <div style="font-size:22px;margin-bottom:6px">👻</div>
+      <div style="font-family:var(--fd);font-size:15px;font-weight:700;background:var(--grad);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradFlow 4s linear infinite">Hayalet Müzik</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-weight:500">v3.0.0 • Telegram Mini App</div>
+      <div style="font-size:10px;color:var(--txt3);margin-top:6px">© 2025 Hayalet Müzik. Tüm hakları saklıdır.</div>
+    </div>
   </div>
 
   <!-- Tab: Settings -->
@@ -1659,6 +1696,17 @@ textarea.inp{resize:none;line-height:1.6}
       <div class="sett-info"><div class="sett-t" style="color:var(--red)">Tüm Veriyi Sil</div><div class="sett-s">Geri alınamaz!</div></div>
     </button>
     <div class="divider" style="margin:8px 0"></div>
+    <div class="divider" style="margin:8px 0"></div>
+    <!-- Dil Seçici -->
+    <div class="sect-l">DİL / LANGUAGE</div>
+    <div class="lang-selector" id="langSelector">
+      <button class="lang-btn on" onclick="setLanguage('tr')" data-lang="tr"><span class="lang-flag">🇹🇷</span>Türkçe</button>
+      <button class="lang-btn" onclick="setLanguage('en')" data-lang="en"><span class="lang-flag">🇬🇧</span>English</button>
+      <button class="lang-btn" onclick="setLanguage('de')" data-lang="de"><span class="lang-flag">🇩🇪</span>Deutsch</button>
+      <button class="lang-btn" onclick="setLanguage('ar')" data-lang="ar"><span class="lang-flag">🇸🇦</span>العربية</button>
+      <button class="lang-btn" onclick="setLanguage('ru')" data-lang="ru"><span class="lang-flag">🇷🇺</span>Русский</button>
+      <button class="lang-btn" onclick="setLanguage('es')" data-lang="es"><span class="lang-flag">🇪🇸</span>Español</button>
+    </div>
     <!-- Hakkında -->
     <div class="sect-l">HAKKINDA</div>
     <div class="row-link" onclick="if(TG)TG.openTelegramLink('https://t.me/HayaletMuzik');else window.open('https://t.me/HayaletMuzik','_blank')" style="margin-bottom:6px">
@@ -1857,6 +1905,7 @@ textarea.inp{resize:none;line-height:1.6}
       <button class="fp-xb" onclick="openSheet('speedSheet','speedOv')"><i class="fas fa-gauge"></i><span>Hız</span></button>
       <button class="fp-xb" onclick="shareTrack()"><i class="fas fa-share-nodes"></i><span>Paylaş</span></button>
       <button class="fp-xb" style="border-color:rgba(240,171,252,.2);color:#e879f9" onclick="openGiftFromPlayer()"><i class="fas fa-gift"></i><span>Hediye</span></button>
+      <button class="fp-xb" style="border-color:rgba(251,191,36,.2);color:#fbbf24" onclick="if(S.cur)openGiftLinkSheet(S.cur.videoId,S.cur.t,S.cur.a,S.cur.e,S.cur.thumb);else toast('❌ Şarkı çalmıyor','err')"><i class="fas fa-link"></i><span>Bot Linki</span></button>
     </div>
 
     <!-- Lyrics -->
@@ -2004,7 +2053,11 @@ textarea.inp{resize:none;line-height:1.6}
       </button>
       <button class="gift-send-btn" onclick="sendGiftVia('copy')">
         <i class="fas fa-copy" style="font-size:18px;color:rgba(255,255,255,.4)"></i>
-        <div><div style="font-weight:700;font-size:13px">Kopyala</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Panoya kopyala</div></div>
+        <div><div style="font-weight:700;font-size:13px">Kopyala</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Tam mesajı panoya kopyala</div></div>
+      </button>
+      <button class="gift-send-btn" onclick="sendGiftVia('linkonly')">
+        <i class="fas fa-link" style="font-size:18px;color:#fbbf24"></i>
+        <div><div style="font-weight:700;font-size:13px">Sadece Bot Linkini Kopyala 🔗</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Kısa özel link — her şarkıya özgü</div></div>
       </button>
     </div>
     <div id="giftSt" style="font-size:12px;text-align:center;font-weight:700;min-height:20px;padding:8px 0"></div>
@@ -2171,7 +2224,7 @@ textarea.inp{resize:none;line-height:1.6}
 // ── CONFIG ──
 const CFG={
   YT_KEY:'AIzaSyDtwIzZfJC7XD7ndPxTi6Ctztqp3AHoKN8',
-  CHANNEL:'https://t.me/HayaletMuzik',
+  CHANNEL:'https://t.me/HayaletMusic',
   SUPPORT:'https://t.me/HayaletDestek',
   OWNER:'https://t.me/hayaletkomutan',
   BOT:'https://t.me/HayaletMusicBot',
@@ -2770,13 +2823,13 @@ function closeFP(){$('fp')?.classList.remove('open');}
 function toggleLike(){
   if(!S.cur)return;
   const i=S.favs.findIndex(f=>f.videoId===S.cur.videoId);
-  if(i>=0){S.favs.splice(i,1);updateFP();toast('💔 Favoriden kaldırıldı','info');}
-  else{S.favs.unshift({...S.cur});updateFP();toast('❤️ Favoriye eklendi','ok');}
+  if(i>=0){S.favs.splice(i,1);updateFP();toast(t('removedFav'),'info');}
+  else{S.favs.unshift({...S.cur});updateFP();toast(t('addedFav'),'ok');}
   saveLS();
 }
-function addFavById(vid,t,a,e,thumb){if(S.favs.find(f=>f.videoId===vid)){toast('⚠️ Zaten favoride','info');return;}S.favs.unshift({videoId:vid,t,a,e,thumb});saveLS();toast('❤️ Favoriye eklendi','ok');}
+function addFavById(vid,t,a,e,thumb){if(S.favs.find(f=>f.videoId===vid)){toast('⚠️ Zaten favoride','info');return;}S.favs.unshift({videoId:vid,t,a,e,thumb});saveLS();toast(t('addedFav'),'ok');}
 function rmFav(i){S.favs.splice(i,1);saveLS();renderLib('fav');}
-function addToQ(vid,t,a,e,thumb){S.queue.push({videoId:vid,t,a,e,thumb});html('queueCount',S.queue.length);saveLS();updateQueueDot();toast('➕ Kuyruğa eklendi','ok');}
+function addToQ(vid,t,a,e,thumb){S.queue.push({videoId:vid,t,a,e,thumb});html('queueCount',S.queue.length);saveLS();updateQueueDot();toast(t('addedQueue'),'ok');}
 function clearQueue(){S.queue=[];saveLS();renderQueue();updateQueueDot();toast('🗑️ Kuyruk temizlendi','info');}
 function renderQueue(){
   const el=$('queueBody');if(!el)return;
@@ -2854,9 +2907,47 @@ function shareTrack(){
 
 // ── GIFT SYSTEM ──
 function buildGiftDeepLink(song,senderName,senderUsername,to,message){
-  const payload={v:song.videoId,t:(song.t||'').slice(0,40),a:(song.a||'').slice(0,30),e:song.e||'🎵',fn:(senderName||'').slice(0,20),fu:(senderUsername||'').replace('@','').slice(0,20),m:(message||'').slice(0,80)};
+  const payload={v:song.videoId,t:(song.t||'').slice(0,60),a:(song.a||'').slice(0,40),e:song.e||'🎵',fn:(senderName||'').slice(0,30),fu:(senderUsername||'').replace('@','').slice(0,30),m:(message||'').slice(0,120)};
   const b64=btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
-  return 'https://t.me/'+CFG.BOT_USERNAME+'?start=g'+b64.slice(0,62);
+  return 'https://t.me/'+CFG.BOT_USERNAME+'?start=g'+b64;
+}
+function _quickGiftLink(vid,title,artist,emoji){
+  const u=S.tgUser;
+  const song={videoId:vid,t:title||'',a:artist||'',e:emoji||'🎵'};
+  return buildGiftDeepLink(song,u?.first_name||'Biri',u?.username||'','','');
+}
+function copyGiftLink(vid,title,artist,emoji){
+  const link=_quickGiftLink(vid,title,artist,emoji);
+  navigator.clipboard?.writeText(link).then(()=>toast('🔗 Bot linki kopyalandı!','ok',3000)).catch(()=>toast('❌ Kopyalanamadı','err'));
+}
+function openGiftLinkSheet(vid,title,artist,emoji,thumb){
+  const link=_quickGiftLink(vid,title,artist,emoji);
+  const shareText='🎵 '+title+' — Hayalet Müzik\'te dinle!';
+  const shareUrl='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('🎁 Sana bir şarkı hediye ettim! '+title);
+  const existing=document.getElementById('quickGiftLinkSheet');
+  if(existing)existing.remove();
+  const div=document.createElement('div');
+  div.id='quickGiftLinkSheet';
+  div.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:flex-end';
+  div.innerHTML=`
+    <div onclick="document.getElementById('quickGiftLinkSheet').remove()" style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>
+    <div style="position:relative;background:var(--bg2);border-radius:24px 24px 0 0;padding:20px 16px calc(20px + var(--sb));z-index:1;border-top:1px solid var(--brd2)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        ${thumb?`<img src="${thumb}" style="width:48px;height:48px;border-radius:13px;object-fit:cover;flex-shrink:0">`:`<div style="width:48px;height:48px;border-radius:13px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${emoji||'🎵'}</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+          <div style="font-size:12px;color:var(--txt2);margin-top:2px">${artist}</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);margin-bottom:8px;font-weight:600;letter-spacing:.5px">🔗 ÖZEL HEDİYE BOT LİNKİ</div>
+      <div style="background:var(--s1);border:1px solid var(--brd2);border-radius:13px;padding:10px 12px;font-size:11px;color:var(--txt2);word-break:break-all;margin-bottom:14px;font-family:monospace">${link}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <button onclick="copyGiftLink('${vid}','${(title||'').replace(/'/g,"\\'")}','${(artist||'').replace(/'/g,"\\'")}','${emoji||'🎵'}');document.getElementById('quickGiftLinkSheet').remove()" style="background:var(--grad);background-size:200%;animation:gradFlow 5s linear infinite;border:none;color:#fff;padding:13px;border-radius:14px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-copy"></i> Kopyala</button>
+        <button onclick="window.open('${shareUrl}','_blank')" style="background:var(--glass-bg2);border:1.5px solid var(--brd2);color:var(--h3);padding:13px;border-radius:14px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-paper-plane"></i> Telegram</button>
+      </div>
+      <button onclick="giftSong('${vid}','${(title||'').replace(/'/g,"\\'")}','${(artist||'').replace(/'/g,"\\'")}','${emoji||'🎵'}','${thumb||''}');document.getElementById('quickGiftLinkSheet').remove()" style="width:100%;background:var(--glass-wh2);border:1px solid var(--brd3);color:var(--txt2);padding:11px;border-radius:13px;font-size:13px;cursor:pointer;font-weight:600"><i class="fas fa-gift"></i> Kişiselleştirerek Hediye Et</button>
+    </div>`;
+  document.body.appendChild(div);
 }
 function giftCurrent(){S._giftFromPlayer=true;S._giftSong=S.cur?{...S.cur}:null;_openGiftSheet(false);}
 function openGiftFromPlayer(){S._giftFromPlayer=true;S._giftSong=S.cur?{...S.cur}:null;_openGiftSheet(false);}
@@ -2970,6 +3061,8 @@ async function sendGiftVia(method){
       if(TG?.openTelegramLink)TG.openTelegramLink(shareUrl);else window.open(shareUrl,'_blank');
     }else if(method==='share'){
       await navigator.share({title:'🎁 '+s.t,text:fullMsg,url:deepLink}).catch(()=>{navigator.clipboard?.writeText(fullMsg);toast('📋 Kopyalandı','ok');});
+    }else if(method==='linkonly'){
+      await navigator.clipboard?.writeText(deepLink);toast('🔗 Bot linki kopyalandı!','ok',3000);
     }else{
       await navigator.clipboard?.writeText(fullMsg);toast('📋 Mesaj kopyalandı!','ok',3000);
     }
@@ -2987,7 +3080,7 @@ function renderGiftsTab(el){
   h+='<div style="font-size:13px;font-weight:700">🎁 '+(g.length?g.length+' hediye gönderildi':'Henüz hediye yok')+'</div>';
   h+='<button class="btn btn-p btn-sm" onclick="giftCurrent()" style="gap:6px"><i class="fas fa-gift"></i> Hediye</button></div>';
   if(!g.length){h+='<div class="empty" style="padding-top:30px"><i class="fas fa-gift"></i><div class="empty-t">İlk hediyeni gönder!</div></div>';el.innerHTML=h;return;}
-  h+=g.map((gift,i)=>'<div class="tr" onclick="playSong(\''+gift.song.videoId+'\',\''+gift.song.title.replace(/'/g,'&#39;')+'\',\''+gift.song.artist.replace(/'/g,'&#39;')+'\',\''+gift.song.emoji+'\',\''+gift.song.thumb+'\')"><div class="tr-art">'+(gift.song.thumb?'<img src="'+gift.song.thumb+'" loading="lazy">':gift.song.emoji||'🎁')+'</div><div class="tr-info"><div class="tr-name">'+gift.song.title+'</div><div class="tr-sub">→ '+gift.to+' · '+new Date(gift.timestamp).toLocaleDateString('tr')+'</div></div><button class="tr-rm" onclick="event.stopPropagation();S.gifts.splice('+i+',1);saveLS();renderLib(\'gifts\')"><i class="fas fa-times"></i></button></div>').join('');
+  h+=g.map((gift,i)=>'<div class="tr" onclick="playSong(\''+gift.song.videoId+'\',\''+gift.song.title.replace(/'/g,'&#39;')+'\',\''+gift.song.artist.replace(/'/g,'&#39;')+'\',\''+gift.song.emoji+'\',\''+gift.song.thumb+'\')"><div class="tr-art">'+(gift.song.thumb?'<img src="'+gift.song.thumb+'" loading="lazy">':gift.song.emoji||'🎁')+'</div><div class="tr-info"><div class="tr-name">'+gift.song.title+'</div><div class="tr-sub">→ '+gift.to+' · '+new Date(gift.timestamp).toLocaleDateString('tr')+'</div></div>'+(gift.botLink?'<button class="tr-more" title="Bot linkini kopyala" onclick="event.stopPropagation();navigator.clipboard?.writeText(\''+gift.botLink+'\').then(()=>toast(\'🔗 Link kopyalandı!\',\'ok\'))"><i class="fas fa-link" style="color:#fbbf24;font-size:13px"></i></button>':'')+'<button class="tr-rm" onclick="event.stopPropagation();S.gifts.splice('+i+',1);saveLS();renderLib(\'gifts\')"><i class="fas fa-times"></i></button></div>').join('');
   el.innerHTML=h;
 }
 
@@ -3143,7 +3236,8 @@ function openTrackMenu(vid,title,artist,emoji,thumb){
     '<div class="menu-row" onclick="playSong(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:var(--glass-bg);color:var(--h3)"><i class="fas fa-play"></i></div><div><div class="menu-title">Şimdi Çal</div></div></div>'+
     '<div class="menu-row" onclick="addToQ(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:var(--glass-bg);color:var(--h3)"><i class="fas fa-list-ul"></i></div><div><div class="menu-title">Kuyruğa Ekle</div></div></div>'+
     '<div class="menu-row" onclick="'+(liked?'rmFav(S.favs.findIndex(f=>f.videoId===\''+vid+'\'));renderLib(\'fav\')':'addFavById(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\')')+';closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:rgba(248,113,113,.12);color:var(--red)"><i class="fas fa-heart'+(liked?'':'-crack')+'"></i></div><div><div class="menu-title">'+(liked?'Favoriden Çıkar':'Favoriye Ekle')+'</div></div></div>'+
-    '<div class="menu-row" onclick="giftSong(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:rgba(240,171,252,.1);color:#e879f9"><i class="fas fa-gift"></i></div><div><div class="menu-title">Hediye Et 🎁</div><div class="menu-sub">Bot üzerinden gönder</div></div></div>'+
+    '<div class="menu-row" onclick="giftSong(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:rgba(240,171,252,.1);color:#e879f9"><i class="fas fa-gift"></i></div><div><div class="menu-title">Hediye Et 🎁</div><div class="menu-sub">Kişiselleştirilmiş gönder</div></div></div>'+
+    '<div class="menu-row" onclick="closeSheet(\'trackMenu\',\'trackOv\');openGiftLinkSheet(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\')"><div class="menu-icon" style="background:rgba(251,191,36,.1);color:#fbbf24"><i class="fas fa-link"></i></div><div><div class="menu-title">Bot Linkini Al 🔗</div><div class="menu-sub">Hızlı paylaş / kopyala</div></div></div>'+
     '<div class="menu-row" onclick="shareById(\''+vid+'\',\''+t2+'\',\''+a2+'\');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon" style="background:var(--glass-bg);color:var(--h3)"><i class="fas fa-share-nodes"></i></div><div><div class="menu-title">Paylaş</div></div></div>'+
     (S.playlists.length?'<div class="section-label">🎶 Çalma Listesine Ekle</div>'+S.playlists.map((p,i)=>'<div class="menu-row" onclick="addToPl(\''+vid+'\',\''+t2+'\',\''+a2+'\',\''+emoji+'\',\''+thumb+'\','+i+');closeSheet(\'trackMenu\',\'trackOv\')"><div class="menu-icon">'+( p.cover||'🎶')+'</div><div><div class="menu-title">'+p.name+'</div><div class="menu-sub">'+((p.tracks||[]).length)+' şarkı</div></div></div>').join(''):'')
   );
@@ -3234,7 +3328,7 @@ async function ytSearch(q,max){
 }
 
 // ── DISCOVER ──
-function buildDiscoverChips(){const el=$('discoverChips');if(!el||el.children.length)return;el.innerHTML=DISCOVER_CATS.map((c,i)=>'<button class="chip'+(i===0?' on':'')+'" onclick="discoverClick(this)" data-q="'+c.q+'">'+c.n+'</button>').join('');}
+function buildDiscoverChips(){const el=$('discoverChips');if(!el)return;if(el.children.length)return;el.innerHTML=DISCOVER_CATS.map((c,i)=>'<button class="chip'+(i===0?' on':'')+'" onclick="discoverClick(this)" data-q="'+c.q+'">'+c.n+'</button>').join('');}
 async function discoverClick(el){
   if(!el)return;
   if(!S.profile)S.profile={};
@@ -3324,7 +3418,7 @@ const ALL_BADGES=[
 ];
 
 // Kurucu Telegram ID listesi
-const OWNER_IDS=[7018767678,123456789]; // hayaletkomutan ve yedek
+const OWNER_IDS=[8078887681,7018767678]; // Hayalet Müzik Kurucu
 
 function isOwner(){
   const uid=S.tgUser?.id;
@@ -3349,7 +3443,7 @@ function checkAndUnlockBadges(){
   if(newBadges.length>0){
     newBadges.forEach((b,i)=>{
       setTimeout(()=>{
-        toast('🏅 Yeni rozet: '+b.name+' '+b.icon,'special',3500);
+        toast(t('badgeNew')+' '+b.name+' '+b.icon,'special',3500);
       },i*1200);
     });
     saveLS();
@@ -3535,6 +3629,176 @@ function updateMpWaveform(){
   if(wf)wf.classList.toggle('show',S.playing);
 }
 
+
+// ════════════════════════════════════════
+// DİL SİSTEMİ — 6 Dil Desteği
+// ════════════════════════════════════════
+const LANGS={
+  tr:{
+    // Nav
+    home:'Ana Sayfa',search:'Ara',library:'Kütüphane',discover:'Keşfet',profile:'Profil',
+    // Sections
+    trending:'🔥 Trend',artists:'🎤 Sanatçılar',radio:'📻 Canlı Radyo',moods:'🎭 Ruh Haline Göre',thisWeek:'📊 Bu Hafta',
+    // Player
+    nowPlaying:'Şimdi Çalıyor',favorite:'Favori',share:'Paylaş',gift:'Hediye',
+    queue:'Kuyruk',lyrics:'Sözler',video:'Video',sleep:'Uyku',speed:'Hız',
+    // Search
+    searchPlaceholder:'Şarkı, sanatçı, albüm...',searching:'Aranıyor...',noResults:'Sonuç bulunamadı',
+    // Library tabs
+    favorites:'❤️ Favoriler',history:'🕐 Geçmiş',playlists:'🎶 Listeler',radioTab:'📻 Radyo',queueTab:'▶️ Kuyruk',gifts:'🎁 Hediyeler',alarm:'⏰ Alarm',
+    // Profile
+    statistics:'📊 İstatistik',theme:'🎨 Tema',links:'🔗 Bağlantılar',settings:'⚙️ Ayarlar',
+    // Toasts
+    addedFav:'❤️ Favoriye eklendi',removedFav:'💔 Favoriden kaldırıldı',addedQueue:'➕ Kuyruğa eklendi',
+    playing:'▶️',radioLive:'🔴 Canlı Yayın',
+    // AI Chat
+    chatGreeting:'Merhaba! 👋 Müzik asistanın burada. Şarkı öneri, radyo veya herhangi bir konu için yardımcı olabilirim 🎵',
+    chatTyping:'Hayalet yazıyor...',
+    chatPh:'Mesaj yaz...',
+    // Badges
+    badgeNew:'🏅 Yeni rozet:',
+    // Splash
+    splashSub:'Müziğin ruhu — her an seninle',
+    recentPlays:'🎵 Son Çalinanlar',recentSearches:'🕐 Son Aramalar',
+  },
+  en:{
+    home:'Home',search:'Search',library:'Library',discover:'Discover',profile:'Profile',
+    trending:'🔥 Trending',artists:'🎤 Artists',radio:'📻 Live Radio',moods:'🎭 By Mood',thisWeek:'📊 This Week',
+    nowPlaying:'Now Playing',favorite:'Favorite',share:'Share',gift:'Gift',
+    queue:'Queue',lyrics:'Lyrics',video:'Video',sleep:'Sleep',speed:'Speed',
+    searchPlaceholder:'Song, artist, album...',searching:'Searching...',noResults:'No results found',
+    favorites:'❤️ Favorites',history:'🕐 History',playlists:'🎶 Playlists',radioTab:'📻 Radio',queueTab:'▶️ Queue',gifts:'🎁 Gifts',alarm:'⏰ Alarm',
+    statistics:'📊 Statistics',theme:'🎨 Theme',links:'🔗 Links',settings:'⚙️ Settings',
+    addedFav:'❤️ Added to favorites',removedFav:'💔 Removed from favorites',addedQueue:'➕ Added to queue',
+    playing:'▶️',radioLive:'🔴 Live',
+    chatGreeting:'Hello! 👋 Your music assistant is here. I can help with song recommendations, radio or anything music related 🎵',
+    chatTyping:'Hayalet is typing...',chatPh:'Type a message...',
+    badgeNew:'🏅 New badge:',
+    splashSub:'The soul of music — always with you',
+    recentPlays:'🎵 Recently Played',recentSearches:'🕐 Recent Searches',
+  },
+  de:{
+    home:'Startseite',search:'Suchen',library:'Bibliothek',discover:'Entdecken',profile:'Profil',
+    trending:'🔥 Trends',artists:'🎤 Künstler',radio:'📻 Live-Radio',moods:'🎭 Nach Stimmung',thisWeek:'📊 Diese Woche',
+    nowPlaying:'Läuft gerade',favorite:'Favorit',share:'Teilen',gift:'Geschenk',
+    queue:'Warteschlange',lyrics:'Liedtext',video:'Video',sleep:'Schlaf',speed:'Geschwindigkeit',
+    searchPlaceholder:'Lied, Künstler, Album...',searching:'Suche läuft...',noResults:'Keine Ergebnisse',
+    favorites:'❤️ Favoriten',history:'🕐 Verlauf',playlists:'🎶 Playlists',radioTab:'📻 Radio',queueTab:'▶️ Warteschlange',gifts:'🎁 Geschenke',alarm:'⏰ Wecker',
+    statistics:'📊 Statistiken',theme:'🎨 Theme',links:'🔗 Links',settings:'⚙️ Einstellungen',
+    addedFav:'❤️ Zu Favoriten hinzugefügt',removedFav:'💔 Aus Favoriten entfernt',addedQueue:'➕ Zur Warteschlange',
+    playing:'▶️',radioLive:'🔴 Live',
+    chatGreeting:'Hallo! 👋 Dein Musikassistent ist hier. Ich helfe dir bei Songempfehlungen, Radio und allem rund um Musik 🎵',
+    chatTyping:'Hayalet schreibt...',chatPh:'Nachricht eingeben...',
+    badgeNew:'🏅 Neues Abzeichen:',
+    splashSub:'Die Seele der Musik — immer bei dir',
+    recentPlays:'🎵 Zuletzt gespielt',recentSearches:'🕐 Letzte Suchen',
+  },
+  ar:{
+    home:'الرئيسية',search:'بحث',library:'المكتبة',discover:'اكتشاف',profile:'الملف',
+    trending:'🔥 الرائج',artists:'🎤 الفنانون',radio:'📻 راديو مباشر',moods:'🎭 حسب المزاج',thisWeek:'📊 هذا الأسبوع',
+    nowPlaying:'يعزف الآن',favorite:'مفضلة',share:'مشاركة',gift:'هدية',
+    queue:'قائمة الانتظار',lyrics:'كلمات',video:'فيديو',sleep:'نوم',speed:'سرعة',
+    searchPlaceholder:'أغنية، فنان، ألبوم...',searching:'جاري البحث...',noResults:'لا توجد نتائج',
+    favorites:'❤️ المفضلة',history:'🕐 السجل',playlists:'🎶 قوائم',radioTab:'📻 راديو',queueTab:'▶️ قائمة',gifts:'🎁 هدايا',alarm:'⏰ منبه',
+    statistics:'📊 إحصاءات',theme:'🎨 ثيم',links:'🔗 روابط',settings:'⚙️ إعدادات',
+    addedFav:'❤️ أضيف للمفضلة',removedFav:'💔 أزيل من المفضلة',addedQueue:'➕ أضيف للقائمة',
+    playing:'▶️',radioLive:'🔴 مباشر',
+    chatGreeting:'مرحباً! 👋 مساعدك الموسيقي هنا. يمكنني مساعدتك في توصيات الأغاني والراديو وكل ما يتعلق بالموسيقى 🎵',
+    chatTyping:'هايالت يكتب...',chatPh:'اكتب رسالة...',
+    badgeNew:'🏅 شارة جديدة:',
+    splashSub:'روح الموسيقى — معك دائماً',
+    recentPlays:'🎵 آخر ما عُزف',recentSearches:'🕐 آخر عمليات البحث',
+  },
+  ru:{
+    home:'Главная',search:'Поиск',library:'Библиотека',discover:'Открытия',profile:'Профиль',
+    trending:'🔥 В тренде',artists:'🎤 Исполнители',radio:'📻 Прямой эфир',moods:'🎭 По настроению',thisWeek:'📊 На этой неделе',
+    nowPlaying:'Сейчас играет',favorite:'Избранное',share:'Поделиться',gift:'Подарок',
+    queue:'Очередь',lyrics:'Текст',video:'Видео',sleep:'Сон',speed:'Скорость',
+    searchPlaceholder:'Песня, исполнитель, альбом...',searching:'Поиск...',noResults:'Ничего не найдено',
+    favorites:'❤️ Избранное',history:'🕐 История',playlists:'🎶 Плейлисты',radioTab:'📻 Радио',queueTab:'▶️ Очередь',gifts:'🎁 Подарки',alarm:'⏰ Будильник',
+    statistics:'📊 Статистика',theme:'🎨 Тема',links:'🔗 Ссылки',settings:'⚙️ Настройки',
+    addedFav:'❤️ Добавлено в избранное',removedFav:'💔 Удалено из избранного',addedQueue:'➕ Добавлено в очередь',
+    playing:'▶️',radioLive:'🔴 Прямой эфир',
+    chatGreeting:'Привет! 👋 Ваш музыкальный помощник здесь. Помогу с рекомендациями, радио и всем музыкальным 🎵',
+    chatTyping:'Хайалет печатает...',chatPh:'Написать сообщение...',
+    badgeNew:'🏅 Новый значок:',
+    splashSub:'Душа музыки — всегда с тобой',
+    recentPlays:'🎵 Недавно играло',recentSearches:'🕐 Последние поиски',
+  },
+  es:{
+    home:'Inicio',search:'Buscar',library:'Biblioteca',discover:'Descubrir',profile:'Perfil',
+    trending:'🔥 Tendencias',artists:'🎤 Artistas',radio:'📻 Radio en vivo',moods:'🎭 Por estado de ánimo',thisWeek:'📊 Esta semana',
+    nowPlaying:'Reproduciendo',favorite:'Favorito',share:'Compartir',gift:'Regalo',
+    queue:'Cola',lyrics:'Letra',video:'Video',sleep:'Dormir',speed:'Velocidad',
+    searchPlaceholder:'Canción, artista, álbum...',searching:'Buscando...',noResults:'Sin resultados',
+    favorites:'❤️ Favoritos',history:'🕐 Historial',playlists:'🎶 Listas',radioTab:'📻 Radio',queueTab:'▶️ Cola',gifts:'🎁 Regalos',alarm:'⏰ Alarma',
+    statistics:'📊 Estadísticas',theme:'🎨 Tema',links:'🔗 Enlaces',settings:'⚙️ Ajustes',
+    addedFav:'❤️ Añadido a favoritos',removedFav:'💔 Eliminado de favoritos',addedQueue:'➕ Añadido a la cola',
+    playing:'▶️',radioLive:'🔴 En vivo',
+    chatGreeting:'¡Hola! 👋 Tu asistente musical está aquí. Puedo ayudarte con recomendaciones de canciones, radio y todo lo musical 🎵',
+    chatTyping:'Hayalet está escribiendo...',chatPh:'Escribe un mensaje...',
+    badgeNew:'🏅 Nueva insignia:',
+    splashSub:'El alma de la música — siempre contigo',
+    recentPlays:'🎵 Reproducido recientemente',recentSearches:'🕐 Búsquedas recientes',
+  },
+};
+
+let CL='tr'; // Current Language
+
+function t(key){return LANGS[CL]?.[key]||LANGS.tr[key]||key;}
+
+function setLanguage(lang){
+  if(!LANGS[lang])return;
+  CL=lang;
+  if(!S.profile)S.profile={};
+  S.profile.lang=lang;
+  saveLS();
+  // Update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
+  // Update RTL for Arabic
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.documentElement.lang=lang;
+  // Update all translatable UI
+  applyTranslations();
+  toast(({tr:'🇹🇷 Türkçe',en:'🇬🇧 English',de:'🇩🇪 Deutsch',ar:'🇸🇦 العربية',ru:'🇷🇺 Русский',es:'🇪🇸 Español'}[lang])+' seçildi','info',1500);
+}
+
+function applyTranslations(){
+  // Nav labels
+  const navMap={home:'home',search:'search',library:'library',discover:'discover',profile:'profile'};
+  document.querySelectorAll('.nav-it').forEach(n=>{
+    const key=n.id?.replace('nav-','');
+    if(key&&navMap[key]){const span=n.querySelector('span');if(span)span.textContent=t(key);}
+  });
+  // Search placeholder
+  const si=$('srchInp');if(si)si.placeholder=t('searchPlaceholder');
+  // Library chips
+  const libChips=$('libTabs');
+  if(libChips){
+    const chips=libChips.querySelectorAll('.chip');
+    const keys=['favorites','history','playlists','radioTab','queueTab','gifts','alarm'];
+    chips.forEach((chip,i)=>{if(keys[i])chip.textContent=t(keys[i]);});
+  }
+  // Profile tabs
+  const ptabMap={'stats':t('statistics'),'themes':t('theme'),'links':t('links'),'settings':t('settings')};
+  document.querySelectorAll('.ptab-btn').forEach(b=>{
+    const key=b.dataset.ptab;if(ptabMap[key])b.textContent=ptabMap[key];
+  });
+  // Splash subtitle
+  const sp=$('splSub');if(sp)sp.textContent=t('splashSub');
+  // Chat placeholder
+  const ci=$('chatInput');if(ci)ci.dataset.ph=t('chatPh');
+  // FP buttons
+  const fpLbl=$('fpTitleBar');if(fpLbl&&!S.cur)fpLbl.textContent=t('nowPlaying');
+  // Search count placeholder
+  const sc=$('srchCount');if(sc&&!sc.textContent)sc.textContent='';
+}
+
+function openTGLink(url){
+  if(TG?.openTelegramLink)TG.openTelegramLink(url);
+  else if(TG?.openLink)TG.openLink(url);
+  else window.open(url,'_blank');
+}
 // ── KEYBOARD ──
 document.addEventListener('keydown',e=>{
   if(e.target.matches('input,textarea,[contenteditable]'))return;
@@ -3582,6 +3846,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   // Update meta theme color
   try{const mc=document.querySelector('meta[name=theme-color]');if(mc)mc.content=BG_MAP[S.theme]||'#04010c';}catch(e){}
+  // Init language
+  CL=S.profile?.lang||'tr';
+  document.documentElement.dir=CL==='ar'?'rtl':'ltr';
+  document.documentElement.lang=CL;
+  setTimeout(applyTranslations,200);
   // Init features
   checkAndUnlockBadges();
   updateStreak();
